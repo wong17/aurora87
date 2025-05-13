@@ -149,6 +149,7 @@
     <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\ZombieSleep.cpp" />
     <ClCompile Include="AIEnviroment\Player\FiniteStatePlayer.cpp" />
     <ClCompile Include="AIEnviroment\Player\Player.cpp" />
+    <ClCompile Include="Event\EventManager.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,8 @@
     <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\ZombieSleep.h" />
     <ClInclude Include="AIEnviroment\Player\FiniteStatePlayer.h" />
     <ClInclude Include="AIEnviroment\Player\Player.h" />
+    <ClInclude Include="Event\EventData.h" />
+    <ClInclude Include="Event\EventManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
