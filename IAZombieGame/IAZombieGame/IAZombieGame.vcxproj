@@ -139,7 +139,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIEnviroment\Base\EntityManager.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\DumbZombie.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\FiniteStateDumbZombie.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\CalculateBoxVision.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\EvadeObstacle.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\Persuit.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\Seek.cpp" />
+    <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\ZombieSleep.cpp" />
+    <ClCompile Include="AIEnviroment\Player\FiniteStatePlayer.cpp" />
+    <ClCompile Include="AIEnviroment\Player\Player.cpp" />
     <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AIEnviroment\Base\BaseGameEntity.h" />
+    <ClInclude Include="AIEnviroment\Base\EntityManager.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\DumbZombie.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\FiniteStateDumbZombie.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\CalculateBoxVision.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\EvadeObstacle.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\Persuit.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\Seek.h" />
+    <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\ZombieSleep.h" />
+    <ClInclude Include="AIEnviroment\Player\FiniteStatePlayer.h" />
+    <ClInclude Include="AIEnviroment\Player\Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
