@@ -53,7 +53,7 @@ static GLuint Indices[] = {
 };
 
 PlayerRender::PlayerRender() :
-	m_count(0)
+	m_count(9)
 	, playerTextures(nullptr)
 	,vbo(nullptr)
 	,vao(nullptr)

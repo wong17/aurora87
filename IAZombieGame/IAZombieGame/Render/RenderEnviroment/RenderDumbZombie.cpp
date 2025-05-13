@@ -54,7 +54,7 @@ static GLuint Indices[] = {
 
 };
 RenderDumbZombie::RenderDumbZombie() :
-	m_count(0)
+	m_count(10)
 	,zombieTextures(nullptr)
 	,vbo(nullptr)
 	,ebo(nullptr)

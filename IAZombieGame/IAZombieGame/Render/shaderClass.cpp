@@ -11,7 +11,8 @@ std::string get_file_contents(const char* filename)
 		in.seekg(0, std::ios::beg);
 		in.read(&contents[0], contents.size());
 		in.close();
-
+		std::cout << "File read successfully: " << filename << std::endl;
+		std::cout << "File contents: " << contents << std::endl;
 		return (contents);
 	}
 	throw std::runtime_error("Failed to open file: " + std::string(filename));

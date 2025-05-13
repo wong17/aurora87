@@ -78,6 +78,18 @@
     <ClCompile Include="Render\RenderEnviroment\RenderDumbZombie.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="AIEnviroment\Player\Mechanics\Walk.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="AIEnviroment\Player\Mechanics\AttackHandsToHands.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderLight\Light.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIEnviroment\Base\BaseGameEntity.h">
@@ -143,5 +155,20 @@
     <ClInclude Include="Render\RenderEnviroment\RenderDumbZombie.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="AIEnviroment\Player\Mechanics\Walk.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="AIEnviroment\Player\Mechanics\AttackHandsToHands.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderLight\Light.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zombieDumb.frag" />
+    <None Include="zombieDumb.vert" />
+    <None Include="light.frag" />
+    <None Include="light.vert" />
   </ItemGroup>
 </Project>

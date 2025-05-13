@@ -57,7 +57,7 @@ void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)
 
 void Texture::Bind(int index)
 {
-    if (index >= 0 && index < 2)
+    if (index >= 0 && index < 3)
     {
         glBindTexture(type, IDs[index]);
     }

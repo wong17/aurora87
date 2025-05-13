@@ -150,13 +150,17 @@
     <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\Seek.cpp" />
     <ClCompile Include="AIEnviroment\DumbZombie\Mechanics\ZombieSleep.cpp" />
     <ClCompile Include="AIEnviroment\Player\FiniteStatePlayer.cpp" />
+    <ClCompile Include="AIEnviroment\Player\Mechanics\AttackHandsToHands.cpp" />
+    <ClCompile Include="AIEnviroment\Player\Mechanics\Walk.cpp" />
     <ClCompile Include="AIEnviroment\Player\Player.cpp" />
     <ClCompile Include="Event\EventManager.cpp" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\EBO.cpp" />
     <ClCompile Include="Render\RenderEnviroment\PlayerRender.cpp" />
     <ClCompile Include="Render\RenderEnviroment\RenderDumbZombie.cpp" />
+    <ClCompile Include="Render\RenderLight\Light.cpp" />
     <ClCompile Include="Render\shaderClass.cpp" />
     <ClCompile Include="Render\stb.cpp" />
     <ClCompile Include="Render\Texture.cpp" />
@@ -174,6 +178,8 @@
     <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\Seek.h" />
     <ClInclude Include="AIEnviroment\DumbZombie\Mechanics\ZombieSleep.h" />
     <ClInclude Include="AIEnviroment\Player\FiniteStatePlayer.h" />
+    <ClInclude Include="AIEnviroment\Player\Mechanics\AttackHandsToHands.h" />
+    <ClInclude Include="AIEnviroment\Player\Mechanics\Walk.h" />
     <ClInclude Include="AIEnviroment\Player\Player.h" />
     <ClInclude Include="Event\EventData.h" />
     <ClInclude Include="Event\EventManager.h" />
@@ -181,10 +187,17 @@
     <ClInclude Include="Render\EBO.h" />
     <ClInclude Include="Render\RenderEnviroment\PlayerRender.h" />
     <ClInclude Include="Render\RenderEnviroment\RenderDumbZombie.h" />
+    <ClInclude Include="Render\RenderLight\Light.h" />
     <ClInclude Include="Render\shaderClass.h" />
     <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Render\VAO.h" />
     <ClInclude Include="Render\VBO.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="light.frag" />
+    <None Include="light.vert" />
+    <None Include="zombieDumb.frag" />
+    <None Include="zombieDumb.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

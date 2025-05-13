@@ -1,25 +1,9 @@
-﻿  EntityManager.cpp
-  DumbZombie.cpp
-C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\AIEnviroment\Player\Player.h(9,9): error C1083: No se puede abrir el archivo incluir: 'shaderClass.h': No such file or directory
-  (compilando archivo de origen "AIEnviroment/DumbZombie/DumbZombie.cpp")
+﻿  Main.cpp
+C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\AIEnviroment\Player\Player.h(66,43): warning C4244: 'return': conversión de 'const float' a 'int'; posible pérdida de datos
+  (compilando archivo de origen "Main.cpp")
   
-  FiniteStateDumbZombie.cpp
-  CalculateBoxVision.cpp
-  EvadeObstacle.cpp
-  Persuit.cpp
-  Seek.cpp
-C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\AIEnviroment\Player\Player.h(9,9): error C1083: No se puede abrir el archivo incluir: 'shaderClass.h': No such file or directory
-  (compilando archivo de origen "AIEnviroment/DumbZombie/Mechanics/Seek.cpp")
-  
-  ZombieSleep.cpp
-C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\AIEnviroment\Player\Player.h(9,9): error C1083: No se puede abrir el archivo incluir: 'shaderClass.h': No such file or directory
-  (compilando archivo de origen "AIEnviroment/DumbZombie/Mechanics/ZombieSleep.cpp")
-  
-  FiniteStatePlayer.cpp
-  Player.cpp
-C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\AIEnviroment\Player\Player.h(9,9): error C1083: No se puede abrir el archivo incluir: 'shaderClass.h': No such file or directory
-  (compilando archivo de origen "AIEnviroment/Player/Player.cpp")
-  
-  EventManager.cpp
-  Main.cpp
+C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\Main.cpp(63,17): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\Main.cpp(75,21): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+  Texture.cpp
   Generando código...
+  IAZombieGame.vcxproj -> C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\x64\Debug\IAZombieGame.exe
