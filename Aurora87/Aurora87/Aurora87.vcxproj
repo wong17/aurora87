@@ -247,6 +247,12 @@
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
     <ClInclude Include="test\MultipleEntitiesTestLayer.h" />
     <ClInclude Include="test\MultipleModelsTestLayer.h" />
+    <ClInclude Include="vendor\AL\al.h" />
+    <ClInclude Include="vendor\AL\alc.h" />
+    <ClInclude Include="vendor\AL\alext.h" />
+    <ClInclude Include="vendor\AL\efx-creative.h" />
+    <ClInclude Include="vendor\AL\efx-presets.h" />
+    <ClInclude Include="vendor\AL\efx.h" />
     <ClInclude Include="vendor\assimp\aabb.h" />
     <ClInclude Include="vendor\assimp\ai_assert.h" />
     <ClInclude Include="vendor\assimp\anim.h" />
