@@ -46,7 +46,7 @@ namespace Engine
 			{
 				float fps = frameCount / fpsTimer;
 				std::stringstream ss;
-				ss << "Wong Graphic Engine - FPS: " << std::fixed << std::setprecision(2) << fps;
+				ss << "Aurora 87 - FPS: " << std::fixed << std::setprecision(2) << fps;
 				glfwSetWindowTitle(m_Window->GetNativeWindow(), ss.str().c_str());
 				// Reiniciamos el contador y timer
 				frameCount = 0;
