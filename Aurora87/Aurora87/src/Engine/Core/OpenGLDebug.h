@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+
 #include <iostream>
 #include <string>
 
@@ -9,7 +10,14 @@ namespace Engine
 	class OpenGLDebug
 	{
 	public:
-		static void Enable() {
+		static void Enable() 
+		{
+			if (!GLAD_GL_VERSION_4_3)
+			{
+				std::cerr << "[OpenGL Warning] GL_KHR_debug no está disponible. "
+					<< "No se habilitará OpenGL debug callback." << std::endl;
+			}
+
 			// Sólo disponible a partir de OpenGL 4.3 / ARB_debug_output
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -19,8 +27,10 @@ namespace Engine
 		}
 
 	private:
-		static const char* _Source(GLenum src) {
-			switch (src) {
+		static const char* _Source(GLenum src) 
+		{
+			switch (src) 
+			{
 				case GL_DEBUG_SOURCE_API:             return "API";
 				case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   return "Window Sys";
 				case GL_DEBUG_SOURCE_SHADER_COMPILER: return "Shader";
@@ -30,8 +40,10 @@ namespace Engine
 				default:                              return "Unknown";
 			}
 		}
-		static const char* _Type(GLenum type) {
-			switch (type) {
+		static const char* _Type(GLenum type) 
+		{
+			switch (type) 
+			{
 				case GL_DEBUG_TYPE_ERROR:               return "Error";
 				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: return "Deprecated";
 				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  return "Undefined";
@@ -44,8 +56,10 @@ namespace Engine
 				default:                                return "Unknown";
 			}
 		}
-		static const char* _Severity(GLenum sev) {
-			switch (sev) {
+		static const char* _Severity(GLenum sev) 
+		{
+			switch (sev) 
+			{
 				case GL_DEBUG_SEVERITY_HIGH:         return "HIGH";
 				case GL_DEBUG_SEVERITY_MEDIUM:       return "MEDIUM";
 				case GL_DEBUG_SEVERITY_LOW:          return "LOW";
