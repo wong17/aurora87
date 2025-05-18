@@ -27,6 +27,40 @@ namespace Engine
 		: m_Mesh(nullptr), m_Model(model), m_Shader(shader), m_Name(name), m_TransformComponent(transform)
 	{ }
 
+	void Entity::DrawDepth(Shader & depthShader)
+	{
+		depthShader.Bind();
+		
+		glm::mat4 model = GetWorldMatrix();
+		depthShader.SetMat4("u_ModelMatrix", model);
+
+		// Dibujar mesh/model sin texturas
+		if (m_Model)
+			m_Model->Draw(depthShader, false);
+		else if (m_Mesh)
+			m_Mesh->Draw(depthShader, false);
+
+		for (auto& child : m_Childrens)
+			child->DrawDepth(depthShader);
+	}
+
+	void Entity::DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount)
+	{
+		depthShader.Bind();
+		
+		glm::mat4 model = GetWorldMatrix();
+		depthShader.SetMat4("u_ModelMatrix", model);
+
+		// Dibujar mesh/model sin texturas
+		if (m_Model)
+			m_Model->DrawInstanced(depthShader, instanceCount, false);
+		else if (m_Mesh)
+			m_Mesh->DrawInstanced(depthShader, instanceCount, false);
+
+		for (auto& child : m_Childrens)
+			child->DrawInstancedDepth(depthShader, instanceCount);
+	}
+
 	void Entity::Draw(bool bindTextures)
 	{
 		m_Shader->Bind();

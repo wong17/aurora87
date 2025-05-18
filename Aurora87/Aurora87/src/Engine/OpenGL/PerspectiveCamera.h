@@ -65,9 +65,9 @@ namespace Engine
 		void ProcessKeyboard(CameraMovement movement, float deltaTime);
 		void ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch = true);
 
-	private:
+	protected:
 		void RecalculateViewMatrix() override;
-	private:
+	protected:
 		glm::vec3 m_Front = { 0.0f, 0.0f, -1.0f };	// Indica la dirección hacia la que está mirando la cámara
 		glm::vec3 m_Right = { 1.0f, 0.0f, 0.0f };	// Indica la dirección a la derecha de la cámara
 		glm::vec3 m_Up = { 0.0f, 1.0f, 0.0f };		// Indica la dirección hacia arriba de la cámara

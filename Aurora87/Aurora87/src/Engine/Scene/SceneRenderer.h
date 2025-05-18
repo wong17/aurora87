@@ -2,6 +2,7 @@
 
 #include "Engine/OpenGL/UniformBuffer.h"
 #include "Engine/Scene/EntityManager.h"
+#include "Engine/OpenGL/Shader.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,6 +20,7 @@ namespace Engine
 		{ }
 
 		void SetViewProjection(const glm::mat4& view, const glm::mat4& projection);
+		void RenderDepth(const EntityManager& em, Shader& depthShader);
 		void RenderAll(const EntityManager& em, bool bindTextures = true);
 
 	private:

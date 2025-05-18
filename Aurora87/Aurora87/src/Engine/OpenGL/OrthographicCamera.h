@@ -20,7 +20,9 @@ namespace Engine
 
 		void OnEvent(Event& event) override;
 
-	private:
+	protected:
 		void RecalculateViewMatrix() override;
+
+		float m_Left, m_Right, m_Bottom, m_Top;
 	};
 }

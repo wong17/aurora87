@@ -37,6 +37,9 @@ namespace Engine
 			const std::string& name = "", 
 			const TransformComponent& transform = TransformComponent());
 
+		void DrawDepth(Shader& depthShader);
+		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
+
 		void Draw(bool bindTextures);
 		void Draw(bool bindTextures, UniformBuffer& uniformBuffer, uint32_t entityIndex);
 		void DrawInstanced(bool bindTextures, uint32_t instanceCount = 0);
@@ -69,7 +72,8 @@ namespace Engine
 		std::shared_ptr<Entity> m_Parent = nullptr;
 		std::vector<std::shared_ptr<Entity>> m_Childrens;
 
-		glm::mat4 GetWorldMatrix() const {
+		glm::mat4 GetWorldMatrix() const 
+		{
 			glm::mat4 local = m_TransformComponent.GetLocalMatrix();
 			if (m_Parent != nullptr)
 				return m_Parent->GetWorldMatrix() * local;

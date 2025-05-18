@@ -12,6 +12,17 @@ namespace Engine
 		m_CameraUniformBuffer.SetData("u_ProjectionMatrix", glm::value_ptr(projection));
 	}
 
+	void SceneRenderer::RenderDepth(const EntityManager& em, Shader& depthShader)
+	{
+		for (const auto& rec : em.GetRecords())
+		{
+			if (rec.instanceCount == 0)
+				rec.entity->DrawDepth(depthShader);
+			else
+				rec.entity->DrawInstancedDepth(depthShader, rec.instanceCount);
+		}
+	}
+
 	void SceneRenderer::RenderAll(const EntityManager& em, bool bindTextures)
 	{
 		for (const auto& rec : em.GetRecords())
