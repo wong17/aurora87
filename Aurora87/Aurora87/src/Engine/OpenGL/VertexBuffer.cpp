@@ -3,7 +3,7 @@
 namespace Engine
 {
 	VertexBuffer::VertexBuffer(uint32_t size, GLenum usage)
-		: m_Size(size), m_Usage(usage)
+		: m_Size(size), m_Capacity(size), m_Usage(usage)
 	{
 		// Desde OpenGL 4.5 DSA (Direct State Access)
 		glCreateBuffers(1, &m_RendererID);
@@ -11,7 +11,7 @@ namespace Engine
 	}
 
 	VertexBuffer::VertexBuffer(float* vertices, uint32_t size, GLenum usage)
-		: m_Size(size), m_Usage(usage)
+		: m_Size(size), m_Capacity(size), m_Usage(usage)
 	{
 		// Desde OpenGL 4.5 DSA (Direct State Access)
 		glCreateBuffers(1, &m_RendererID);
@@ -32,6 +32,7 @@ namespace Engine
 			}
 		}
 		m_Size = static_cast<uint32_t>(raw.size() * sizeof(float));
+		m_Capacity = m_Size;
 
 		glCreateBuffers(1, &m_RendererID);
 		GLCall(glNamedBufferData(m_RendererID, m_Size, raw.data(), usage));
@@ -41,6 +42,7 @@ namespace Engine
 		: m_Usage(usage)
 	{
 		m_Size = static_cast<uint32_t>(vertices.size() * sizeof(float));
+		m_Capacity = m_Size;
 		glCreateBuffers(1, &m_RendererID);
 		GLCall(glNamedBufferData(m_RendererID, m_Size, vertices.data(), usage));
 	}
@@ -62,8 +64,18 @@ namespace Engine
 
 	void VertexBuffer::SetData(const void* data, uint32_t size)
 	{
-		m_Size = size;
-		// Desde OpenGL 4.5 DSA (Direct State Access)
-		GLCall(glNamedBufferSubData(m_RendererID, 0, m_Size, data));
+		if (size > m_Capacity) 
+		{
+			// Redimensiona entero el buffer
+			m_Capacity = size;
+			m_Size = size;
+			GLCall(glNamedBufferData(m_RendererID, m_Capacity, data, m_Usage));
+		}
+		else 
+		{
+			// Solo sub-data con DSA
+			m_Size = size;
+			GLCall(glNamedBufferSubData(m_RendererID, 0, m_Size, data));
+		}
 	}
 }
