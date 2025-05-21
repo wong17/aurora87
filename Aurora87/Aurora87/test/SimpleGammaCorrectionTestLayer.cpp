@@ -58,7 +58,7 @@ namespace Test
 		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer);
 		m_TestCube = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreateCube(texture1), m_ShapesShader, "TestCube");
 		m_TestPentagon = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePentagon(texture2), m_ShapesShader, "TestPentagon");
-		m_TestPlane = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePlane(texture3, glm::vec3(10.0f)), m_PlaneShader, "TestPlane");
+		m_TestPlane = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePlane(texture3), m_PlaneShader, "TestPlane");
 
 		m_EntityManager->SetInstanceTransforms({
 			{ m_TestCube, batches[0] },
