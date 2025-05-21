@@ -156,6 +156,9 @@
     <ClCompile Include="src\Engine\OpenGL\ShadowMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test\ShadowMappingTestLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -965,6 +968,9 @@
     <ClInclude Include="src\Engine\OpenGL\ShadowCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="test\ShadowMappingTestLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -1006,6 +1012,13 @@
     <None Include="res\shaders\test\gamma-correction-fragment-shader.glsl" />
     <None Include="res\shaders\test\texture-vertex-shader.glsl" />
     <None Include="res\shaders\test\texture-instanced-vertex-shader.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-vertex.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-depth-fragment.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-depth-vertex.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-instanced-vertex.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-fragment.glsl" />
+    <None Include="res\shaders\test\debug-quad-vertex.glsl" />
+    <None Include="res\shaders\test\debug-quad-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\container2.png">

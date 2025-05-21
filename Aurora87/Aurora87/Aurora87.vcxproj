@@ -170,6 +170,7 @@
     <ClCompile Include="src\Engine\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\Engine\OpenGL\VertexBuffer.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="test\ShadowMappingTestLayer.cpp" />
     <ClCompile Include="test\SimpleGammaCorrectionTestLayer.cpp" />
     <ClCompile Include="test\MultipleEntitiesTestLayer.cpp" />
     <ClCompile Include="test\MultipleModelsTestLayer.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="src\Engine\OpenGL\VertexBuffer.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferElement.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferLayout.h" />
+    <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
     <ClInclude Include="test\MultipleEntitiesTestLayer.h" />
     <ClInclude Include="test\MultipleModelsTestLayer.h" />
@@ -462,10 +464,17 @@
     <None Include="res\shaders\skybox\skybox-vertex-shader.glsl" />
     <None Include="res\shaders\test\basic-fragment-shader.glsl" />
     <None Include="res\shaders\test\basic-vertex-shader.glsl" />
+    <None Include="res\shaders\test\debug-quad-fragment.glsl" />
+    <None Include="res\shaders\test\debug-quad-vertex.glsl" />
     <None Include="res\shaders\test\gamma-correction-fragment-shader.glsl" />
     <None Include="res\shaders\test\model-fragment-shader.glsl" />
     <None Include="res\shaders\test\instanced-model-vertex-shader.glsl" />
     <None Include="res\shaders\test\model-vertex-shader.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-depth-fragment.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-depth-vertex.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-fragment.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-instanced-vertex.glsl" />
+    <None Include="res\shaders\test\shadow-mapping-vertex.glsl" />
     <None Include="res\shaders\test\texture-instanced-vertex-shader.glsl" />
     <None Include="res\shaders\test\texture-vertex-shader.glsl" />
     <None Include="res\shaders\text_rendering\text-rendering-fragment-shader.glsl" />
