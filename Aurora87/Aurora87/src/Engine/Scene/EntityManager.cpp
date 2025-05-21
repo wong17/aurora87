@@ -3,38 +3,61 @@
 namespace Engine
 {
     // Crea una nueva entidad y le asigna un índice UBO
-    std::shared_ptr<Entity> EntityManager::CreateEntity(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, const std::string& name)
+    std::shared_ptr<Entity> EntityManager::CreateEntity(
+        std::shared_ptr<Model> model, 
+        std::shared_ptr<Shader> shader,
+        const std::string& name)
     {
-        uint32_t index = AllocateIndex();
+        uint32_t uboIndex = AllocateIndex();
 		// Se crea una nueva entidad y se le asigna un ID único
         auto entity = std::make_shared<Entity>(model, shader, name);
         entity->m_ID = GenerateUniqueID();
 		// Esto hace que el vector de registros esté ordenado por ID
-        Record newRecord{ entity, index, shader };
+        Record rec{ entity, uboIndex, shader };
         auto it = std::lower_bound(m_Records.begin(), m_Records.end(), entity->GetID(), 
             [](const Record& rec, Entity::EntityID id) { return rec.entity->GetID() < id; });
-        m_Records.insert(it, std::move(newRecord));
+        m_Records.insert(it, std::move(rec));
 
         if (!name.empty())
             m_EntityMap[name] = entity;
+
+        m_IDMap[entity->GetID()] = entity;
+
+		// InstanceTransform por defecto, una matriz identidad
+        std::vector<glm::mat4> identityBatch = { glm::mat4(1.0f) };
+        if (entity->GetMesh())
+            entity->GetMesh()->SetInstanceTransforms(identityBatch, Mesh::InstanceLayout());
+        else if (entity->GetModel())
+            entity->GetModel()->SetInstanceTransforms(identityBatch, Mesh::InstanceLayout());
 
         return entity;
     }
 
-    std::shared_ptr<Entity> EntityManager::CreateEntity(std::shared_ptr<Mesh> mesh, std::shared_ptr<Shader> shader, const std::string& name) 
+    std::shared_ptr<Entity> EntityManager::CreateEntity(
+        std::shared_ptr<Mesh> mesh, 
+        std::shared_ptr<Shader> shader,
+        const std::string& name)
     {
-        uint32_t index = AllocateIndex();
+        uint32_t uboIndex = AllocateIndex();
         // Se crea una nueva entidad y se le asigna un ID único
         auto entity = std::make_shared<Entity>(mesh, shader, name);
         entity->m_ID = GenerateUniqueID();
         // Esto hace que el vector de registros esté ordenado por ID
-        Record newRecord{ entity, index, shader };
+        Record rec{ entity, uboIndex, shader };
         auto it = std::lower_bound(m_Records.begin(), m_Records.end(), entity->GetID(),
             [](const Record& rec, Entity::EntityID id) { return rec.entity->GetID() < id; });
-        m_Records.insert(it, std::move(newRecord));
+        m_Records.insert(it, std::move(rec));
         
         if (!name.empty())
             m_EntityMap[name] = entity;
+
+        m_IDMap[entity->GetID()] = entity;
+
+        std::vector<glm::mat4> identityBatch = { glm::mat4(1.0f) };
+        if (entity->GetMesh())
+            entity->GetMesh()->SetInstanceTransforms(identityBatch, Mesh::InstanceLayout());
+        else if (entity->GetModel())
+            entity->GetModel()->SetInstanceTransforms(identityBatch, Mesh::InstanceLayout());
 
         return entity;
     }
@@ -49,11 +72,9 @@ namespace Engine
         // Reciclar índice del UniformBuffer
         m_FreeIndices.push(it->uniformBufferIndex);
 
-        // Eliminar del mapa solo si coincide el puntero
-        const std::string& name = it->entity->GetName();
-        auto mapIt = m_EntityMap.find(name);
-        if (mapIt != m_EntityMap.end() && mapIt->second == entity)
-            m_EntityMap.erase(mapIt);
+        // Eliminar de los mapas
+        m_EntityMap.erase(entity->GetName());
+        m_IDMap.erase(entity->GetID());
 
         // Eliminar de m_Records
         m_Records.erase(it);
@@ -61,9 +82,8 @@ namespace Engine
 
     void EntityManager::DestroyByID(Entity::EntityID id)
     {
-        Record* rec = FindRecordByID(id);
-        if (!rec) return;
-        DestroyEntity(rec->entity);
+        if (auto rec = FindRecordByID(id))
+            DestroyEntity(rec->entity);
     }
 
     void EntityManager::SetInstanceTransforms(std::initializer_list<std::pair<std::shared_ptr<Entity>, std::vector<glm::mat4>>> batches, 
@@ -90,15 +110,9 @@ namespace Engine
     void EntityManager::SetInstanceTransforms(const std::shared_ptr<Entity>& entity, const std::vector<glm::mat4>& mats, 
         const VertexBufferLayout& instanceLayout)
     {
-        if (!entity)
-        {
-            std::cerr << "EntityManager::SetInstanceTransforms(): La entidad es nula.\n";
-            return;
-        }
-
         if (!Exists(entity))
         {
-            std::cerr << "EntityManager::SetInstanceTransforms(): La entidad no pertenece al EntityManager.\n";
+            std::cerr << "EntityManager::SetInstanceTransforms(): La entidad no esta registrada.\n";
             return;
         }
 
@@ -118,24 +132,26 @@ namespace Engine
 
     bool EntityManager::Exists(const std::shared_ptr<Entity>& entity) const
     {
-        return entity && ExistsByID(entity->GetID());
+        return entity && m_IDMap.count(entity->GetID());
     }
 
     bool EntityManager::ExistsByID(Engine::Entity::EntityID id) const
     {
-        return FindRecordByID(id) != nullptr;
+        return m_IDMap.count(id);
     }
 
     std::shared_ptr<Entity> EntityManager::GetEntityByName(const std::string& name) const
     {
-        auto it = m_EntityMap.find(name);
-        return (it != m_EntityMap.end()) ? it->second : nullptr;
+        if (auto it = m_EntityMap.find(name); it != m_EntityMap.end())
+            return it->second;
+        return nullptr;
     }
 
     std::shared_ptr<Entity> EntityManager::GetEntityByID(Engine::Entity::EntityID id) const
     {
-        const Record* rec = FindRecordByID(id);
-        return rec ? rec->entity : nullptr;
+        if (auto it = m_IDMap.find(id); it != m_IDMap.end())
+            return it->second;
+        return nullptr;
     }
 
     const std::vector<std::shared_ptr<Entity>> EntityManager::GetAllEntities() const
@@ -160,7 +176,7 @@ namespace Engine
     const EntityManager::Record * EntityManager::FindRecordByID(Engine::Entity::EntityID id) const
     {
         auto it = std::lower_bound(m_Records.begin(), m_Records.end(), id,
-            [id](const Record& rec, Entity::EntityID id) { return rec.entity->GetID() < id; });
+            [id](const Record& rec, Entity::EntityID i) { return rec.entity->GetID() < i; });
 
         if (it != m_Records.end() && it->entity->GetID() == id)
             return &(*it);
