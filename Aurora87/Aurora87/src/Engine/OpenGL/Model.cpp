@@ -87,6 +87,20 @@ namespace Engine
 		}
 	}
 
+	void Model::DrawDepth(Shader& depthShader)
+	{
+		depthShader.Bind();
+		for (auto& mesh : m_Meshes)
+			mesh.DrawDepth(depthShader);
+	}
+
+	void Model::DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount)
+	{
+		depthShader.Bind();
+		for (auto& mesh : m_Meshes)
+			mesh.DrawInstancedDepth(depthShader, instanceCount);
+	}
+
 	void Model::Draw(Shader& shader, bool bindTextures)
 	{
 		shader.Bind();

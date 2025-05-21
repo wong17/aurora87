@@ -44,6 +44,8 @@ namespace Engine
 		bool IsValid() const { return m_Valid; }
 
 		void SetInstanceTransforms(const std::vector<glm::mat4>& mats, const VertexBufferLayout& instanceLayout = Mesh::InstanceLayout());
+		void DrawDepth(Shader& depthShader);
+		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
 		void Draw(Shader& shader, bool bindTextures = true);
 		void DrawInstanced(Shader& shader, uint32_t instanceCount = 0, bool bindTextures = true);
 
