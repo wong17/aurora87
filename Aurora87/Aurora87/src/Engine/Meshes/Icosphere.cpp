@@ -247,32 +247,42 @@ namespace Engine
              0.131434f, -0.262869f,  0.404506f,     0.4713f, -0.6617f,  0.5831f,    0.181819f, 0.157461f
         };
 
-		for (size_t i = 0; i < vertices.size(); i += 8) {
-			vertices[i + 0] *= m_Size.x; // x
-			vertices[i + 1] *= m_Size.y; // y
-			vertices[i + 2] *= m_Size.z; // z
-		}
-
         std::vector<TextureData> textures;
-        auto material = MaterialTextureType::Diffuse;
-        if (m_Texture)
+        if (m_DiffuseTexture)
         {
             textures.push_back({
-                material,
-                m_Texture,
-                MaterialTextureUniformName(material),
+                MaterialTextureType::Diffuse,
+                m_DiffuseTexture,
+                MaterialTextureUniformName(MaterialTextureType::Diffuse),
                 0,
-                m_Texture->GetSpecification().SRGB });
+                m_DiffuseTexture->GetSpecification().SRGB });
         }
-        else if (!m_TexturePath.empty())
+        else if (!m_DiffuseTexturePath.empty())
         {
             TextureSpecification spec;
             spec.SRGB = true;
 
-            if (auto tex = TextureManager::Get().Load(m_TexturePath, spec))
-                textures.push_back({ material, tex, MaterialTextureUniformName(material), 0, spec.SRGB });
+            if (auto tex = TextureManager::Get().Load(m_DiffuseTexturePath, spec))
+                textures.push_back({ MaterialTextureType::Diffuse, tex, MaterialTextureUniformName(MaterialTextureType::Diffuse), 0, spec.SRGB });
             else
-                std::cerr << "Icosphere::GenerateMesh(): Error al cargar la textura " << m_TexturePath << "\n";
+                std::cerr << "Cube::GenerateMesh(): Error al cargar la textura " << m_DiffuseTexturePath << "\n";
+        }
+
+        if (m_SpecularTexture)
+        {
+            textures.push_back({
+                MaterialTextureType::Specular,
+                m_SpecularTexture,
+                MaterialTextureUniformName(MaterialTextureType::Specular),
+                1,
+                m_SpecularTexture->GetSpecification().SRGB });
+        }
+        else if (!m_SpecularTexturePath.empty())
+        {
+            if (auto tex = TextureManager::Get().Load(m_SpecularTexturePath))
+                textures.push_back({ MaterialTextureType::Specular, tex, MaterialTextureUniformName(MaterialTextureType::Specular), 1, false });
+            else
+                std::cerr << "Cube::GenerateMesh(): Error al cargar la textura " << m_SpecularTexturePath << "\n";
         }
 
 		return std::make_shared<Mesh>(vertices, textures);

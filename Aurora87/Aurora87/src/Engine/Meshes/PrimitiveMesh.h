@@ -9,24 +9,30 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <memory>
+#include <string>
 
 namespace Engine
 {
 	class PrimitiveMesh
 	{
 	public:
-		PrimitiveMesh(const std::string& texturePath, glm::vec3 size = glm::vec3(1.0f))
-			: m_Size(size), m_TexturePath(texturePath) { }
+        PrimitiveMesh(const std::string& diffuseTexturePath, const std::string& speculaTexturePath = "")
+            : m_DiffuseTexturePath(diffuseTexturePath), m_SpecularTexturePath(speculaTexturePath), 
+			m_DiffuseTexture(nullptr), m_SpecularTexture(nullptr)
+        { }
 
-		PrimitiveMesh(std::shared_ptr<Texture> texture, glm::vec3 size = glm::vec3(1.0f))
-			: m_Size(size), m_TexturePath(""), m_Texture(std::move(texture)) { }
+        PrimitiveMesh(std::shared_ptr<Texture> diffuseTexture, std::shared_ptr<Texture> specularTexture = nullptr)
+            : m_DiffuseTexturePath(""), m_SpecularTexturePath(""), 
+			m_DiffuseTexture(diffuseTexture), m_SpecularTexture(specularTexture)
+        { }
 
 		virtual ~PrimitiveMesh() = default;
 		virtual std::shared_ptr<Mesh> GenerateMesh() const = 0;
 
 	protected:
-		glm::vec3 m_Size;
-		std::string m_TexturePath;
-		std::shared_ptr<Texture> m_Texture;
+		std::string m_DiffuseTexturePath;
+		std::string m_SpecularTexturePath;
+		std::shared_ptr<Texture> m_DiffuseTexture = nullptr;
+		std::shared_ptr<Texture> m_SpecularTexture = nullptr;
 	};
 }

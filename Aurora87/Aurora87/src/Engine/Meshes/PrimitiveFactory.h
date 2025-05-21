@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/OpenGL/Mesh.h"
+#include "Engine/OpenGL/Texture.h"
 #include "Engine/Meshes/PrimitiveMesh.h"
 #include "Engine/Meshes/Cube.h"
 #include "Engine/Meshes/Pyramid.h"
@@ -21,30 +22,43 @@ namespace Engine
 	class PrimitiveFactory
 	{
 	private:
-		// Ahora textura va primero, tamaño al final
-		template<typename PrimitiveType, typename TextureArg>
-		static std::shared_ptr<Mesh> CreateInternal(TextureArg&& texture,
-			const glm::vec3& size = glm::vec3(1.0f))
+		// Versión que construye la primitiva a partir de rutas
+		template<typename PrimitiveType>
+		static std::shared_ptr<Mesh> CreateInternal(
+			const std::string& diffusePath,
+			const std::string& specularPath)
 		{
 			return std::make_shared<PrimitiveType>(
-				std::forward<TextureArg>(texture),
-				size
+				diffusePath,
+				specularPath
 			)->GenerateMesh();
 		}
 
-#define REGISTER_PRIMITIVE(name, type)					\
-        static std::shared_ptr<Mesh> Create##name(		\
-            const std::string& path,					\
-            const glm::vec3& size = glm::vec3(1.0f))	\
-        {												\
-            return CreateInternal<type>(path, size);	\
-        }												\
-        static std::shared_ptr<Mesh> Create##name(		\
-            const std::shared_ptr<Texture>& texture,	\
-            const glm::vec3& size = glm::vec3(1.0f))	\
-        {												\
-            return CreateInternal<type>(texture, size);	\
-        }
+		// Versión que construye la primitiva a partir de texturas ya cargadas
+		template<typename PrimitiveType>
+		static std::shared_ptr<Mesh> CreateInternal(
+			const std::shared_ptr<Texture>& diffuse,
+			const std::shared_ptr<Texture>& specular)
+		{
+			return std::make_shared<PrimitiveType>(
+				diffuse,
+				specular
+			)->GenerateMesh();
+		}
+
+#define REGISTER_PRIMITIVE(name, type)							\
+    static std::shared_ptr<Mesh> Create##name(					\
+        const std::string& diffusePath,							\
+        const std::string& specularPath = "")					\
+    {															\
+        return CreateInternal<type>(diffusePath, specularPath);	\
+    }															\
+    static std::shared_ptr<Mesh> Create##name(					\
+        const std::shared_ptr<Texture>& diffuse,				\
+        const std::shared_ptr<Texture>& specular = nullptr)		\
+    {															\
+        return CreateInternal<type>(diffuse, specular);			\
+    }
 
 	public:
 		REGISTER_PRIMITIVE(Cube, Cube)
@@ -53,7 +67,6 @@ namespace Engine
 		REGISTER_PRIMITIVE(Hexagon, Hexagon)
 		REGISTER_PRIMITIVE(Icosphere, Icosphere)
 		REGISTER_PRIMITIVE(Plane, Plane)
-
 #undef REGISTER_PRIMITIVE
 	};
 }
