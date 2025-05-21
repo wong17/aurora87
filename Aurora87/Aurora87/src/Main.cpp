@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <memory>
+#include <AIEntitiesTestLayer.h>
 
 int main(void)
 {
@@ -13,6 +14,7 @@ int main(void)
 	//app->PushLayer(std::make_shared<Test::MultipleEntitiesTestLayer>());
 	//app->PushLayer(std::make_shared<Test::MultipleModelsTestLayer>());
 	app->PushLayer(std::make_shared<Test::SimpleGammaCorrectionTestLayer>());
+	//app->PushLayer(std::make_shared<Test::AIEntitiesTestLayer>());
 	app->Run();
 
 	return 0;
