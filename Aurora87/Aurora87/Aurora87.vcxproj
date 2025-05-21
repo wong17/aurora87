@@ -135,6 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\Seek.cpp" />
+    <ClCompile Include="src\AIEnviroment\DumbZombie\DumbZombie.cpp" />
     <ClCompile Include="src\AIEnviroment\EventGame\EventManager.cpp" />
     <ClCompile Include="src\AIEnviroment\Player\Player.cpp" />
     <ClCompile Include="test\AIEntitiesTestLayer.cpp" />
@@ -187,8 +189,12 @@
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\AIEnviroment\Player\Mechanics\Walk.cpp" />
+    <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AIEnviroment\DumbZombie\Mechanics\Seek.h" />
+    <ClInclude Include="src\AIEnviroment\DumbZombie\DumbZombie.h" />
+    <ClInclude Include="src\AIEnviroment\DumbZombie\FiniteStateDumbZombie.h" />
     <ClInclude Include="src\AIEnviroment\Player\FiniteStatePlayer.h" />
     <ClInclude Include="src\AIEnviroment\EventGame\EventManager.h" />
     <ClInclude Include="src\AIEnviroment\EventGame\EventData.h" />
@@ -466,6 +472,7 @@
     <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="vendor\stb_image\stb_image.h" />
     <ClInclude Include="src\AIEnviroment\Player\Mechanics\Walk.h" />
+    <ClInclude Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

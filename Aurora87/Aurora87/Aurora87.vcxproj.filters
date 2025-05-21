@@ -171,6 +171,15 @@
     <ClCompile Include="src\AIEnviroment\Player\Mechanics\Walk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DumbZombie\DumbZombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\Seek.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1002,6 +1011,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AIEnviroment\Player\Mechanics\Walk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DumbZombie\FiniteStateDumbZombie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DumbZombie\DumbZombie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DumbZombie\Mechanics\Seek.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
