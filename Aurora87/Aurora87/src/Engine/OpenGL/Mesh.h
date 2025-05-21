@@ -61,6 +61,8 @@ namespace Engine
 		// Instancing
 		void SetInstanceTransforms(const std::vector<glm::mat4>& mats, const VertexBufferLayout& instanceLayout = InstanceLayout());
 		void SetDrawMode(GLenum drawMode) { m_DrawMode = drawMode; }
+		void DrawDepth(Shader& depthShader);
+		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
 		void Draw(Shader& shader, bool bindTextures = true);
 		void DrawInstanced(Shader& shader, uint32_t instanceCount = 0, bool bindTextures = true);
 		bool CheckTextureLimit(MaterialTextureType type) const;
@@ -157,6 +159,7 @@ namespace Engine
 
 		bool m_HasEBO = false;
 		bool m_HasInstancing = false;
+		bool m_InstancingInitialized = false;
 
 		std::unordered_map<MaterialTextureType, int> m_TextureCounts;
 

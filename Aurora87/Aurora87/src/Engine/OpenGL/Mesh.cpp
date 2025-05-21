@@ -161,6 +161,59 @@ namespace Engine
 		//DebugMesh(*this);
 	}
 
+	void Mesh::DrawDepth(Shader& depthShader)
+	{
+		depthShader.Bind();
+
+		if (m_VertexArray == nullptr) 
+		{
+			std::cerr << "Mesh::DrawDepth(): VertexArray es null." << std::endl;
+			return;
+		}
+
+		m_VertexArray->Bind();
+		if (m_HasEBO)
+		{
+			GLCall(glDrawElements(m_DrawMode, m_ElementBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
+		}
+		else
+		{
+			GLCall(glDrawArrays(m_DrawMode, 0, m_VertexBuffer->GetVertexCount()));
+		}
+	}
+
+	void Mesh::DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount)
+	{
+		if (!m_HasInstancing)
+			throw std::runtime_error("Mesh::DrawInstancedDepth(): no se han configurado instancias (SetInstanceTransforms)");
+
+		// Si no hay instancias registradas entonces se invoca Draw()
+		if (instanceCount == 0) 
+		{
+			std::cout << "Mesh::DrawInstancedDepth(): instanceCount es 0, llamando a Draw()" << std::endl;
+			DrawDepth(depthShader);
+			return;
+		}
+
+		depthShader.Bind();
+
+		if (m_VertexArray == nullptr) 
+		{
+			std::cerr << "Mesh::DrawInstancedDepth(): VertexArray es null." << std::endl;
+			return;
+		}
+
+		m_VertexArray->Bind();
+		if (m_HasEBO)
+		{
+			GLCall(glDrawElementsInstanced(m_DrawMode, m_ElementBuffer->GetCount(), GL_UNSIGNED_INT, nullptr, instanceCount));
+		}
+		else
+		{
+			GLCall(glDrawArraysInstanced(m_DrawMode, 0, m_VertexBuffer->GetVertexCount(), instanceCount));
+		}
+	}
+
 	void Mesh::Draw(Shader& shader, bool bindTextures)
 	{
 		shader.Bind();
@@ -172,7 +225,8 @@ namespace Engine
 		if (bindTextures)
 			BindTextures(shader);
 
-		if (m_VertexArray == nullptr) {
+		if (m_VertexArray == nullptr) 
+		{
 			std::cerr << "Mesh::Draw(): VertexArray es null." << std::endl;
 			return;
 		}
@@ -194,7 +248,8 @@ namespace Engine
 			throw std::runtime_error("Mesh::DrawInstanced(): no se han configurado instancias (SetInstanceTransforms)");
 
 		// Si no hay instancias registradas entonces se invoca Draw()
-		if (instanceCount == 0) {
+		if (instanceCount == 0) 
+		{
 			std::cout << "Mesh::DrawInstanced(): instanceCount es 0, llamando a Draw()" << std::endl;
 			Draw(shader, bindTextures);
 			return;
@@ -209,7 +264,8 @@ namespace Engine
 		if (bindTextures)
 			BindTextures(shader);
 
-		if (m_VertexArray == nullptr) {
+		if (m_VertexArray == nullptr) 
+		{
 			std::cerr << "Mesh::DrawInstanced(): VertexArray es null." << std::endl;
 			return;
 		}
@@ -317,7 +373,8 @@ namespace Engine
 	void Mesh::CalculateTextureCounts()
 	{
 		m_TextureCounts.clear();
-		for (const auto& texture : m_Textures) {
+		for (const auto& texture : m_Textures) 
+		{
 			m_TextureCounts[texture.Type]++;
 		}
 	}
@@ -390,11 +447,22 @@ namespace Engine
 		if (!m_HasInstancing)
 			return;
 
-		m_InstanceVertexBuffer = std::make_shared<VertexBuffer>(m_InstanceTransforms);
-		if (m_InstanceLayout.GetElements().empty())
-			m_InstanceLayout = InstanceLayout();
+		if (!m_InstancingInitialized)
+		{
+			m_InstanceVertexBuffer = std::make_shared<VertexBuffer>(m_InstanceTransforms);
+			if (m_InstanceLayout.GetElements().empty())
+				m_InstanceLayout = InstanceLayout();
 
-		m_InstanceVertexBuffer->SetLayout(m_InstanceLayout);
-		m_VertexArray->AddVertexBuffer(m_InstanceVertexBuffer, 1);
+			m_InstanceVertexBuffer->SetLayout(m_InstanceLayout);
+			m_VertexArray->AddVertexBuffer(m_InstanceVertexBuffer, 1);
+
+			m_InstancingInitialized = true;
+			return;
+		}
+
+		// Si ya se inicializó, actualizamos el buffer de instancias
+		m_InstanceVertexBuffer->Bind();
+		m_InstanceVertexBuffer->SetData(m_InstanceTransforms.data(), 
+			static_cast<uint32_t>(m_InstanceTransforms.size() * sizeof(glm::mat4)));
 	}
 }
