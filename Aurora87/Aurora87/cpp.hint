@@ -1,0 +1,6 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return static_cast<int>(category); }
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return type; } virtual EventType GetEventType() const override { return GetStaticType(); } virtual const char* GetName() const override { return Engine::ExtractTypeName(#type); }
+#define REGISTER_PRIMITIVE(name, type) static std::shared_ptr<Mesh> Create##name( const glm::vec3& size, const std::string& path) { return CreateInternal<type>(size, path); } static std::shared_ptr<Mesh> Create##name( const glm::vec3& size, const std::shared_ptr<Texture>& texture) { return CreateInternal<type>(size, texture); }
