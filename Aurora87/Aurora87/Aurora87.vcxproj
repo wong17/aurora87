@@ -186,6 +186,7 @@
     <ClCompile Include="vendor\ImGui\imgui_tables.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\AIEnviroment\Player\Mechanics\Walk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AIEnviroment\Player\FiniteStatePlayer.h" />
@@ -464,6 +465,7 @@
     <ClInclude Include="vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="vendor\stb_image\stb_image.h" />
+    <ClInclude Include="src\AIEnviroment\Player\Mechanics\Walk.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

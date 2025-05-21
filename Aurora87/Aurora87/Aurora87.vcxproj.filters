@@ -168,6 +168,9 @@
     <ClCompile Include="src\AIEnviroment\EventGame\EventManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Player\Mechanics\Walk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -996,6 +999,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AIEnviroment\Player\FiniteStatePlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Player\Mechanics\Walk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

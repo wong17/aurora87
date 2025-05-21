@@ -67,7 +67,6 @@ namespace AIEnviroment
 		void Respawn();
 		void AttackHandsToHands();
 		virtual void HandleEvent(const EventData& event);
-		void ClosestZombieTarget();
 		float Dot(glm::vec3 Heading) { return glm::dot(Heading, Heading); }
 		glm::vec3 Heading() const {
 			if (glm::length(m_velocity) > 0.0001f)
