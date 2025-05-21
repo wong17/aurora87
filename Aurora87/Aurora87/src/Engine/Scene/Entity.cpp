@@ -5,26 +5,15 @@ namespace Engine
 	Entity::Entity(
 		std::shared_ptr<Mesh> mesh, 
 		std::shared_ptr<Shader> shader,
-		const std::string& name, 
-		const TransformComponent& transform)
-		: m_Mesh(mesh), m_Model(nullptr), m_Shader(shader), m_Name(name), m_TransformComponent(transform)
-	{ }
-
-
-	Entity::Entity(
-		std::shared_ptr<PrimitiveMesh> primitiveMesh, 
-		std::shared_ptr<Shader> shader,
-		const std::string& name, 
-		const TransformComponent& transform)
-		: m_Mesh(primitiveMesh->GenerateMesh()), m_Model(nullptr), m_Shader(shader), m_Name(name), m_TransformComponent(transform)
+		const std::string& name)
+		: m_Mesh(mesh), m_Model(nullptr), m_Shader(shader), m_Name(name)
 	{ }
 
 	Entity::Entity(
 		std::shared_ptr<Model> model, 
 		std::shared_ptr<Shader> shader,
-		const std::string& name, 
-		const TransformComponent& transform)
-		: m_Mesh(nullptr), m_Model(model), m_Shader(shader), m_Name(name), m_TransformComponent(transform)
+		const std::string& name)
+		: m_Mesh(nullptr), m_Model(model), m_Shader(shader), m_Name(name)
 	{ }
 
 	void Entity::DrawDepth(Shader & depthShader)
@@ -36,9 +25,9 @@ namespace Engine
 
 		// Dibujar mesh/model sin texturas
 		if (m_Model)
-			m_Model->Draw(depthShader, false);
+			m_Model->DrawDepth(depthShader);
 		else if (m_Mesh)
-			m_Mesh->Draw(depthShader, false);
+			m_Mesh->DrawDepth(depthShader);
 
 		for (auto& child : m_Childrens)
 			child->DrawDepth(depthShader);
@@ -53,9 +42,9 @@ namespace Engine
 
 		// Dibujar mesh/model sin texturas
 		if (m_Model)
-			m_Model->DrawInstanced(depthShader, instanceCount, false);
+			m_Model->DrawInstancedDepth(depthShader, instanceCount);
 		else if (m_Mesh)
-			m_Mesh->DrawInstanced(depthShader, instanceCount, false);
+			m_Mesh->DrawInstancedDepth(depthShader, instanceCount);
 
 		for (auto& child : m_Childrens)
 			child->DrawInstancedDepth(depthShader, instanceCount);
@@ -64,7 +53,7 @@ namespace Engine
 	void Entity::Draw(bool bindTextures)
 	{
 		m_Shader->Bind();
-		glm::mat4 matrix = m_TransformComponent.GetLocalMatrix();
+		glm::mat4 matrix = GetWorldMatrix();
 		m_Shader->SetMat4("u_ModelMatrix", matrix);
 
 		if (m_Model)
@@ -87,7 +76,7 @@ namespace Engine
 		// Desplazamiento interno donde se almacena el modelo dentro de cada bloque
 		uint32_t modelOffset = uniformBuffer.GetLayout().GetElement("u_ModelMatrix").Offset;
 
-		glm::mat4 matrix = m_TransformComponent.GetLocalMatrix();
+		glm::mat4 matrix = GetWorldMatrix();
 
 		uniformBuffer.Bind();
 		// Subir solo la matriz de modelo a la región de esta entidad en el UBO
@@ -108,7 +97,7 @@ namespace Engine
 	{
 		m_Shader->Bind();
 
-		glm::mat4 matrix = m_TransformComponent.GetLocalMatrix();
+		glm::mat4 matrix = GetWorldMatrix();
 		m_Shader->SetMat4("u_ModelMatrix", matrix);
 
 		if (m_Model)
@@ -131,7 +120,7 @@ namespace Engine
 		// Desplazamiento interno donde se almacena el modelo dentro de cada bloque
 		uint32_t modelOffset = uniformBuffer.GetLayout().GetElement("u_ModelMatrix").Offset;
 
-		glm::mat4 modelMat = m_TransformComponent.GetLocalMatrix();
+		glm::mat4 modelMat = GetWorldMatrix();
 
 		uniformBuffer.Bind();
 		// Subir solo la matriz de modelo a la región de esta entidad en el UBO
@@ -150,7 +139,7 @@ namespace Engine
 
 	std::shared_ptr<Entity> Entity::AddChild(std::shared_ptr<Model> childModel, std::shared_ptr<Shader> shader, const std::string& name)
 	{
-		auto child = std::make_shared<Entity>(std::move(childModel), shader, name, TransformComponent{});
+		auto child = std::make_shared<Entity>(std::move(childModel), shader, name);
 		m_Childrens.push_back(child);
 		return child;
 	}

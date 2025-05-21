@@ -24,18 +24,11 @@ namespace Engine
 		Entity(
 			std::shared_ptr<Mesh> mesh, 
 			std::shared_ptr<Shader> shader, 
-			const std::string& name = "", 
-			const TransformComponent& transform = TransformComponent());
-		Entity(
-			std::shared_ptr<PrimitiveMesh> primitiveMesh, 
-			std::shared_ptr<Shader> shader, 
-			const std::string& name = "", 
-			const TransformComponent& transform = TransformComponent());
+			const std::string& name = "");
 		Entity(
 			std::shared_ptr<Model> model, 
 			std::shared_ptr<Shader> shader, 
-			const std::string& name = "", 
-			const TransformComponent& transform = TransformComponent());
+			const std::string& name = "");
 
 		void DrawDepth(Shader& depthShader);
 		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
@@ -47,25 +40,25 @@ namespace Engine
 
 		std::shared_ptr<Entity> AddChild(std::shared_ptr<Model> childModel, std::shared_ptr<Shader> shader, const std::string& name);
 		void RemoveChild(const std::shared_ptr<Entity>& child);
-		const std::vector<std::shared_ptr<Entity>>& GetChildrens() const { return m_Childrens; }
+		inline const std::vector<std::shared_ptr<Entity>>& GetChildrens() const { return m_Childrens; }
 
-		const std::string& GetName() const { return m_Name; }
-		TransformComponent& GetTransformComponent() { return m_TransformComponent; }
-		std::shared_ptr<Model> GetModel() const { return m_Model; }
-		std::shared_ptr<Mesh> GetMesh() const { return m_Mesh; }
+		inline const std::string& GetName() const { return m_Name; }
+		inline TransformComponent& GetTransformComponent() { return m_TransformComponent; }
+		inline std::shared_ptr<Model> GetModel() const { return m_Model; }
+		inline std::shared_ptr<Mesh> GetMesh() const { return m_Mesh; }
 
-		void SetShader(std::shared_ptr<Shader> shader) { m_Shader = shader; }
-		void SetTransform(const TransformComponent& transform) { m_TransformComponent = transform; }
-		void Translate(const glm::vec3& vector) { m_TransformComponent.Translate(vector); }
-		void Rotate(const glm::vec3& vector) { m_TransformComponent.Rotate(vector); }
-		void Scale(const glm::vec3& vector) { m_TransformComponent.Scale *= vector; }
+		inline void SetShader(std::shared_ptr<Shader> shader) { m_Shader = shader; }
+		inline void SetTransform(const TransformComponent& transform) { m_TransformComponent = transform; }
+		inline void Translate(const glm::vec3& vector) { m_TransformComponent.Translate(vector); }
+		inline void Rotate(const glm::vec3& vector) { m_TransformComponent.Rotate(vector); }
+		inline void Scale(const glm::vec3& vector) { m_TransformComponent.Scale *= vector; }
 
 		using EntityID = uint64_t;
-		EntityID GetID() const { return m_ID; }
+		inline EntityID GetID() const { return m_ID; }
 
 	private:
 		std::string m_Name;
-		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<Shader> m_Shader = nullptr;
 		std::shared_ptr<Model> m_Model = nullptr;
 		std::shared_ptr<Mesh> m_Mesh = nullptr;
 		TransformComponent m_TransformComponent;
