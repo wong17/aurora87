@@ -22,8 +22,8 @@ void Test::AIEntitiesTestLayer::OnAttach()
 
 	// Instancing
 	const unsigned int numBatches = 5;
-	glm::vec3 areaMin(-200.0f, -200.0f, -200.0f);
-	glm::vec3 areaMax(200.0f, 200.0f, 200.0f);
+	glm::vec3 areaMin(-20.0f, -20.0f, -20.0f);
+	glm::vec3 areaMax(20.0f, 20.0f, 20.0f);
 	auto batches = Engine::Utils::GenerateTransformBatches(numBatches, m_ShapeInstanceCount, areaMin, areaMax);
 
 	// Skybox
@@ -88,7 +88,13 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	app.GetRenderSettings().SetCullFace(true);
 	app.GetRenderSettings().SetAlphaBlending(true);
 	Player* player = new Player();
-	GameEntityManager::Instance().RegisterEntity(player);
+	DumbZombie* dumbZombie = new DumbZombie();
+	m_Player = player;
+	m_DumbZombie = dumbZombie;
+	m_Player->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
+	GameEntityManager::Instance().RegisterEntity(m_Player);
+	GameEntityManager::Instance().RegisterEntity(m_DumbZombie);
+
 }
 
 void Test::AIEntitiesTestLayer::OnDetach()
@@ -113,10 +119,14 @@ void Test::AIEntitiesTestLayer::OnUpdate(float deltaTime)
 		m_Angle -= glm::two_pi<float>();
 
 	glm::vec3 position{ std::sin(m_Angle) * m_Radius , 0.0f, std::cos(m_Angle) * m_Radius };
+	m_Player->Update();
+	m_DumbZombie->Update();
 
 	// Actualizar posicion de todas las entidades
 	//m_TransformSystem->TranslateEntities({ m_TestCube, m_TestPyramid, m_TestPentagon, m_TestHexagon, m_TestIcosphere }, position);
 	// Renderizar todas las entidades
+	m_TransformSystem->TranslateEntities({ m_TestCube}, m_DumbZombie->GetPosition());
+	m_TransformSystem->TranslateEntities({ m_TestIcosphere}, m_Player->GetPosition());
 	m_SceneRenderer->RenderAll(*m_EntityManager, true);
 
 	// Dibujar el Skybox

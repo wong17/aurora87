@@ -32,6 +32,8 @@
 #include "AIEnviroment/Base/BaseGameEntity.h"
 #include "AIEnviroment/Base/GameEntityManager.h"
 #include "AIEnviroment/Player/Player.h"
+#include <AIEnviroment/DumbZombie/DumbZombie.h>
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -67,7 +69,7 @@ namespace Test {
 
 		// Figuras de prueba
 		std::shared_ptr<Engine::Entity> m_TestCube, m_TestPyramid, m_TestPentagon, m_TestHexagon, m_TestIcosphere, m_Model;
-		unsigned int m_ShapeInstanceCount = 1000;
+		unsigned int m_ShapeInstanceCount = 1;
 		float m_Angle = 0.0f;
 		float m_AngularSpeed = glm::radians(90.0f);
 		float m_Radius = 3.0f;
@@ -87,6 +89,11 @@ namespace Test {
 		std::shared_ptr<Engine::CameraGame> m_GameCamera = nullptr;
 		std::shared_ptr<Engine::Shader> m_TextShader;
 
+		// Player
+		Player* m_Player = nullptr;
+
+		//Zombie
+		DumbZombie* m_DumbZombie = nullptr;
 		bool m_WireframeMode = false;
 	};
 }

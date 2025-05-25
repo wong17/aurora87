@@ -135,11 +135,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.cpp" />
+    <ClCompile Include="src\AIEnviroment\FastZombie\FastZombie.cpp" />
     <ClCompile Include="src\AIEnviroment\Base\GameEntityManager.cpp" />
     <ClCompile Include="src\AIEnviroment\DumbZombie\DumbZombie.cpp" />
     <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\Seek.cpp" />
     <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.cpp" />
     <ClCompile Include="src\AIEnviroment\EventGame\EventManager.cpp" />
+    <ClCompile Include="src\AIEnviroment\FastZombie\FastStateFastZombie.h" />
     <ClCompile Include="src\AIEnviroment\Player\Mechanics\Walk.cpp" />
     <ClCompile Include="src\AIEnviroment\Player\Player.cpp" />
     <ClCompile Include="src\Engine\Meshes\Cube.cpp" />
@@ -192,8 +195,11 @@
     <ClCompile Include="vendor\ImGui\imgui_tables.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.h" />
+    <ClInclude Include="src\AIEnviroment\FastZombie\FastZombie.h" />
     <ClInclude Include="src\AIEnviroment\Base\BaseGameEntity.h" />
     <ClInclude Include="src\AIEnviroment\Base\GameEntityManager.h" />
     <ClInclude Include="src\AIEnviroment\DumbZombie\DumbZombie.h" />
@@ -477,6 +483,7 @@
     <ClInclude Include="vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="vendor\stb_image\stb_image.h" />
+    <ClInclude Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

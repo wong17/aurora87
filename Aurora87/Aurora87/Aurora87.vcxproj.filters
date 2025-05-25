@@ -186,6 +186,18 @@
     <ClCompile Include="test\AIEntitiesTestLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AIEnviroment\FastZombie\FastStateFastZombie.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\FastZombie\FastZombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1035,6 +1047,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="test\AIEntitiesTestLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\FastZombie\FastZombie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
