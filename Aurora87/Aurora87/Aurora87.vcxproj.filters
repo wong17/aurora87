@@ -180,7 +180,7 @@
     <ClCompile Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameLogic\CameraGame.cpp">
+    <ClCompile Include="src\AIEnviroment\GameLogic\CameraGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test\AIEntitiesTestLayer.cpp">
@@ -196,6 +196,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\FleeDistance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\SeekDistance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\ZombieSleepDistance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\DistanceZombie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1043,7 +1055,7 @@
     <ClInclude Include="src\AIEnviroment\DumbZombie\Mechanics\ZombieDumbSleep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameLogic\CameraGame.h">
+    <ClInclude Include="src\AIEnviroment\GameLogic\CameraGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="test\AIEntitiesTestLayer.h">
@@ -1056,6 +1068,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\FleeDistance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\SeekDistance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\ZombieSleepDistance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\FiniteStateDistanceZombie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\DistanceZombie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

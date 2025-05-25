@@ -50,7 +50,7 @@
 #include <map>
 #include <string>
 #include <filesystem>
-#include <GameLogic/CameraGame.h>
+#include <AIEnviroment/GameLogic/CameraGame.h>
 namespace Test {
 	class AIEntitiesTestLayer : public Engine::Layer
 	{

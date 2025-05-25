@@ -135,6 +135,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\DistanceZombie.cpp" />
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\FleeDistance.cpp" />
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\SeekDistance.cpp" />
+    <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\ZombieSleepDistance.cpp" />
     <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.cpp" />
     <ClCompile Include="src\AIEnviroment\FastZombie\FastZombie.cpp" />
     <ClCompile Include="src\AIEnviroment\Base\GameEntityManager.cpp" />
@@ -179,7 +183,7 @@
     <ClCompile Include="src\Engine\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Engine\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\Engine\OpenGL\VertexBuffer.cpp" />
-    <ClCompile Include="src\GameLogic\CameraGame.cpp" />
+    <ClCompile Include="src\AIEnviroment\GameLogic\CameraGame.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="test\AIEntitiesTestLayer.cpp" />
     <ClCompile Include="test\ShadowMappingTestLayer.cpp" />
@@ -198,6 +202,11 @@
     <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\DistanceZombie.h" />
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\FiniteStateDistanceZombie.h" />
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\FleeDistance.h" />
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\SeekDistance.h" />
+    <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\ZombieSleepDistance.h" />
     <ClInclude Include="src\AIEnviroment\FastZombie\Mechanics\SeekFast.h" />
     <ClInclude Include="src\AIEnviroment\FastZombie\FastZombie.h" />
     <ClInclude Include="src\AIEnviroment\Base\BaseGameEntity.h" />
@@ -276,7 +285,7 @@
     <ClInclude Include="src\Engine\OpenGL\VertexBuffer.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferElement.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferLayout.h" />
-    <ClInclude Include="src\GameLogic\CameraGame.h" />
+    <ClInclude Include="src\AIEnviroment\GameLogic\CameraGame.h" />
     <ClInclude Include="test\AIEntitiesTestLayer.h" />
     <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
