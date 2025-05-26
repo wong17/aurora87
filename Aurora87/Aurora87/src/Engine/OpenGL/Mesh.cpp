@@ -298,54 +298,12 @@ namespace Engine
 
 	void Mesh::BindTextures(Shader& shader)
 	{
-		//// 1) Bind de cada textura a su unidad
-		//for (auto& td : m_Textures)
-		//	td.Texture->Bind(td.TextureUnitIndex);
-
-		//// 2) Preparamos el array de TexInfo
-		//std::vector<TexInfo> infos;
-		//infos.reserve(m_Textures.size());
-		//for (auto& td : m_Textures) 
-		//{
-		//	infos.push_back({ int(td.TextureUnitIndex), int(td.Type) });
-		//}
-
-		//// 3) Subir u_NumTexInfo
-		//shader.SetInt("u_NumTexInfo", int(infos.size()));
-
-		//// 4) Para cada TexInfo[i], subimos sus campos
-		//for (int i = 0; i < (int)infos.size(); ++i) {
-		//	shader.SetInt("u_TexInfo[" + std::to_string(i) + "].unit", infos[i].unit);
-		//	shader.SetInt("u_TexInfo[" + std::to_string(i) + "].kind", infos[i].kind);
-		//}
-
-		//// 5) Finalmente, nuestros samplers u_Textures[0..MAX_TEX_INFO-1] deben apuntar
-		//// a las unidades de textura 0..MAX_TEX_INFO-1.  
-		//// Sólo necesitamos hacer esto UNA vez, podría hacerse en OnAttach():
-		//static int units[MAX_TEX_INFO];
-		//static bool samplersInitialized = false;
-		//if (!samplersInitialized) {
-		//	for (int j = 0; j < MAX_TEX_INFO; j++)
-		//		units[j] = j;
-		//	shader.SetIntArray("u_Textures", units, MAX_TEX_INFO);
-		//	samplersInitialized = true;
-		//}
-
 		std::unordered_map<MaterialTextureType, int> typeCounters;
 		for (auto& td : m_Textures) {
 			std::string uniformName = MaterialTextureUniformName(td.Type);
+			int arrayIndex = typeCounters[td.Type]++;
 
-			if (!IsTextureTypeArray(td.Type))
-			{
-				if (typeCounters[td.Type]++ > 0)
-				{
-					std::cerr << "Mesh::BindTextures: Error multiples texturas para tipo unico " << static_cast<int>(td.Type) << "\n";
-					continue;
-				}
-			}
-			else
-			{
-				int arrayIndex = typeCounters[td.Type]++;
+			if (IsTextureTypeArray(td.Type)) {
 				uniformName += "[" + std::to_string(arrayIndex) + "]";
 			}
 
