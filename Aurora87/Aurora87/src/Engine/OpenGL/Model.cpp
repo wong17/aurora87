@@ -359,40 +359,65 @@ namespace Engine
 		if (m_Extension == ".gltf" || m_Extension == ".glb")
 		{
 			aiColor3D baseColor(1, 1, 1);
-			if (AI_SUCCESS == mat->Get(AI_MATKEY_BASE_COLOR, baseColor)) {
+			if (mat->Get(AI_MATKEY_BASE_COLOR, baseColor) == AI_SUCCESS)
+			{
 				outBaseColor = glm::vec3(baseColor.r, baseColor.g, baseColor.b);
 			}
-			mat->Get(AI_MATKEY_METALLIC_FACTOR, outMetallic);
-			mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, outRoughness);
+
+			ai_real metallic = 0.0f;
+			if (mat->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS)
+			{
+				outMetallic = static_cast<float>(metallic);
+			}
+
+			ai_real roughness = 1.0f;
+			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) == AI_SUCCESS)
+			{
+				outRoughness = static_cast<float>(roughness);
+			}
 		}
 		else if (m_Extension == ".fbx")
 		{
-			// en FBX normalmente hay un color difuso y un "shininess"
 			aiColor3D diffuse(1, 1, 1);
-			if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse)) {
+			if (mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse) == AI_SUCCESS)
+			{
 				outBaseColor = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
 			}
 
-			if (AI_SUCCESS != mat->Get(AI_MATKEY_METALLIC_FACTOR, outMetallic)) {
-				// Fallback a conversión de shininess
-				// shininess ∈ [0..max] -> lo convertimos a roughness = 1 - (shininess / maxShininess)
-				float shininess = 100.0f;
-				if (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS, shininess)) {
-					const float maxShine = 1000.0f;  // Valor más realista para FBX
-					outRoughness = 1.0f - glm::clamp(shininess / maxShine, 0.0f, 1.0f);
+			// Metallic
+			ai_real metallic = 0.0f;
+			if (mat->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS)
+			{
+				outMetallic = static_cast<float>(metallic);
+			}
+
+			// Roughness
+			ai_real roughness = 1.0f;
+			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) != AI_SUCCESS)
+			{
+				// Fallback a shininess si no hay roughness
+				ai_real shininess = 100.0f;
+				if (mat->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
+				{
+					const float maxShine = 500.0f;
+					outRoughness = 1.0f - glm::clamp(static_cast<float>(shininess) / maxShine, 0.0f, 1.0f);
 				}
+			}
+			else
+			{
+				outRoughness = static_cast<float>(roughness);
 			}
 		}
 		else if (m_Extension == ".obj")
 		{
 			aiColor3D diffuse(1.0f, 1.0f, 1.0f);
-			if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse)) {
+			if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse))
+			{
 				outBaseColor = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
 			}
-		}
-		else
-		{
-			std::cerr << "Model::ExtractPBRFactors: Formato no implementado para PBR: " << m_Extension << "\n";
+
+			outMetallic = 0.0f;
+			outRoughness = 0.8f;
 		}
 	}
 
