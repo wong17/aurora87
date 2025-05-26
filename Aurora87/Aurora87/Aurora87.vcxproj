@@ -210,6 +210,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="test\SimpleGammaCorrectionTestLayer.cpp" />
     <ClCompile Include="test\MultipleEntitiesTestLayer.cpp" />
     <ClCompile Include="test\MultipleModelsTestLayer.cpp" />
+    <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp" />
     <ClCompile Include="vendor\Glad\glad.c" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
@@ -415,6 +416,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="vendor\assimp\XmlParser.h" />
     <ClInclude Include="vendor\assimp\XMLTools.h" />
     <ClInclude Include="vendor\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="vendor\dds-ktx\dds-ktx.h" />
     <ClInclude Include="vendor\entt\entt.hpp" />
     <ClInclude Include="vendor\freetype\config\ftconfig.h" />
     <ClInclude Include="vendor\freetype\config\ftheader.h" />
