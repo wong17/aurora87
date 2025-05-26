@@ -13,6 +13,7 @@
 #include <assimp/material.h>
 #include <assimp/GltfMaterial.h>
 #include <assimp/texture.h>
+#include <assimp/version.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,6 +28,7 @@
 #include <unordered_map>
 #include <stdexcept>
 #include <optional>
+#include <functional>
 
 namespace Engine
 {

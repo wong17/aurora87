@@ -4,65 +4,105 @@ namespace Engine
 {
 	static void DebugModel(const aiScene* scene)
 	{
-		if (!scene) {
-			std::cerr << "DebugModel: No se ha cargado ninguna escena." << std::endl;
+		if (!scene)
+		{
+			std::cerr << "DebugModel: No se ha cargado ninguna escena.\n";
 			return;
 		}
 
-		std::cout << "DebugModel: Información del modelo cargado:" << std::endl;
+		// Cabecera
+		std::cout << "Assimp " << aiGetVersionMajor() << "."
+			<< aiGetVersionMinor() << "."
+			<< aiGetVersionPatch() << "\n"
+			<< "DebugModel: #" << scene->mNumMeshes << " meshes, "
+			<< scene->mNumMaterials << " materials, "
+			<< scene->mNumTextures << " embedded textures\n";
 
-		// Información general de la escena
-		std::cout << " - Numero de mallas: " << scene->mNumMeshes << std::endl;
-		std::cout << " - Numero de materiales: " << scene->mNumMaterials << std::endl;
-		std::cout << " - Numero de texturas embebidas: " << scene->mNumTextures << std::endl;
-
-		// Iterar sobre las mallas
-		for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
-			const aiMesh* mesh = scene->mMeshes[i];
-			std::cout << "   Malla " << i + 1 << ":" << std::endl;
-			std::cout << "     - Nombre: " << (mesh->mName.length > 0 ? mesh->mName.C_Str() : "Sin nombre") << std::endl;
-			std::cout << "     - Numero de vertices: " << mesh->mNumVertices << std::endl;
-			std::cout << "     - Numero de caras: " << mesh->mNumFaces << std::endl;
-			std::cout << "     - Tiene normales: " << (mesh->HasNormals() ? "Si" : "No") << std::endl;
-			std::cout << "     - Tiene tangentes y bitangentes: " << (mesh->HasTangentsAndBitangents() ? "Si" : "No") << std::endl;
-			std::cout << "     - Numero de canales UV: " << mesh->GetNumUVChannels() << std::endl;
-			std::cout << "     - Numero de canales de color: " << mesh->GetNumColorChannels() << std::endl;
-			std::cout << "     - Material index: " << mesh->mMaterialIndex << std::endl;
-			std::cout << "     - Tipo de malla: " << ((mesh->mPrimitiveTypes & aiPrimitiveType_TRIANGLE) ? "Triangulo" : "Desconocido") << std::endl;
-			std::cout << "     - Tamanio de la malla: " << mesh->mNumVertices * sizeof(aiVector3D) << " bytes" << std::endl;
-			std::cout << "     - Tamanio de los indices: " << mesh->mNumFaces * sizeof(aiFace) << " bytes" << std::endl;
-			std::cout << "     - Tamanio de las texturas: " << mesh->mNumUVComponents[0] * sizeof(aiVector3D) << " bytes" << std::endl;
+		// --- MALLAS ---
+		for (unsigned i = 0; i < scene->mNumMeshes; ++i)
+		{
+			const aiMesh* m = scene->mMeshes[i];
+			struct { const char* label; std::function<std::string()> val; } props[] = {
+				{ "Name",       [&] { return m->mName.length ? m->mName.C_Str() : "Sin nombre"; } },
+				{ "Vertices",   [&] { return std::to_string(m->mNumVertices); } },
+				{ "Faces",      [&] { return std::to_string(m->mNumFaces); } },
+				{ "Normals",    [&] { return m->HasNormals() ? "Si" : "No"; } },
+				{ "Tangents",   [&] { return m->HasTangentsAndBitangents() ? "Si" : "No"; } },
+				{ "UV channels",[&] { return std::to_string(m->GetNumUVChannels()); } },
+				{ "Color ch.",  [&] { return std::to_string(m->GetNumColorChannels()); } },
+				{ "Mat idx",    [&] { return std::to_string(m->mMaterialIndex); } },
+				{ "Mode",       [&] { return (m->mPrimitiveTypes & aiPrimitiveType_TRIANGLE) ?
+										   "Triangulo" : "Otro"; } },
+				{ "Mesh size",  [&] { return std::to_string(m->mNumVertices * sizeof(aiVector3D)) + " bytes"; } },
+				{ "Index size", [&] { return std::to_string(m->mNumFaces * sizeof(aiFace)) + " bytes"; } }
+			};
+			std::cout << " Malla " << (i + 1) << ":\n";
+			for (auto& p : props)
+				std::cout << "  - " << std::setw(12) << p.label << ": " << p.val() << "\n";
 		}
 
-		// Iterar sobre los materiales
-		for (unsigned int i = 0; i < scene->mNumMaterials; ++i) {
-			const aiMaterial* material = scene->mMaterials[i];
-			aiString name;
-			material->Get(AI_MATKEY_NAME, name);
-			std::cout << "   Material " << i + 1 << ":" << std::endl;
-			std::cout << "     - Nombre: " << name.C_Str() << std::endl;
-			std::cout << "     - Numero de texturas difusas: " << material->GetTextureCount(aiTextureType_DIFFUSE) << std::endl;
-			std::cout << "     - Numero de texturas especulares: " << material->GetTextureCount(aiTextureType_SPECULAR) << std::endl;
-			std::cout << "     - Numero de texturas normales: " << material->GetTextureCount(aiTextureType_NORMALS) << std::endl;
-			std::cout << "     - Numero de texturas de altura: " << material->GetTextureCount(aiTextureType_HEIGHT) << std::endl;
-			std::cout << "     - Numero de texturas de emisividad: " << material->GetTextureCount(aiTextureType_EMISSIVE) << std::endl;
-			std::cout << "     - Numero de texturas de oclusión: " << material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) << std::endl;
-			std::cout << "     - Numero de texturas de opacidad: " << material->GetTextureCount(aiTextureType_OPACITY) << std::endl;
-			std::cout << "     - Numero de texturas de metalicidad: " << material->GetTextureCount(aiTextureType_METALNESS) << std::endl;
-			std::cout << "     - Numero de texturas de rugosidad: " << material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) << std::endl;
-			std::cout << "     - Numero de texturas de base color: " << material->GetTextureCount(aiTextureType_BASE_COLOR) << std::endl;
-		}
+		// --- MATERIALES y consumidor de texturas ---
+		struct TexType { aiTextureType t; const char* name; };
+		static constexpr TexType texTypes[] = {
+			{ aiTextureType_DIFFUSE,           "Diffuse" },
+			{ aiTextureType_SPECULAR,          "Specular" },
+			{ aiTextureType_NORMALS,           "Normal" },
+			{ aiTextureType_HEIGHT,            "Height" },
+			{ aiTextureType_EMISSIVE,          "Emissive" },
+			{ aiTextureType_AMBIENT_OCCLUSION, "AO" },
+			{ aiTextureType_OPACITY,           "Opacity" },
+			{ aiTextureType_METALNESS,         "Metallic" },
+			{ aiTextureType_DIFFUSE_ROUGHNESS, "Roughness" },
+			{ aiTextureType_BASE_COLOR,        "BaseColor" },
+			{ aiTextureType_GLTF_METALLIC_ROUGHNESS,"M-R" }
+		};
 
-		// Texturas embebidas
-		if (scene->mNumTextures > 0) {
-			std::cout << " - Texturas embebidas:" << std::endl;
-			for (unsigned int i = 0; i < scene->mNumTextures; ++i) {
-				const aiTexture* texture = scene->mTextures[i];
-				std::cout << "   Textura " << i + 1 << ":" << std::endl;
-				std::cout << "     - Ancho: " << texture->mWidth << std::endl;
-				std::cout << "     - Altura: " << (texture->mHeight > 0 ? std::to_string(texture->mHeight) : "Compresión DDS") << std::endl;
-				std::cout << "     - Formato: " << (texture->achFormatHint[0] != '\0' ? texture->achFormatHint : "Desconocido") << std::endl;
+		// Mapeo de uso de embeddings
+		std::unordered_map<int, std::vector<std::string>> usage;
+		for (unsigned m = 0; m < scene->mNumMaterials; ++m)
+		{
+			aiString matName; scene->mMaterials[m]->Get(AI_MATKEY_NAME, matName);
+			std::cout << " Material " << (m + 1) << ": " << matName.C_Str() << "\n";
+			for (auto& tt : texTypes)
+			{
+				unsigned cnt = scene->mMaterials[m]->GetTextureCount(tt.t);
+				if (!cnt) continue;
+				std::cout << "  * " << tt.name << ": " << cnt << "\n";
+				for (unsigned i = 0; i < cnt; ++i) {
+					aiString path;
+					if (scene->mMaterials[m]->GetTexture(tt.t, i, &path) == AI_SUCCESS
+						&& path.C_Str()[0] == '*')
+					{
+						int idx = std::stoi(path.C_Str() + 1);
+						usage[idx].push_back(tt.name);
+					}
+				}
 			}
+		}
+
+		// Uso de embeddings
+		if (!usage.empty())
+		{
+			std::cout << " Uso de textures embebidas:\n";
+			for (auto& kv : usage)
+			{
+				std::cout << "  - Tex[" << (kv.first + 1) << "]: ";
+				for (size_t i = 0; i < kv.second.size(); ++i) {
+					std::cout << kv.second[i] << (i + 1 < kv.second.size() ? ", " : "");
+				}
+				std::cout << "\n";
+			}
+		}
+
+		// Raw embedded textures
+		for (unsigned i = 0; i < scene->mNumTextures; ++i)
+		{
+			const aiTexture* T = scene->mTextures[i];
+			std::cout << " Raw Tex " << (i + 1)
+				<< "  WxH: " << T->mWidth << " x "
+				<< (T->mHeight > 0 ? std::to_string(T->mHeight) : "DDS")
+				<< ", fmt: " << (T->achFormatHint[0] ? T->achFormatHint : "??")
+				<< "\n";
 		}
 	}
 
