@@ -4,6 +4,8 @@
 
 #include <assimp/scene.h>
 #include <assimp/texture.h>
+#include <assimp/GltfMaterial.h>
+#include <assimp/material.h>
 #include <glm/glm.hpp>
 
 #include <string>
@@ -13,7 +15,6 @@
 
 namespace Engine
 {
-    constexpr int MAX_TEX_INFO = 16;
     constexpr int MAX_TEXTURES_PER_TYPE = 7;
 
 	// Enum para los tipos de texturas
@@ -66,7 +67,8 @@ namespace Engine
 	// Para convertir de MaterialTextureType a aiTextureType y usarlo en el shader
     inline std::string MaterialTextureUniformName(MaterialTextureType type)
     {
-        switch (type) {
+        switch (type) 
+        {
             case MaterialTextureType::Diffuse:              return "u_texture_diffuse";
             case MaterialTextureType::Specular:             return "u_texture_specular";
             case MaterialTextureType::Normal:               return "u_texture_normal";
@@ -98,7 +100,7 @@ namespace Engine
 		    case MaterialTextureType::AmbientOcclusion:     return aiTextureType_AMBIENT_OCCLUSION;
 		    case MaterialTextureType::Opacity:              return aiTextureType_OPACITY;
             case MaterialTextureType::BaseColor:            return aiTextureType_BASE_COLOR;
-            case MaterialTextureType::MetallicRoughness:    return aiTextureType_UNKNOWN;
+            case MaterialTextureType::MetallicRoughness:    return aiTextureType_GLTF_METALLIC_ROUGHNESS;
 		    case MaterialTextureType::Unknown:              return aiTextureType_UNKNOWN;
             case MaterialTextureType::Roughness:            return aiTextureType_DIFFUSE_ROUGHNESS;
             case MaterialTextureType::Metallic:             return aiTextureType_METALNESS;
@@ -115,7 +117,7 @@ namespace Engine
             MaterialTextureType::MetallicRoughness,
             MaterialTextureType::Normal,
             MaterialTextureType::AmbientOcclusion,
-            MaterialTextureType::Emissive
+            MaterialTextureType::Emissive,
         }},
         {".glb", {
 			MaterialTextureType::BaseColor,         // glTF albedo
@@ -142,8 +144,7 @@ namespace Engine
         {".obj", {
             MaterialTextureType::Diffuse,
             MaterialTextureType::Specular,
-            MaterialTextureType::Normal,
-            MaterialTextureType::AmbientOcclusion
+            MaterialTextureType::Normal
         }}
     };
 
