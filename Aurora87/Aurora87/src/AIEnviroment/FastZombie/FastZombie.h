@@ -29,13 +29,20 @@ namespace AIEnviroment
 		float AttackCooldownTimer;
 		int m_playerTargetID;
 		float m_deltaTime;
+		bool m_tagged = false;
+		float m_detectionRadius = 30.0f;
 	public:
 		FastZombie();
 		~FastZombie();
 		void Update();
 		std::string GetType() const override { return "DumbZombie"; }
 		void ChangeFiniteStateFastZombie(FiniteStateFastZombie* finiteStateDumbZombie);
-		glm::vec3 GetPosition() const { return m_position; }
+		glm::vec3 GetPosition() const override { return m_position; }
+		double BRadius() const override { return 1.4f; }
+		void Tag() override { m_tagged = true; }
+		void UnTag() override { m_tagged = false; }
+		bool IsTagged() const override { return m_tagged; }
+		EntityCategory GetCategory() const override { return EntityCategory::ZOMBIE; }
 		glm::vec3 GetDirection() const { return m_direction; }
 		glm::vec3 GetVelocity() const { return m_velocity; }
 		glm::vec3 GetTargetPosition() const { return m_targetPosition; }

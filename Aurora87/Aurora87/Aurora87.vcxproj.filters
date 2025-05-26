@@ -225,6 +225,27 @@
     <ClCompile Include="src\AIEnviroment\GameLogic\CameraGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AIEnviroment\GeometricsCollision\Geometrics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\AK47_Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\Bullets\Bullets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Load.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Shoot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Health\Health.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Health\FiniteStateHealth.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1116,6 +1137,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AIEnviroment\GameLogic\CameraGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\GeometricsCollision\Geometrics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\GameLogic\TagginEntities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\AK47_Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\Bullets\Bullets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\FiniteStateAK47.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Shoot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Health\Health.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

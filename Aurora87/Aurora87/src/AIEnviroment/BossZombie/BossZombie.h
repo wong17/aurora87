@@ -42,6 +42,7 @@ namespace AIEnviroment {
 		bool isCharging;
 		bool firstTimeCharge;
 		float DistanceToPlayerCharge;
+		float m_detectionRadius = 30.0f;
 	public:
 		BossZombie();
 		~BossZombie();

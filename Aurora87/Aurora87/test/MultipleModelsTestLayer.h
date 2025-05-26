@@ -29,7 +29,7 @@
 #include "Engine/Meshes/Cube.h"
 #include "Engine/Meshes/PrimitiveFactory.h"
 #include "Engine/Meshes/PrimitiveMesh.h"
-
+#include "AIEnviroment/GeometricsCollision/Geometrics.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -66,7 +66,7 @@ namespace Test
 
 		// Figuras de prueba
 		std::shared_ptr<Engine::Entity> m_Model;
-		unsigned int m_ShapeInstanceCount = 100;
+		unsigned int m_ShapeInstanceCount = 10;
 		float m_Angle = 0.0f;
 		float m_AngularSpeed = glm::radians(90.0f);
 		float m_Radius = 3.0f;

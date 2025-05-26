@@ -4,6 +4,8 @@
 #include <AIEnviroment/EventGame/EventData.h>
 #include <AIEnviroment/EventGame/EventManager.h>
 #include <AIEnviroment/DumbZombie/FiniteStateDumbZombie.h>
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/EntityManager.h"
 
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
@@ -23,19 +25,27 @@ namespace AIEnviroment
 		glm::vec3 m_targetVelocity;
 		glm::vec3 m_velocity;
 		glm::vec3 m_targetPositionOffset;
+		bool m_tagged = false;
 		float AttackRange;
 		float AttackDamage;
 		float AttackCooldown;
 		float AttackCooldownTimer;
 		int m_playerTargetID;
 		float m_deltaTime;
+		float m_detectionRadius = 30.0f;
+		std::shared_ptr<Engine::Entity> m_Entity;
 	public:
 		DumbZombie();
 		~DumbZombie();
 		void Update();
 		std::string GetType() const override { return "DumbZombie"; }
 		void ChangeFiniteStateDumbZombie(FiniteStateDumbZombie* finiteStateDumbZombie);
-		glm::vec3 GetPosition() const { return m_position; }
+		glm::vec3 GetPosition() const override { return m_position; }
+		double BRadius() const override { return 1.4f; }
+		void Tag() override { m_tagged = true; }
+		void UnTag() override { m_tagged = false; }
+		bool IsTagged() const override { return m_tagged; }
+		EntityCategory GetCategory() const override { return EntityCategory::ZOMBIE; }
 		glm::vec3 GetDirection() const { return m_direction; }
 		glm::vec3 GetVelocity() const { return m_velocity; }
 		glm::vec3 GetTargetPosition() const { return m_targetPosition; }
@@ -65,6 +75,8 @@ namespace AIEnviroment
 		void SetDirection(const glm::vec3& direction) { m_direction = direction; }
 		void SetVelocity(const glm::vec3& velocity) { m_velocity = velocity; }
 		void ClosestPlayerTarget();
+		void SetEntity(std::shared_ptr<Engine::Entity> entity) { m_Entity = entity; }
+		std::shared_ptr<Engine::Entity> GetEntity() const { return m_Entity; }
 		void SetDeltaTime(float deltaTime) { m_deltaTime = deltaTime; }
 		float GetDeltaTime() const { return m_deltaTime; }
 		void Death();

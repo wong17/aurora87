@@ -70,7 +70,7 @@ namespace Test {
 
 		// Figuras de prueba
 		std::shared_ptr<Engine::Entity> m_TestCube, m_TestPyramid, m_TestPentagon, m_TestHexagon, m_TestIcosphere, m_Model;
-		unsigned int m_ShapeInstanceCount = 1;
+		unsigned int m_ShapeInstanceCount = 1000;
 		float m_Angle = 0.0f;
 		float m_AngularSpeed = glm::radians(90.0f);
 		float m_Radius = 3.0f;

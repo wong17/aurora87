@@ -121,32 +121,34 @@ namespace AIEnviroment {
 
 	void BossZombie::ClosestPlayerTarget()
 	{
-		float closestDistance = std::numeric_limits<float>::max();
-		Player* ClosestPlayer = nullptr;
-		glm::vec3 currentPosition = this->GetPosition();
+		auto& allEntities = AIEnviroment::GameEntityManager::Instance().GetAllEntities();
 
-		for (const auto& pair : GameEntityManager::Instance().GetAllEntities())
-		{
-			Player* entity = dynamic_cast<Player*>(pair.second);
-			if (entity && entity->GetType() == "Player")
-			{
-				float distance = glm::length(entity->GetPosition() - currentPosition);
-				if (distance < closestDistance)
-				{
-					closestDistance = distance;
+		double closestDistance = std::numeric_limits<double>::max();
+		AIEnviroment::BaseGameEntity* closestPlayer = nullptr;
 
-					ClosestPlayer = entity;
-				}
+		for (auto& pair : allEntities) {
+			auto* entity = pair.second;
+
+			if (entity->GetID() == this->GetID()) continue;
+			if (entity->GetCategory() != EntityCategory::PLAYER) continue;
+
+			double distance = glm::length(entity->GetPosition() - this->GetPosition());
+			double range = m_detectionRadius + entity->BRadius();
+
+			if (distance < range && distance < closestDistance) {
+				closestDistance = distance;
+				closestPlayer = entity;
 			}
-
 		}
-		if (ClosestPlayer)
-		{
-			m_playerTargetID = ClosestPlayer->GetID();
-			m_targetPosition = ClosestPlayer->GetPosition();
+
+		if (closestPlayer) {
+			m_targetPosition = closestPlayer->GetPosition();
+			m_playerTargetID = closestPlayer->GetID();
+
+
 		}
 		else {
-			std::cout << "Error:No hay id de jugador" << std::endl;
+			std::cout << "Error: No hay jugador cercano en rango" << std::endl;
 		}
 	}
 

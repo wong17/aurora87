@@ -135,6 +135,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AIEnviroment\Equipaments\Health\FiniteStateHealth.h" />
+    <ClCompile Include="src\AIEnviroment\Equipaments\Health\Health.cpp" />
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Shoot.cpp" />
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Load.cpp" />
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\AK47_Entity.cpp" />
+    <ClCompile Include="src\AIEnviroment\Equipaments\Guns\Bullets\Bullets.cpp" />
+    <ClCompile Include="src\AIEnviroment\GeometricsCollision\Geometrics.cpp" />
     <ClCompile Include="src\AIEnviroment\GameLogic\CameraGame.cpp" />
     <ClCompile Include="src\AIEnviroment\BossZombie\BossZombie.cpp" />
     <ClCompile Include="src\AIEnviroment\BossZombie\Mechanics\AttackDistanceBoss.cpp" />
@@ -207,6 +214,13 @@
     <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AIEnviroment\Equipaments\Health\Health.h" />
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Shoot.h" />
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\AK47_Mechanics\Load.h" />
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\AK47_Entity.h" />
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\Bullets\Bullets.h" />
+    <ClInclude Include="src\AIEnviroment\Equipaments\Guns\GunsMechanics\FiniteStateAK47.h" />
+    <ClInclude Include="src\AIEnviroment\GeometricsCollision\Geometrics.h" />
     <ClInclude Include="src\AIEnviroment\GameLogic\CameraGame.h" />
     <ClInclude Include="src\AIEnviroment\BossZombie\BossZombie.h" />
     <ClInclude Include="src\AIEnviroment\BossZombie\FiniteStateBossZombie.h" />
@@ -297,6 +311,7 @@
     <ClInclude Include="src\Engine\OpenGL\VertexBuffer.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferElement.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferLayout.h" />
+    <ClInclude Include="src\AIEnviroment\GameLogic\TagginEntities.h" />
     <ClInclude Include="test\AIEntitiesTestLayer.h" />
     <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />

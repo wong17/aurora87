@@ -40,7 +40,16 @@ namespace Test
 
 		// Entity Manager
 		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer);
-		m_Model = m_EntityManager->CreateEntity(std::make_shared<Engine::Model>("res/models/ModelMenu/ModelMenu.obj"), modelShader, "Model");
+		m_Model = m_EntityManager->CreateEntity(std::make_shared<Engine::Model>("res/models/nanosuit/nanosuit.obj"), modelShader, "Model");
+
+		//Collision::GeometricsBox geo = Collision::GeometricsBox();
+		//Collision::AABB col =  geo.Calculate_AABB(m_Model->GetMesh());
+		//std::cout << col.m_max.x << std::endl;
+		//std::cout << col.m_max.y << std::endl;
+		//std::cout << col.m_max.z << std::endl;
+		//std::cout << col.m_min.x << std::endl;
+		//std::cout << col.m_min.y << std::endl;
+		//std::cout << col.m_min.z << std::endl;
 
 		m_EntityManager->SetInstanceTransforms(m_Model, instanceMatrix);
 

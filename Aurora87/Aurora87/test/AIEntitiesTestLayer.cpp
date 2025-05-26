@@ -91,7 +91,7 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	DumbZombie* dumbZombie = new DumbZombie();
 	m_Player = player;
 	m_DumbZombie = dumbZombie;
-	m_Player->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
+	m_Player->SetPosition(glm::vec3(0.0f, 0.0f, 1.0f));
 	GameEntityManager::Instance().RegisterEntity(m_Player);
 	GameEntityManager::Instance().RegisterEntity(m_DumbZombie);
 

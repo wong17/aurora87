@@ -1,8 +1,4 @@
 #pragma once
-#include<glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtc/type_ptr.hpp>
-
 #include <AIEnviroment/Base/BaseGameEntity.h>
 #include <AIEnviroment/Base/GameEntityManager.h>
 #include <AIEnviroment/EventGame/EventData.h>
@@ -27,6 +23,7 @@ namespace AIEnviroment
 		float m_attackCooldown;
 		float m_attackCooldownTimer;
 		int m_zombieTargetID;
+		bool m_tagged = false;
 		float m_deltaTime;
 		float m_distanceToZombie;
 	public:
@@ -35,9 +32,15 @@ namespace AIEnviroment
 		~Player();
 		void Update();
 		void ChangeFiniteStatePlayer(FiniteStatePlayer* finiteStateDumbZombie);
+
+		glm::vec3 GetPosition() const override { return m_position; }
+		double BRadius() const override { return 10.0f; }
+		void Tag() override { m_tagged = true; }
+		void UnTag() override { m_tagged = false; }
+		bool IsTagged() const override { return m_tagged; }
+		EntityCategory GetCategory() const override { return EntityCategory::PLAYER; }
 		std::string GetType() const override { return "Player"; }
 		void SetPosition(const glm::vec3& position) { m_position = position; }
-		glm::vec3 GetPosition() const { return m_position; }
 		void SetDirection(const glm::vec3& direction) { m_direction = direction; }
 		glm::vec3 GetDirection() const { return m_direction; }
 		void SetVelocity(const glm::vec3& velocity) { m_velocity = velocity; }

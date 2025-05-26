@@ -1,6 +1,5 @@
 #pragma once
-#include <glm/fwd.hpp>
-#include "glm/glm.hpp"
+
 #include "string"
 #include <AIEnviroment/DistanceZombie/FiniteStateDistanceZombie.h>
 
@@ -31,14 +30,20 @@ namespace AIEnviroment {
 		float AttackCooldownTimer;
 		int m_playerTargetID;
 		float m_deltaTime;
-		GLuint m_textureID;
+		bool m_tagged = false;
+		float m_detectionRadius = 30.0f;
 	public:
 		DistanceZombie();
 		~DistanceZombie();
 		void Update();
 		std::string GetType() const override { return "DumbZombie"; }
 		void ChangeFiniteStateDumbZombie(FiniteStateDistanceZombie* finiteStateDumbZombie);
-		glm::vec3 GetPosition() const { return m_position; }
+		glm::vec3 GetPosition() const override { return m_position; }
+		double BRadius() const override { return 1.4; }
+		void Tag() override { m_tagged = true; }
+		void UnTag() override { m_tagged = false; }
+		bool IsTagged() const override { return m_tagged; }
+		EntityCategory GetCategory() const override { return EntityCategory::ZOMBIE; }
 		glm::vec3 GetDirection() const { return m_direction; }
 		glm::vec3 GetVelocity() const { return m_velocity; }
 		glm::vec3 GetTargetPosition() const { return m_targetPosition; }
@@ -71,8 +76,6 @@ namespace AIEnviroment {
 		void SetDeltaTime(float deltaTime) { m_deltaTime = deltaTime; }
 		float GetDeltaTime() const { return m_deltaTime; }
 		void Death();
-		void SetTextureID(GLuint texID) { m_textureID = texID; }
-		GLuint GetTextureID() const { return m_textureID; }
 		float GetFleeRange() const { return FleeRange; }
 		void SetFleeRange(float fleeRange) { FleeRange = fleeRange; }
 		glm::vec3 Heading() const {

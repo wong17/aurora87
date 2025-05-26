@@ -85,7 +85,7 @@ namespace AIEnviroment
 			{
 				std::random_device rd;
 				std::mt19937 gen(rd());
-				std::uniform_real_distribution<float> dis(-20.0f, 20.0f);
+				std::uniform_real_distribution<float> dis(-0.1f, 0.1f);
 				float randomX = dis(gen);
 				float randomY = dis(gen);
 				float randomZ = dis(gen);
@@ -120,7 +120,7 @@ namespace AIEnviroment
 				{
 					m_health -= event.GetFloat("zombieDumbDamage");
 					std::cout << "Vida" << m_health << std::endl;
-					std::cout << "Zombie ID: " << zombieID << " Ataco con distancia" << std::endl;
+					std::cout << "Zombie ID: " << zombieID << " Ataco" << std::endl;
 
 					if (m_health <= 0.0f)
 					{
