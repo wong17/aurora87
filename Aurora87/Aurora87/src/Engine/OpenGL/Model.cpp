@@ -4,7 +4,7 @@ namespace Engine
 {
 	static void DebugModel(const aiScene* scene)
 	{
-		if (!scene)
+		if (!scene) 
 		{
 			std::cerr << "DebugModel: No se ha cargado ninguna escena.\n";
 			return;
@@ -19,7 +19,7 @@ namespace Engine
 			<< scene->mNumTextures << " embedded textures\n";
 
 		// --- MALLAS ---
-		for (unsigned i = 0; i < scene->mNumMeshes; ++i)
+		for (unsigned i = 0; i < scene->mNumMeshes; ++i) 
 		{
 			const aiMesh* m = scene->mMeshes[i];
 			struct { const char* label; std::function<std::string()> val; } props[] = {
@@ -59,11 +59,11 @@ namespace Engine
 
 		// Mapeo de uso de embeddings
 		std::unordered_map<int, std::vector<std::string>> usage;
-		for (unsigned m = 0; m < scene->mNumMaterials; ++m)
+		for (unsigned m = 0; m < scene->mNumMaterials; ++m) 
 		{
 			aiString matName; scene->mMaterials[m]->Get(AI_MATKEY_NAME, matName);
 			std::cout << " Material " << (m + 1) << ": " << matName.C_Str() << "\n";
-			for (auto& tt : texTypes)
+			for (auto& tt : texTypes) 
 			{
 				unsigned cnt = scene->mMaterials[m]->GetTextureCount(tt.t);
 				if (!cnt) continue;
@@ -81,10 +81,10 @@ namespace Engine
 		}
 
 		// Uso de embeddings
-		if (!usage.empty())
+		if (!usage.empty()) 
 		{
 			std::cout << " Uso de textures embebidas:\n";
-			for (auto& kv : usage)
+			for (auto& kv : usage) 
 			{
 				std::cout << "  - Tex[" << (kv.first + 1) << "]: ";
 				for (size_t i = 0; i < kv.second.size(); ++i) {
@@ -95,7 +95,7 @@ namespace Engine
 		}
 
 		// Raw embedded textures
-		for (unsigned i = 0; i < scene->mNumTextures; ++i)
+		for (unsigned i = 0; i < scene->mNumTextures; ++i) 
 		{
 			const aiTexture* T = scene->mTextures[i];
 			std::cout << " Raw Tex " << (i + 1)
@@ -110,7 +110,7 @@ namespace Engine
 	{
 		try {
 			LoadModel(path);
-			//DebugModel(m_Scene);
+			DebugModel(m_Scene);
 			m_Valid = true;
 		}
 		catch (const std::exception& e) {
@@ -179,7 +179,7 @@ namespace Engine
 			;
 
 		// Formatos PBR (glTF/GLB)
-		if (m_Extension == ".gltf" || m_Extension == ".glb")
+		if (m_Extension == ".gltf" || m_Extension == ".glb") 
 		{
 			flags |= aiProcess_EmbedTextures
 				| aiProcess_CalcTangentSpace   // Normales + tangentes
@@ -187,14 +187,14 @@ namespace Engine
 				| aiProcess_RemoveRedundantMaterials;
 		}
 		// FBX
-		else if (m_Extension == ".fbx")
+		else if (m_Extension == ".fbx") 
 		{
 			flags |= aiProcess_FlipUVs
 				| aiProcess_CalcTangentSpace
 				| aiProcess_LimitBoneWeights;
 		}
 		// OBJ
-		else if (m_Extension == ".obj")
+		else if (m_Extension == ".obj") 
 		{
 			flags |= aiProcess_FlipUVs
 				| aiProcess_CalcTangentSpace
@@ -202,7 +202,7 @@ namespace Engine
 				| aiProcess_SortByPType;
 		}
 		// Otros
-		else
+		else 
 		{
 			flags |= aiProcess_FlipUVs
 				| aiProcess_CalcTangentSpace
@@ -250,38 +250,6 @@ namespace Engine
 		return Mesh(vertices, indices, textures, Mesh::DefaultModelLayout(), drawMode, baseColor, metallic, roughness);
 	}
 
-	std::vector<TextureData> Model::LoadMaterialTextures(aiMaterial* mat, MaterialTextureType mtt, uint32_t& nextTextureUnit)
-	{
-		std::vector<TextureData> result;
-		// Recolectar todas las rutas de la textura
-		auto paths = CollectTexturePaths(mat, mtt);
-		result.reserve(paths.size());
-
-		for (size_t i = 0; i < paths.size(); ++i)
-		{
-			bool embedded = false;
-			int  embeddedIndex = -1;
-			// A partir de aiString, determinar si es embedded o archivo, devolver pathId limpio
-			std::string pathId = ResolveTexturePath(paths[i], embedded, embeddedIndex);
-
-			// Ver si ya la cacheamos
-			if (auto it = m_LoadedTexturesMap.find(pathId); it != m_LoadedTexturesMap.end())
-			{
-				result.push_back(it->second);
-				continue;
-			}
-
-			// Cargar y crear un TextureData, o std::nullopt en error
-			if (auto td = CreateTextureData(pathId, mtt, nextTextureUnit))
-			{
-				result.push_back(*td);
-				m_LoadedTexturesMap.emplace(pathId, *td);
-			}
-		}
-
-		return result;
-	}
-	
 	std::vector<Vertex> Model::ExtractVertices(aiMesh* mesh) const
 	{
 		// 1. Vertices (Reservar espacio para los vértices)
@@ -336,7 +304,7 @@ namespace Engine
 		// Obtener lista de texturas para la extensión actual
 		auto it = TEXTURE_TYPES_BY_EXTENSION.find(m_Extension);
 		if (it == TEXTURE_TYPES_BY_EXTENSION.end()) {
-			std::cerr << "Formato no soportado: " << m_Extension << "\n";
+			std::cerr << "Model::ExtractTextures: Formato no soportado: " << m_Extension << "\n";
 			return textures;
 		}
 		// Cargar texturas de cada tipo
@@ -349,6 +317,207 @@ namespace Engine
 		return textures;
 	}
 
+	std::vector<TextureData> Model::LoadMaterialTextures(aiMaterial* mat, MaterialTextureType mtt, uint32_t& nextTextureUnit)
+	{
+		std::vector<TextureData> result;
+		// Recolectar todas las rutas de la textura
+		auto paths = CollectTexturePaths(mat, mtt);
+		result.reserve(paths.size());
+
+		for (size_t i = 0; i < paths.size(); ++i)
+		{
+			bool embedded = false;
+			int  embeddedIndex = -1;
+			// A partir de aiString, determinar si es embedded o archivo, devolver pathId limpio
+			std::string pathId = ResolveTexturePath(paths[i], embedded, embeddedIndex);
+
+			// Ver si ya la cacheamos
+			if (auto it = m_LoadedTexturesMap.find(pathId); it != m_LoadedTexturesMap.end())
+			{
+				result.push_back(it->second);
+				continue;
+			}
+
+			// Cargar y crear un TextureData, o std::nullopt en error
+			if (auto td = CreateTextureData(pathId, mtt, nextTextureUnit))
+			{
+				result.push_back(*td);
+				m_LoadedTexturesMap.emplace(pathId, *td);
+			}
+		}
+
+		return result;
+	}
+
+	std::vector<aiString> Model::CollectTexturePaths(aiMaterial* mat, MaterialTextureType mtt) const
+	{
+		std::vector<aiString> paths;
+
+		aiString path;
+		aiTextureType aType = MaterialTextureAssimpType(mtt);
+		unsigned count = mat->GetTextureCount(aType);
+		paths.reserve(count);
+
+		for (unsigned i = 0; i < count; ++i) 
+		{
+			if (mat->GetTexture(aType, i, &path) == AI_SUCCESS) 
+			{
+				paths.push_back(path);
+			}
+		}
+
+		if (paths.empty() && (m_Extension == ".glb" || m_Extension == ".gltf")) 
+		{
+			switch (mtt) 
+			{
+				case MaterialTextureType::BaseColor:
+					aType = aiTextureType_DIFFUSE;
+					break;
+				case MaterialTextureType::MetallicRoughness:
+					aType = aiTextureType_SPECULAR;
+					break;
+				default:
+					return paths;
+			}
+
+			count = mat->GetTextureCount(aType);
+			for (unsigned i = 0; i < count; ++i) 
+			{
+				if (mat->GetTexture(aType, i, &path) == AI_SUCCESS)
+				{
+					paths.push_back(path);
+				}
+			}
+		}
+
+		return paths;
+	}
+
+	// Subdirectorios comunes para texturas
+	static const std::vector<std::string> textureSubdirs =
+	{
+		"textures", "texture",       // Más comunes
+		"images", "image",
+		"materials", "material",
+		"source", "sources",
+		"tex", "diffuse", "normal"
+	};
+
+	std::string Model::ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const
+	{
+		std::string id = aiStr.C_Str();
+		outEmbedded = false;
+		outEmbeddedIndex = -1;
+
+		// Embedded ("*0", "*1", …) — sin cambios
+		if (!id.empty() && id[0] == '*')
+		{
+			outEmbeddedIndex = std::stoi(id.substr(1));
+			outEmbedded = true;
+			return "__embedded_" + std::to_string(outEmbeddedIndex);
+		}
+
+		// Normalizar separadores y eliminar comillas si existen
+		std::replace(id.begin(), id.end(), '\\', '/');
+		id.erase(std::remove(id.begin(), id.end(), '\"'), id.end());
+
+		// Preparar paths para buscar
+		std::filesystem::path textureFile = id;
+		if (textureFile.is_absolute())
+		{
+			if (std::filesystem::exists(textureFile))
+			{
+				return textureFile.lexically_normal().string(); // Normaliza "./" o "../"
+			}
+			std::cerr << "Model::ResolveTexturePath: Ruta absoluta no encontrada: " << id << "\n";
+			return id; // Devolvemos la original para mantener la consistencia
+		}
+		std::filesystem::path modelDir = std::filesystem::path(m_Directory).lexically_normal();
+		std::filesystem::path parentDir = modelDir.parent_path().lexically_normal();
+
+		// Para verificar y devolver el path si existe
+		auto checkAndReturn = [](const std::filesystem::path& path) -> std::optional<std::string>
+			{
+				if (std::filesystem::exists(path))
+				{
+					return path.string();
+				}
+				return std::nullopt;
+			};
+
+		// Mismo directorio del modelo
+		if (auto path = checkAndReturn(modelDir / textureFile)) return *path;
+
+		// Subdirectorios comunes del modelo
+		for (const auto& subdir : textureSubdirs)
+		{
+			if (auto path = checkAndReturn(modelDir / subdir / textureFile)) return *path;
+		}
+
+		// Directorio padre (solo si existe)
+		if (!parentDir.empty())
+		{
+			// Directorio padre directamente
+			if (auto path = checkAndReturn(parentDir / textureFile)) return *path;
+
+			// Subdirectorios del directorio padre
+			for (const auto& subdir : textureSubdirs)
+			{
+				if (auto path = checkAndReturn(parentDir / subdir / textureFile)) return *path;
+			}
+		}
+
+		std::cerr << "Model::ResolveTexturePath: Textura no encontrada: " << id	<< "\nBusqueda en directorio del modelo: " << modelDir << "\n";
+		if (!parentDir.empty())
+		{
+			std::cerr << "Y directorio padre: " << parentDir << "\n";
+		}
+
+		return (modelDir / textureFile).lexically_normal().string();
+	}
+
+	std::shared_ptr<Texture> Model::LoadTextureFromPath(const std::string& pathId, bool embedded, int embeddedIndex, const TextureSpecification& spec) const
+	{
+		if (embedded)
+		{
+			// textura embebida glTF
+			aiTexture* tex = m_Scene->mTextures[embeddedIndex];
+			return AssimpTextureLoader::LoadEmbeddedTexture(tex, spec);
+		}
+		// textura externa
+		if (!std::filesystem::exists(pathId))
+		{
+			std::cerr << "Model::LoadTextureFromPath: no existe " << pathId << "\n";
+			return nullptr;
+		}
+
+		return TextureManager::Get().Load(pathId, spec);
+	}
+
+	std::optional<TextureData> Model::CreateTextureData(const std::string& pathId, MaterialTextureType mtt, uint32_t& nextTextureUnit) const
+	{
+		// intentamos cargar
+		bool embedded = (pathId.rfind("__embedded_", 0) == 0);
+		int embeddedIndex = embedded ? std::stoi(pathId.substr(std::string("__embedded_").length())) : -1;
+
+		TextureSpecification spec;
+		spec.SRGB = TextureTypeIsSRGB(mtt);
+
+		// Cargar la Texture (embebido o de fichero)
+		auto tex = LoadTextureFromPath(pathId, embedded, embeddedIndex, spec);
+		if (!tex)
+		{
+			std::cerr << "Model::LoadMaterialTextures: fallo carga " << pathId << "\n";
+			return std::nullopt;
+		}
+
+		tex->SetName(pathId);
+		std::string uniformName = MaterialTextureUniformName(mtt);
+		TextureData td(mtt, tex, uniformName, nextTextureUnit++, spec.SRGB, pathId);
+
+		return td;
+	}
+
 	void Model::ExtractPBRFactors(aiMesh* mesh, const aiScene* scene, glm::vec3& outBaseColor, float& outMetallic, float& outRoughness) const
 	{
 		outBaseColor = glm::vec3(1.0f);
@@ -356,54 +525,54 @@ namespace Engine
 		outRoughness = 1.0f;
 
 		aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-		if (m_Extension == ".gltf" || m_Extension == ".glb")
+		if (m_Extension == ".gltf" || m_Extension == ".glb") 
 		{
 			aiColor3D baseColor(1, 1, 1);
-			if (mat->Get(AI_MATKEY_BASE_COLOR, baseColor) == AI_SUCCESS)
+			if (mat->Get(AI_MATKEY_BASE_COLOR, baseColor) == AI_SUCCESS) 
 			{
 				outBaseColor = glm::vec3(baseColor.r, baseColor.g, baseColor.b);
 			}
 
 			ai_real metallic = 0.0f;
-			if (mat->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS)
+			if (mat->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS) 
 			{
 				outMetallic = static_cast<float>(metallic);
 			}
 
 			ai_real roughness = 1.0f;
-			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) == AI_SUCCESS)
+			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) == AI_SUCCESS) 
 			{
 				outRoughness = static_cast<float>(roughness);
 			}
 		}
-		else if (m_Extension == ".fbx")
+		else if (m_Extension == ".fbx") 
 		{
 			aiColor3D diffuse(1, 1, 1);
-			if (mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse) == AI_SUCCESS)
+			if (mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse) == AI_SUCCESS) 
 			{
 				outBaseColor = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
 			}
 
 			// Metallic
 			ai_real metallic = 0.0f;
-			if (mat->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS)
+			if (mat->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS) 
 			{
 				outMetallic = static_cast<float>(metallic);
 			}
 
 			// Roughness
 			ai_real roughness = 1.0f;
-			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) != AI_SUCCESS)
+			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) != AI_SUCCESS) 
 			{
 				// Fallback a shininess si no hay roughness
 				ai_real shininess = 100.0f;
-				if (mat->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
+				if (mat->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) 
 				{
 					const float maxShine = 500.0f;
 					outRoughness = 1.0f - glm::clamp(static_cast<float>(shininess) / maxShine, 0.0f, 1.0f);
 				}
 			}
-			else
+			else 
 			{
 				outRoughness = static_cast<float>(roughness);
 			}
@@ -429,91 +598,5 @@ namespace Engine
 
 		// siempre triangulado por aiProcess_Triangulate:
 		return GL_TRIANGLES;
-	}
-
-	std::vector<aiString> Model::CollectTexturePaths(aiMaterial* mat, MaterialTextureType mtt) const
-	{
-		std::vector<aiString> paths;
-		aiTextureType aType = MaterialTextureAssimpType(mtt);
-
-		if (mtt == MaterialTextureType::MetallicRoughness)
-		{
-			aiString s;
-			if (mat->GetTexture(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE, &s) == AI_SUCCESS)
-				paths.push_back(s);
-		}
-		else
-		{
-			unsigned count = mat->GetTextureCount(aType);
-			paths.reserve(count);
-			for (unsigned i = 0; i < count; ++i)
-			{
-				aiString s;
-				if (mat->GetTexture(aType, i, &s) == AI_SUCCESS)
-					paths.push_back(s);
-			}
-		}
-
-		return paths;
-	}
-
-	std::string Model::ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const
-	{
-		std::string id = aiStr.C_Str();
-		outEmbedded = false;
-		outEmbeddedIndex = -1;
-
-		if (!id.empty() && id[0] == '*')
-		{
-			// formato "*N"
-			outEmbeddedIndex = std::stoi(id.substr(1));
-			outEmbedded = true;
-			return "__embedded_" + std::to_string(outEmbeddedIndex);
-		}
-		// ruta de fichero
-		return (std::filesystem::path(m_Directory) / id).string();
-	}
-
-	std::shared_ptr<Texture> Model::LoadTextureFromPath(const std::string& pathId, bool embedded, int embeddedIndex, const TextureSpecification& spec) const
-	{
-		if (embedded)
-		{
-			// textura embebida glTF
-			aiTexture* tex = m_Scene->mTextures[embeddedIndex];
-			return AssimpTextureLoader::LoadEmbeddedTexture(tex, spec);
-		}
-		// textura externa
-		if (!std::filesystem::exists(pathId))
-		{
-			std::cerr << "Model::LoadTextureFromPath: no existe " << pathId << "\n";
-			return nullptr;
-		}
-
-		return TextureManager::Get().Load(pathId, spec);
-	}
-
-	std::optional<TextureData> Model::CreateTextureData(const std::string& pathId, MaterialTextureType mtt, uint32_t& nextTextureUnit) const
-	{
-		// intentamos cargar
-		bool embedded = (pathId.rfind("__embedded_", 0) == 0);
-		int embeddedIndex = embedded
-			? std::stoi(pathId.substr(std::string("__embedded_").length()))
-			: -1;
-		
-		TextureSpecification spec;
-		spec.SRGB = TextureTypeIsSRGB(mtt);
-
-		// Cargar la Texture (embebido o de fichero)
-		auto tex = LoadTextureFromPath(pathId, embedded, embeddedIndex, spec);
-		if (!tex)
-		{
-			std::cerr << "Model::LoadMaterialTextures: fallo carga " << pathId << "\n";
-			return std::nullopt;
-		}
-
-		std::string uniformName = MaterialTextureUniformName(mtt);
-		TextureData td(mtt, tex, uniformName, nextTextureUnit++, spec.SRGB, pathId);
-
-		return td;
 	}
 }
