@@ -28,32 +28,45 @@ namespace Engine
 			case ImageFormat::RGBA32F:   return GL_RGBA32F;
 			case ImageFormat::SRGB8:     return GL_SRGB8;
 			case ImageFormat::SRGBA8:    return GL_SRGB8_ALPHA8;
+			case ImageFormat::BC1_RGB:   return GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+			case ImageFormat::BC3_RGBA:  return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+			case ImageFormat::BC7:       return GL_COMPRESSED_RGBA_BPTC_UNORM;
+			case ImageFormat::ETC2_RGB8: return GL_COMPRESSED_RGB8_ETC2;
 			default:                     return 0;
 		}
 	}
 
 	Texture::Texture(const TextureSpecification& specification)
-		: m_Specification(specification), m_Width(m_Specification.Width), 
-		m_Height(m_Specification.Height), m_BPP(0), m_IsLoaded(false), 
-		m_InternalFormat(0), m_DataFormat(0), m_RendererID(0)
+		: m_IsLoaded(false), m_InternalFormat(0), m_DataFormat(0), m_RendererID(0)
 	{
+		m_Specification = specification;
+		m_Width = m_Specification.Width;
+		m_Height = m_Specification.Height;
+
 		// Verificar dimensiones válidas
-		if (m_Width == 0 || m_Height == 0) {
-			throw std::invalid_argument("Dimensiones de la textura deben ser mayores a 0.");
+		if (m_Width == 0 || m_Height == 0) 
+		{
+			throw std::invalid_argument("Texture::Texture: Dimensiones de la textura deben ser mayores a 0.");
 			return;
 		}
 
 		m_InternalFormat = ImageFormatToOpenGLInternalFormat(m_Specification.Format);
 		m_DataFormat = ImageFormatToOpenGLDataFormat(m_Specification.Format);
 
+		// Calcular niveles de mipmap SOLO si no es comprimida
+		if (!m_Specification.IsCompressed) {
+			GLsizei calculatedLevels = m_Specification.GenerateMips	? Utils::CalculateMipLevels(m_Width, m_Height) : 1;
+			m_Specification.MipLevels = calculatedLevels; // Actualizar MipLevels
+		}
+
 		// Crear la textura usando DSA
-		GLsizei levels = m_Specification.GenerateMips ? Utils::CalculateMipLevels(m_Width, m_Height) : 1;
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		GLCall(glTextureStorage2D(m_RendererID, levels, m_InternalFormat, m_Width, m_Height));
+		GLCall(glTextureStorage2D(m_RendererID, m_Specification.MipLevels, m_InternalFormat, m_Width, m_Height));
 
 		ApplyTextureParameters();
 
-		if (m_Specification.GenerateMips) {
+		if (m_Specification.GenerateMips) 
+		{
 			glGenerateTextureMipmap(m_RendererID);
 		}
 
@@ -62,7 +75,8 @@ namespace Engine
 	}
 
 	Texture::Texture(const std::string& path) 
-		: m_Path(path), m_Width(0), m_Height(0), m_BPP(0), m_IsLoaded(false), m_InternalFormat(0), m_DataFormat(0), m_RendererID(0), m_Specification()
+		: m_Path(path), m_Width(0), m_Height(0), m_IsLoaded(false), m_InternalFormat(0), m_DataFormat(0), 
+		m_RendererID(0), m_Specification()
 	{
 		m_Name = Utils::ExtractFileName(path);
 		LoadFromFile(path);
@@ -70,7 +84,7 @@ namespace Engine
 
 	Texture::Texture(const TextureSpecification& specification, const std::string& path)
 		: m_Path(path), m_Specification(specification), m_Width(0), m_Height(0), 
-		m_BPP(0), m_IsLoaded(false), m_InternalFormat(0), m_DataFormat(0), m_RendererID(0)
+		m_IsLoaded(false), m_InternalFormat(0), m_DataFormat(0), m_RendererID(0)
 	{
 		m_Name = Utils::ExtractFileName(path);
 		LoadFromFile(path);
@@ -83,7 +97,8 @@ namespace Engine
 
 	void Texture::Bind(uint32_t slot) const
 	{
-		if (m_IsLoaded) {
+		if (m_IsLoaded) 
+		{
             glBindTextureUnit(slot, m_RendererID);
         }
 	}
@@ -91,28 +106,56 @@ namespace Engine
     void Texture::SetData(void* data, uint32_t size) const
     {
 		uint32_t bpp = 0;
-		switch (m_DataFormat) {
-			case GL_RED:		bpp = 1; break;
-			case GL_RGB:		bpp = 3; break;
-			case GL_RGBA:		bpp = 4; break;
-			case GL_RGBA32F:	bpp = 16; break; // 4 componentes * 4 bytes
-			default:
-				std::cerr << "Formato no soportado" << std::endl;
+		switch (m_DataFormat) 
+		{
+			case GL_RED:        bpp = 1; break;   // 1 canal (8 bits)
+			case GL_RG:         bpp = 2; break;   // 2 canales (8 bits cada uno)
+			case GL_RGB:        bpp = 3; break;   // 3 canales
+			case GL_RGBA:       bpp = 4; break;   // 4 canales
+			case GL_RGBA32F:    bpp = 16; break;  // 4 componentes float (4 bytes cada una)
+			// Para formatos enteros y otros
+			case GL_R16:        bpp = 2; break;   // 1 canal (16 bits)
+			case GL_RG16:       bpp = 4; break;   // 2 canales (16 bits cada uno)
+			case GL_RGB16:      bpp = 6; break;   // 3 canales (16 bits cada uno)
+			case GL_RGBA16:     bpp = 8; break;   // 4 canales (16 bits cada uno)
+			default: 
+				std::cerr << "Texture::SetData: Formato no soportado: 0x" << std::hex << m_DataFormat << std::dec << "\n"; 
 				return;
 		}
 
 		uint32_t expectedSize = m_Width * m_Height * bpp;
-		if (size != expectedSize) {
-            throw std::runtime_error("Tamanio de datos incorrecto. Esperado: " + std::to_string(expectedSize) + ", Recibido: " + std::to_string(size));
+		if (size != expectedSize) 
+		{
+            throw std::runtime_error("Tamanio de datos incorrecto. Esperado: " + std::to_string(expectedSize) 
+				+ ", Recibido: " + std::to_string(size));
 		}
 
-		GLenum type = (m_InternalFormat == GL_RGBA32F) ? GL_FLOAT : GL_UNSIGNED_BYTE;
+		// Determinamos tipo de dato (basado en formato interno)
+		GLenum type = GL_UNSIGNED_BYTE;
+		if (m_InternalFormat == GL_RGBA32F || m_InternalFormat == GL_R32F)	type = GL_FLOAT;
+		else if (m_InternalFormat == GL_R16 || m_InternalFormat == GL_RG16) type = GL_UNSIGNED_SHORT; // Para formatos de 16 bits
 		GLCall(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, type, data));
 
-		if (m_Specification.GenerateMips) {
+		if (m_Specification.GenerateMips) 
+		{
 			glGenerateTextureMipmap(m_RendererID);
 		}
     }
+
+	void Texture::SetCompressedData(const void* data, size_t dataSize, uint32_t level) const
+	{
+		// Usar dimensiones reales del mipmap si están disponibles
+		uint32_t w = std::max(1u, m_Width >> level);
+		uint32_t h = std::max(1u, m_Height >> level);
+
+		if (w == 0 || h == 0) 
+		{
+			throw std::runtime_error("Texture::SetCompressedData: Dimensiones de mipmap inválidas: " 
+				+ std::to_string(w) + "x" + std::to_string(h));
+		}
+
+		GLCall(glCompressedTextureSubImage2D(m_RendererID, level, 0, 0, w, h, m_InternalFormat, static_cast<GLsizei>(dataSize), data));
+	}
 
 	void Texture::LoadFromFile(const std::string& path)
 	{
@@ -166,6 +209,7 @@ namespace Engine
 
 		// Crear la textura usando DSA
 		GLsizei levels = m_Specification.GenerateMips ? Utils::CalculateMipLevels(m_Width, m_Height) : 1;
+		m_Specification.MipLevels = static_cast<int>(levels);
 		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID));
 		GLCall(glTextureStorage2D(m_RendererID, levels, m_InternalFormat, m_Width, m_Height));
 
