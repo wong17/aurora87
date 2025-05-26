@@ -51,6 +51,7 @@
 #include <string>
 #include <filesystem>
 #include <AIEnviroment/GameLogic/CameraGame.h>
+
 namespace Test {
 	class AIEntitiesTestLayer : public Engine::Layer
 	{

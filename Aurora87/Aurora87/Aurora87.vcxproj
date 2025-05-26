@@ -135,6 +135,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AIEnviroment\GameLogic\CameraGame.cpp" />
+    <ClCompile Include="src\AIEnviroment\BossZombie\BossZombie.cpp" />
+    <ClCompile Include="src\AIEnviroment\BossZombie\Mechanics\AttackDistanceBoss.cpp" />
+    <ClCompile Include="src\AIEnviroment\BossZombie\Mechanics\ChargeBoss.cpp" />
+    <ClCompile Include="src\AIEnviroment\BossZombie\Mechanics\SeekBoss.cpp" />
+    <ClCompile Include="src\AIEnviroment\BossZombie\Mechanics\ZombieSleepBoss.cpp" />
     <ClCompile Include="src\AIEnviroment\DistanceZombie\DistanceZombie.cpp" />
     <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\FleeDistance.cpp" />
     <ClCompile Include="src\AIEnviroment\DistanceZombie\Mechanics\SeekDistance.cpp" />
@@ -183,7 +189,6 @@
     <ClCompile Include="src\Engine\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Engine\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\Engine\OpenGL\VertexBuffer.cpp" />
-    <ClCompile Include="src\AIEnviroment\GameLogic\CameraGame.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="test\AIEntitiesTestLayer.cpp" />
     <ClCompile Include="test\ShadowMappingTestLayer.cpp" />
@@ -202,6 +207,13 @@
     <ClCompile Include="src\AIEnviroment\FastZombie\Mechanics\ZombieFastSleep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AIEnviroment\GameLogic\CameraGame.h" />
+    <ClInclude Include="src\AIEnviroment\BossZombie\BossZombie.h" />
+    <ClInclude Include="src\AIEnviroment\BossZombie\FiniteStateBossZombie.h" />
+    <ClInclude Include="src\AIEnviroment\BossZombie\Mechanics\AttackDistanceBoss.h" />
+    <ClInclude Include="src\AIEnviroment\BossZombie\Mechanics\ChargeBoss.h" />
+    <ClInclude Include="src\AIEnviroment\BossZombie\Mechanics\SeekBoss.h" />
+    <ClInclude Include="src\AIEnviroment\BossZombie\Mechanics\ZombieSleepBoss.h" />
     <ClInclude Include="src\AIEnviroment\DistanceZombie\DistanceZombie.h" />
     <ClInclude Include="src\AIEnviroment\DistanceZombie\FiniteStateDistanceZombie.h" />
     <ClInclude Include="src\AIEnviroment\DistanceZombie\Mechanics\FleeDistance.h" />
@@ -285,7 +297,6 @@
     <ClInclude Include="src\Engine\OpenGL\VertexBuffer.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferElement.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferLayout.h" />
-    <ClInclude Include="src\AIEnviroment\GameLogic\CameraGame.h" />
     <ClInclude Include="test\AIEntitiesTestLayer.h" />
     <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
