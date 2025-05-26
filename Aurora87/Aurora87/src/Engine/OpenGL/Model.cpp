@@ -171,12 +171,42 @@ namespace Engine
 		std::transform(m_Extension.begin(), m_Extension.end(), m_Extension.begin(), ::tolower);
 		m_Directory = std::filesystem::path(path).parent_path().string();
 
-		unsigned int flags = 
-			aiProcess_Triangulate | aiProcess_CalcTangentSpace | 
-			aiProcess_JoinIdenticalVertices | aiProcess_OptimizeMeshes;
+		// Flags base
+		unsigned int flags =
+			aiProcess_Triangulate
+			| aiProcess_JoinIdenticalVertices
+			| aiProcess_ValidateDataStructure
+			;
 
-		if (m_Extension != ".gltf" && m_Extension != ".glb") {
-			flags |= aiProcess_FlipUVs;
+		// Formatos PBR (glTF/GLB)
+		if (m_Extension == ".gltf" || m_Extension == ".glb")
+		{
+			flags |= aiProcess_EmbedTextures
+				| aiProcess_CalcTangentSpace   // Normales + tangentes
+				| aiProcess_ImproveCacheLocality
+				| aiProcess_RemoveRedundantMaterials;
+		}
+		// FBX
+		else if (m_Extension == ".fbx")
+		{
+			flags |= aiProcess_FlipUVs
+				| aiProcess_CalcTangentSpace
+				| aiProcess_LimitBoneWeights;
+		}
+		// OBJ
+		else if (m_Extension == ".obj")
+		{
+			flags |= aiProcess_FlipUVs
+				| aiProcess_CalcTangentSpace
+				| aiProcess_OptimizeGraph
+				| aiProcess_SortByPType;
+		}
+		// Otros
+		else
+		{
+			flags |= aiProcess_FlipUVs
+				| aiProcess_CalcTangentSpace
+				| aiProcess_OptimizeMeshes;
 		}
 
 		m_Scene = m_Importer.ReadFile(path, flags);
