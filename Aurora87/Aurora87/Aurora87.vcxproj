@@ -185,12 +185,12 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\Engine\OpenGL\Animator.cpp" />
     <ClCompile Include="src\Engine\OpenGL\AssimpTextureLoader.cpp" />
     <ClCompile Include="src\Engine\OpenGL\CubemapTexture.cpp" />
+    <ClCompile Include="src\Engine\OpenGL\Model.cpp" />
     <ClCompile Include="src\Engine\OpenGL\ModelAnimation.cpp" />
     <ClCompile Include="src\Engine\OpenGL\ShadowMap.cpp" />
     <ClCompile Include="src\Engine\Scene\Entity.cpp" />
     <ClCompile Include="src\Engine\Scene\EntityManager.cpp" />
     <ClCompile Include="src\Engine\OpenGL\Mesh.cpp" />
-    <ClCompile Include="src\Engine\OpenGL\Model.cpp" />
     <ClCompile Include="src\Engine\Scene\SceneRenderer.cpp" />
     <ClCompile Include="src\Engine\OpenGL\Skybox.cpp" />
     <ClCompile Include="src\Engine\OpenGL\Skydome.cpp" />
@@ -286,6 +286,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\OpenGL\AssimpTypes.h" />
     <ClInclude Include="src\Engine\OpenGL\Bone.h" />
     <ClInclude Include="src\Engine\OpenGL\CubemapTexture.h" />
+    <ClInclude Include="src\Engine\OpenGL\Model.h" />
     <ClInclude Include="src\Engine\OpenGL\ModelAnimation.h" />
     <ClInclude Include="src\Engine\OpenGL\OrthographicShadowCamera.h" />
     <ClInclude Include="src\Engine\OpenGL\PerspectiveShadowCamera.h" />
@@ -295,7 +296,6 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\Scene\Entity.h" />
     <ClInclude Include="src\Engine\Scene\EntityManager.h" />
     <ClInclude Include="src\Engine\OpenGL\Mesh.h" />
-    <ClInclude Include="src\Engine\OpenGL\Model.h" />
     <ClInclude Include="src\Engine\Scene\MeshComponent.h" />
     <ClInclude Include="src\Engine\Scene\ModelComponent.h" />
     <ClInclude Include="src\Engine\Scene\PhysicsComponent.h" />
