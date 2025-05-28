@@ -1,0 +1,9 @@
+﻿  Main.cpp
+C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\AIEnviroment\Player\Player.h(66,43): warning C4244: 'return': conversión de 'const float' a 'int'; posible pérdida de datos
+  (compilando archivo de origen "Main.cpp")
+  
+C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\Main.cpp(63,17): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\IAZombieGame\Main.cpp(75,21): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+  Texture.cpp
+  Generando código...
+  IAZombieGame.vcxproj -> C:\Users\erick\OpengGL_Projects\aurora87\IAZombieGame\x64\Debug\IAZombieGame.exe
