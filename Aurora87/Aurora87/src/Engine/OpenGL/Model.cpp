@@ -18,7 +18,7 @@ namespace Engine
 			<< scene->mNumMaterials << " materials, "
 			<< scene->mNumTextures << " embedded textures\n";
 
-		// --- MALLAS ---
+		// Mallas
 		for (unsigned i = 0; i < scene->mNumMeshes; ++i) 
 		{
 			const aiMesh* m = scene->mMeshes[i];
@@ -41,7 +41,7 @@ namespace Engine
 				std::cout << "  - " << std::setw(12) << p.label << ": " << p.val() << "\n";
 		}
 
-		// --- MATERIALES y consumidor de texturas ---
+		// Materiales y consumidor de texturas
 		struct TexType { aiTextureType t; const char* name; };
 		static constexpr TexType texTypes[] = {
 			{ aiTextureType_DIFFUSE,           "Diffuse" },
@@ -87,7 +87,8 @@ namespace Engine
 			for (auto& kv : usage) 
 			{
 				std::cout << "  - Tex[" << (kv.first + 1) << "]: ";
-				for (size_t i = 0; i < kv.second.size(); ++i) {
+				for (size_t i = 0; i < kv.second.size(); ++i) 
+				{
 					std::cout << kv.second[i] << (i + 1 < kv.second.size() ? ", " : "");
 				}
 				std::cout << "\n";
@@ -103,6 +104,25 @@ namespace Engine
 				<< (T->mHeight > 0 ? std::to_string(T->mHeight) : "DDS")
 				<< ", fmt: " << (T->achFormatHint[0] ? T->achFormatHint : "??")
 				<< "\n";
+		}
+
+		// Animaciones
+		if (scene->mNumAnimations > 0)
+		{
+			std::cout << "Animaciones: " << scene->mNumAnimations << "\n";
+			for (unsigned a = 0; a < scene->mNumAnimations; ++a)
+			{
+				const aiAnimation* anim = scene->mAnimations[a];
+				std::string name = anim->mName.C_Str();
+				if (name.empty()) name = "<sin nombre>";
+				std::cout << "  [" << a << "] " << name
+					<< " (duración: " << anim->mDuration << " ticks, "
+					<< anim->mTicksPerSecond << " tps)\n";
+			}
+		}
+		else
+		{
+			std::cout << "No hay animaciones en esta escena.\n";
 		}
 	}
 
@@ -130,6 +150,22 @@ namespace Engine
 	void Model::DrawDepth(Shader& depthShader)
 	{
 		depthShader.Bind();
+
+		if (m_ModelAnimation) 
+		{
+			const auto& bones = m_ModelAnimation->GetBoneMatrices();
+			depthShader.SetInt("u_HasAnimation", 1);
+			depthShader.SetInt("u_NumBones", static_cast<int>(bones.size()));
+			for (size_t i = 0; i < bones.size(); ++i) 
+			{
+				depthShader.SetMat4("u_Bones[" + std::to_string(i) + "]", bones[i]);
+			}
+		}
+		else 
+		{
+			depthShader.SetInt("u_HasAnimation", 0);
+		}
+
 		for (auto& mesh : m_Meshes)
 			mesh.DrawDepth(depthShader);
 	}
@@ -137,6 +173,22 @@ namespace Engine
 	void Model::DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount)
 	{
 		depthShader.Bind();
+
+		if (m_ModelAnimation) 
+		{
+			const auto& bones = m_ModelAnimation->GetBoneMatrices();
+			depthShader.SetInt("u_HasAnimation", 1);
+			depthShader.SetInt("u_NumBones", static_cast<int>(bones.size()));
+			for (size_t i = 0; i < bones.size(); ++i) 
+			{
+				depthShader.SetMat4("u_Bones[" + std::to_string(i) + "]", bones[i]);
+			}
+		}
+		else 
+		{
+			depthShader.SetInt("u_HasAnimation", 0);
+		}
+
 		for (auto& mesh : m_Meshes)
 			mesh.DrawInstancedDepth(depthShader, instanceCount);
 	}
@@ -144,6 +196,22 @@ namespace Engine
 	void Model::Draw(Shader& shader, bool bindTextures)
 	{
 		shader.Bind();
+
+		if (m_ModelAnimation) 
+		{
+			const auto& bones = m_ModelAnimation->GetBoneMatrices();
+			shader.SetInt("u_HasAnimation", 1);
+			shader.SetInt("u_NumBones", static_cast<int>(bones.size()));
+			for (size_t i = 0; i < bones.size(); ++i) 
+			{
+				shader.SetMat4("u_Bones[" + std::to_string(i) + "]", bones[i]);
+			}
+		}
+		else 
+		{
+			shader.SetInt("u_HasAnimation", 0);
+		}
+
 		for (auto& mesh : m_Meshes)
 			mesh.Draw(shader, bindTextures);
 	}
@@ -151,8 +219,92 @@ namespace Engine
 	void Model::DrawInstanced(Shader& shader, uint32_t instanceCount, bool bindTextures)
 	{
 		shader.Bind();
+
+		if (m_ModelAnimation) 
+		{
+			const auto& bones = m_ModelAnimation->GetBoneMatrices();
+			shader.SetInt("u_HasAnimation", 1);
+			shader.SetInt("u_NumBones", static_cast<int>(bones.size()));
+			for (size_t i = 0; i < bones.size(); ++i) 
+			{
+				shader.SetMat4("u_Bones[" + std::to_string(i) + "]", bones[i]);
+			}
+		}
+		else 
+		{
+			shader.SetInt("u_HasAnimation", 0);
+		}
+
 		for (auto& mesh : m_Meshes)
 			mesh.DrawInstanced(shader, instanceCount, bindTextures);
+	}
+
+	size_t Model::GetAnimationCount() const
+	{
+		return m_ModelAnimation ? m_ModelAnimation->GetAnimationCount() : 0;
+	}
+
+	const std::vector<std::string>& Model::GetAnimationNames() const
+	{
+		static const std::vector<std::string> empty;
+		return m_ModelAnimation	? m_ModelAnimation->GetAnimationNames() : empty;
+	}
+
+	bool Model::SetAnimation(size_t idx)
+	{
+		if (!m_ModelAnimation) 
+		{
+			std::cerr << "Model::SetAnimation: no hay animaciones cargadas.\n";
+			return false;
+		}
+		size_t count = m_ModelAnimation->GetAnimationCount();
+		if (idx >= count) 
+		{
+			std::cerr << "Model::SetAnimation: índice fuera de rango ("
+				<< idx << " >= " << count << ").\n";
+			return false;
+		}
+
+		return m_ModelAnimation->SetAnimation(idx);
+	}
+
+	bool Model::SetAnimation(const std::string& name)
+	{
+		if (!m_ModelAnimation) 
+		{
+			std::cerr << "Model::SetAnimation: no hay animaciones cargadas.\n";
+			return false;
+		}
+
+		if (name.empty()) 
+		{
+			std::cerr << "Model::SetAnimation: el nombre de la animación está vacío.\n";
+			return false;
+		}
+		const auto& names = m_ModelAnimation->GetAnimationNames();
+		if (std::find(names.begin(), names.end(), name) == names.end()) 
+		{
+			std::cerr << "Model::SetAnimation: animación \"" << name << "\" no encontrada.\n";
+			return false;
+		}
+
+		return m_ModelAnimation->SetAnimation(name);
+	}
+
+	void Model::UpdateAnimation(float deltaTime) 
+	{
+		if (!m_ModelAnimation) 
+		{
+			return;
+		}
+
+		if (deltaTime < 0.0f) 
+		{
+			std::cerr << "Model::UpdateAnimation: deltaTime negativo (" << deltaTime << ").\n";
+			return;
+		}
+
+		m_ModelAnimation->Update(deltaTime);
 	}
 
 	bool Model::NeedsGammaCorrection() const
@@ -213,6 +365,13 @@ namespace Engine
 		if (!m_Scene || m_Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_Scene->mRootNode) {
 			std::cerr << "Model::LoadModel: " << m_Importer.GetErrorString() << std::endl;
 			return;
+		}
+
+		if (m_Scene->mNumAnimations > 0) 
+		{
+			m_ModelAnimation.emplace(m_Scene);
+			std::cout << "Model::LoadModel: cargadas " << m_ModelAnimation->GetAnimationCount()
+				<< " animaciones\n";
 		}
 
 		uint32_t nextTexUnit = 0;
@@ -309,7 +468,8 @@ namespace Engine
 		}
 		// Cargar texturas de cada tipo
 		const auto& baseTypes = it->second;
-		for (auto t : baseTypes) {
+		for (auto t : baseTypes) 
+		{
 			auto maps = LoadMaterialTextures(mat, t, nextTexUnit);
 			textures.insert(textures.end(), maps.begin(), maps.end());
 		}
@@ -329,8 +489,8 @@ namespace Engine
 			bool embedded = false;
 			int  embeddedIndex = -1;
 			// A partir de aiString, determinar si es embedded o archivo, devolver pathId limpio
-			std::string pathId = ResolveTexturePath(paths[i], embedded, embeddedIndex);
-
+			auto optFs = ResolveTexturePath(paths[i], embedded, embeddedIndex);
+			std::string pathId = embeddedIndex >= 0 ? "__embedded_" + std::to_string(embeddedIndex) : (optFs ? *optFs : paths[i].C_Str());
 			// Ver si ya la cacheamos
 			if (auto it = m_LoadedTexturesMap.find(pathId); it != m_LoadedTexturesMap.end())
 			{
@@ -361,9 +521,7 @@ namespace Engine
 		for (unsigned i = 0; i < count; ++i) 
 		{
 			if (mat->GetTexture(aType, i, &path) == AI_SUCCESS) 
-			{
 				paths.push_back(path);
-			}
 		}
 
 		if (paths.empty() && (m_Extension == ".glb" || m_Extension == ".gltf")) 
@@ -400,80 +558,85 @@ namespace Engine
 		"images", "image",
 		"materials", "material",
 		"source", "sources",
-		"tex", "diffuse", "normal"
+		"tex", "diffuse", "normal",
+		"Textures", "Images",
+		"Materials", "Sources"
 	};
 
-	std::string Model::ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const
+	std::optional<std::string> Model::ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const
 	{
-		std::string id = aiStr.C_Str();
+		std::string s = aiStr.C_Str();
+
+		// Embedded ("*0", "*1", …)
+		if (!s.empty() && s.front() == '*')
+		{
+			try 
+			{
+				outEmbeddedIndex = std::stoi(s.substr(1));
+				outEmbedded = true;
+			}
+			catch (const std::exception& e) 
+			{
+				std::cerr << "Model::ResolveTexturePath: Indice embebido invalido: " << s << " | Error: " << e.what() << "\n";
+				outEmbedded = false;
+				outEmbeddedIndex = -1;
+			}
+			return std::nullopt;
+		}
 		outEmbedded = false;
 		outEmbeddedIndex = -1;
 
-		// Embedded ("*0", "*1", …) — sin cambios
-		if (!id.empty() && id[0] == '*')
-		{
-			outEmbeddedIndex = std::stoi(id.substr(1));
-			outEmbedded = true;
-			return "__embedded_" + std::to_string(outEmbeddedIndex);
-		}
-
 		// Normalizar separadores y eliminar comillas si existen
-		std::replace(id.begin(), id.end(), '\\', '/');
-		id.erase(std::remove(id.begin(), id.end(), '\"'), id.end());
+		std::replace(s.begin(), s.end(), '\\', '/');
+		s.erase(std::remove(s.begin(), s.end(), '\"'), s.end());
+		std::filesystem::path texPath = std::filesystem::path(s).lexically_normal();
 
-		// Preparar paths para buscar
-		std::filesystem::path textureFile = id;
-		if (textureFile.is_absolute())
+		const std::vector<std::filesystem::path> baseDirs = 
 		{
-			if (std::filesystem::exists(textureFile))
-			{
-				return textureFile.lexically_normal().string(); // Normaliza "./" o "../"
-			}
-			std::cerr << "Model::ResolveTexturePath: Ruta absoluta no encontrada: " << id << "\n";
-			return id; // Devolvemos la original para mantener la consistencia
-		}
-		std::filesystem::path modelDir = std::filesystem::path(m_Directory).lexically_normal();
-		std::filesystem::path parentDir = modelDir.parent_path().lexically_normal();
+			m_Directory,
+			std::filesystem::path(m_Directory).parent_path()
+		};
 
-		// Para verificar y devolver el path si existe
-		auto checkAndReturn = [](const std::filesystem::path& path) -> std::optional<std::string>
+		auto checkPath = [](const std::filesystem::path& p) -> std::optional<std::string> 
+		{
+			if (std::filesystem::exists(p)) 
+				return p.lexically_normal().string();
+
+			return std::nullopt;
+		};
+
+		// Busqueda de texturas
+		for (const auto& base : baseDirs) 
+		{
+			// Rutas directas
+			std::filesystem::path candidates[] = 
 			{
-				if (std::filesystem::exists(path))
-				{
-					return path.string();
-				}
-				return std::nullopt;
+				base / texPath,
+				base / texPath.filename()
 			};
 
-		// Mismo directorio del modelo
-		if (auto path = checkAndReturn(modelDir / textureFile)) return *path;
-
-		// Subdirectorios comunes del modelo
-		for (const auto& subdir : textureSubdirs)
-		{
-			if (auto path = checkAndReturn(modelDir / subdir / textureFile)) return *path;
-		}
-
-		// Directorio padre (solo si existe)
-		if (!parentDir.empty())
-		{
-			// Directorio padre directamente
-			if (auto path = checkAndReturn(parentDir / textureFile)) return *path;
-
-			// Subdirectorios del directorio padre
-			for (const auto& subdir : textureSubdirs)
+			for (const auto& c : candidates) 
 			{
-				if (auto path = checkAndReturn(parentDir / subdir / textureFile)) return *path;
+				if (auto path = checkPath(c)) 
+				{
+					return path;
+				}
+
+				// 5.b) Subdirectorios comunes
+				for (const auto& sub : textureSubdirs) 
+				{
+					if (auto path = checkPath(base / sub / texPath)) 
+					{
+						return path;
+					}
+				}
 			}
 		}
 
-		std::cerr << "Model::ResolveTexturePath: Textura no encontrada: " << id	<< "\nBusqueda en directorio del modelo: " << modelDir << "\n";
-		if (!parentDir.empty())
-		{
-			std::cerr << "Y directorio padre: " << parentDir << "\n";
-		}
-
-		return (modelDir / textureFile).lexically_normal().string();
+		// Error con rutas probadas
+		std::cerr << "Model::ResolveTexturePath: Textura no encontrada: " << texPath << "\n";
+		
+		return std::nullopt;
 	}
 
 	std::shared_ptr<Texture> Model::LoadTextureFromPath(const std::string& pathId, bool embedded, int embeddedIndex, const TextureSpecification& spec) const
@@ -500,6 +663,15 @@ namespace Engine
 		bool embedded = (pathId.rfind("__embedded_", 0) == 0);
 		int embeddedIndex = embedded ? std::stoi(pathId.substr(std::string("__embedded_").length())) : -1;
 
+		if (embedded) 
+		{
+			if (embeddedIndex < 0 || embeddedIndex >= static_cast<int>(m_Scene->mNumTextures))
+			{
+				std::cerr << "Model::CreateTextureData: Indice embebido invalido: " << embeddedIndex << "\n";
+				return std::nullopt;
+			}
+		}
+
 		TextureSpecification spec;
 		spec.SRGB = TextureTypeIsSRGB(mtt);
 
@@ -507,7 +679,7 @@ namespace Engine
 		auto tex = LoadTextureFromPath(pathId, embedded, embeddedIndex, spec);
 		if (!tex)
 		{
-			std::cerr << "Model::LoadMaterialTextures: fallo carga " << pathId << "\n";
+			std::cerr << "Model::CreateTextureData: fallo carga " << pathId << "\n";
 			return std::nullopt;
 		}
 

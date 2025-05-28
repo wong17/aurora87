@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "TextureManager.h"
 #include "AssimpTextureLoader.h"
+#include "ModelAnimation.h"
 
 #include <glad/glad.h>
 #include <assimp/Importer.hpp>
@@ -51,10 +52,17 @@ namespace Engine
 		void Draw(Shader& shader, bool bindTextures = true);
 		void DrawInstanced(Shader& shader, uint32_t instanceCount = 0, bool bindTextures = true);
 
-		const std::string& GetExtension() const { return m_Extension; }
-		const std::string& GetDirectory() const { return m_Directory; }
-		const std::vector<Mesh>& GetMeshes() { return m_Meshes; }
-		const std::unordered_map<std::string, TextureData>& GetLoadedTextures() { return m_LoadedTexturesMap; }
+		size_t GetAnimationCount() const;
+		const std::vector<std::string>& GetAnimationNames() const;
+		bool SetAnimation(size_t idx);
+		bool SetAnimation(const std::string& name);
+
+		void UpdateAnimation(float deltaTime);
+
+		inline const std::string& GetExtension() const { return m_Extension; }
+		inline const std::string& GetDirectory() const { return m_Directory; }
+		inline const std::vector<Mesh>& GetMeshes() { return m_Meshes; }
+		inline const std::unordered_map<std::string, TextureData>& GetLoadedTextures() { return m_LoadedTexturesMap; }
 
 		bool NeedsGammaCorrection() const;
 
@@ -71,7 +79,7 @@ namespace Engine
 		GLenum DetermineDrawMode(aiMesh* mesh) const;
 		// Funciones para cargar texturas
 		std::vector<aiString> CollectTexturePaths(aiMaterial* mat, MaterialTextureType mtt) const;
-		std::string ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const;
+		std::optional<std::string> ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const;
 		std::shared_ptr<Texture> LoadTextureFromPath(const std::string& pathId, bool embedded, int embeddedIndex, const TextureSpecification& spec) const;
 		std::optional<TextureData> CreateTextureData(const std::string& pathId, MaterialTextureType mtt, uint32_t& nextTextureUnit) const;
 
@@ -82,5 +90,7 @@ namespace Engine
 		std::vector<Mesh> m_Meshes;
 		std::unordered_map<std::string, TextureData> m_LoadedTexturesMap;	// Para evitar cargas duplicadas, las cacheamos
 		bool m_Valid = false;
+
+		std::optional<ModelAnimation> m_ModelAnimation;
 	};
 }
