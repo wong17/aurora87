@@ -115,6 +115,13 @@ namespace Test
 		);
 		m_ShadowMap = std::make_shared<Engine::ShadowMap>(m_OrthographicShadowCamera, 1024, 1024);
 		
+		// Audio Manager
+		m_AudioManager = std::make_shared<Engine::AudioManager>();
+		m_AudioManager->LoadBuffer("Matador", "res/audio/El-matador.wav");
+		m_CurrentAudioSource = m_AudioManager->AcquireSource("Matador");
+		m_CurrentAudioSource->SetLooping(false);
+		m_CurrentAudioSource->Play();
+
 		// Desactivar el cursor para el movimiento de la cámara
 		app.GetWindow().SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -173,6 +180,17 @@ namespace Test
 		// Dibujar el texto
 		m_TextShader->Bind();
 		m_TextRenderer->RenderText(*m_TextShader, "Shadow Mapping", 10.0f, 10.0f, 1.0f, { 1.0f,1.0f,1.0f });
+
+		// Audio Update
+		if (m_CurrentAudioSource)
+		{
+			m_CurrentAudioSource->Update(deltaTime);
+			if (m_CurrentAudioSource->GetState() == Engine::AudioSource::State::Stopped)
+			{
+				m_AudioManager->ReleaseSource(m_CurrentAudioSource);
+				m_CurrentAudioSource.reset();
+			}
+		}
 	}
 
 	void ShadowMappingTestLayer::OnImGuiRender()

@@ -170,6 +170,11 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\AIEnviroment\FastZombie\FastStateFastZombie.h" />
     <ClCompile Include="src\AIEnviroment\Player\Mechanics\Walk.cpp" />
     <ClCompile Include="src\AIEnviroment\Player\Player.cpp" />
+    <ClCompile Include="src\Engine\Audio\AudioBuffer.cpp" />
+    <ClCompile Include="src\Engine\Audio\AudioEngine.cpp" />
+    <ClCompile Include="src\Engine\Audio\AudioManager.cpp" />
+    <ClCompile Include="src\Engine\Audio\AudioSource.cpp" />
+    <ClCompile Include="src\Engine\Audio\WAVLoader.cpp" />
     <ClCompile Include="src\Engine\Meshes\Cube.cpp" />
     <ClCompile Include="src\Engine\Meshes\Hexagon.cpp" />
     <ClCompile Include="src\Engine\Meshes\Icosphere.cpp" />
@@ -211,6 +216,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="test\MultipleEntitiesTestLayer.cpp" />
     <ClCompile Include="test\MultipleModelsTestLayer.cpp" />
     <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp" />
+    <ClCompile Include="vendor\dr_libs\dr_wav.cpp" />
     <ClCompile Include="vendor\Glad\glad.c" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
@@ -255,6 +261,11 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\AIEnviroment\Player\FiniteStatePlayer.h" />
     <ClInclude Include="src\AIEnviroment\Player\Mechanics\Walk.h" />
     <ClInclude Include="src\AIEnviroment\Player\Player.h" />
+    <ClInclude Include="src\Engine\Audio\AudioBuffer.h" />
+    <ClInclude Include="src\Engine\Audio\AudioEngine.h" />
+    <ClInclude Include="src\Engine\Audio\AudioManager.h" />
+    <ClInclude Include="src\Engine\Audio\AudioSource.h" />
+    <ClInclude Include="src\Engine\Audio\WAVLoader.h" />
     <ClInclude Include="src\Engine\Core\DebugGL.h" />
     <ClInclude Include="src\Engine\Core\OpenGLDebug.h" />
     <ClInclude Include="src\Engine\Core\RenderSettings.h" />
@@ -417,6 +428,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="vendor\assimp\XMLTools.h" />
     <ClInclude Include="vendor\assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="vendor\dds-ktx\dds-ktx.h" />
+    <ClInclude Include="vendor\dr_libs\dr_wav.h" />
     <ClInclude Include="vendor\entt\entt.hpp" />
     <ClInclude Include="vendor\freetype\config\ftconfig.h" />
     <ClInclude Include="vendor\freetype\config\ftheader.h" />
@@ -579,6 +591,9 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\fonts\BlackOpsOne-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\audio\El-matador.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

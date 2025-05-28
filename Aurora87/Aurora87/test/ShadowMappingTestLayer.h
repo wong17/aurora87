@@ -3,9 +3,11 @@
 #include "Engine/Core/Application.h"
 #include "Engine/Core/RenderSettings.h"
 #include "Engine/Core/Layer.h"
+
 #include "Engine/Events/Event.h"
 #include "Engine/Events/MouseEvent.h"
 #include "Engine/Events/KeyEvent.h"
+
 #include "Engine/OpenGL/Shader.h"
 #include "Engine/OpenGL/CubemapTexture.h"
 #include "Engine/OpenGL/ShaderManager.h"
@@ -24,14 +26,20 @@
 #include "Engine/OpenGL/UniformBufferLayout.h"
 #include "Engine/OpenGL/TextRenderer.h"
 #include "Engine/OpenGL/Skybox.h"
+
+#include "Engine/Audio/AudioManager.h"
+#include "Engine/Audio/AudioSource.h"
+
 #include "Engine/Scene/SceneRenderer.h"
 #include "Engine/Scene/TransformSystem.h"
 #include "Engine/Scene/TransformComponent.h"
 #include "Engine/Scene/Entity.h"
 #include "Engine/Scene/EntityManager.h"
+
 #include "Engine/Meshes/Cube.h"
 #include "Engine/Meshes/PrimitiveFactory.h"
 #include "Engine/Meshes/PrimitiveMesh.h"
+
 #include "Engine/Util/Utils.h"
 
 #include <glad/glad.h>
@@ -99,5 +107,9 @@ namespace Test
 
 		bool m_WireframeMode = false;
 		bool m_ShowDepthDebug = true;
+
+		// Audio Manager
+		std::shared_ptr<Engine::AudioManager> m_AudioManager = nullptr;
+		std::shared_ptr<Engine::AudioSource> m_CurrentAudioSource = nullptr;
 	};
 }

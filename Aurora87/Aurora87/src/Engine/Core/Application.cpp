@@ -8,11 +8,22 @@ namespace Engine
 	{
 		s_Instance = this;
 		m_Window = std::make_unique<Window>(WindowProperties(name, width, height));
-		m_Window.get()->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		
 		m_RenderSettings = std::make_unique<RenderSettings>(*m_Window);
 
 		//m_Camera = std::make_unique<OrthographicCamera>(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+
+		if (m_AudioEngine.Initialize() != InitResult::OK)
+		{
+			std::cerr << "Application::Application: Error inicializando AudioEngine\n";
+		}
+		else
+		{
+			m_AudioEngine.SetListenerGain(1.0f);
+			m_AudioEngine.SetListenerPosition(0.0f, 0.0f, 0.0f);
+			m_AudioEngine.PrintDeviceInfo();
+		}
 
 		float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 		m_Camera = std::make_unique<PerspectiveCamera>(45.0f, aspectRatio, 0.1f, 1000.0f);
@@ -24,6 +35,7 @@ namespace Engine
 
 	Application::~Application()
 	{
+		m_AudioEngine.Shutdown();
 	}
 
 	void Application::Run()
