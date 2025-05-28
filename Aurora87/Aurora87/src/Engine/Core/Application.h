@@ -11,6 +11,7 @@
 #include "Engine/OpenGL/Camera.h"
 #include "Engine/OpenGL/OrthographicCamera.h"
 #include "Engine/OpenGL/PerspectiveCamera.h"
+#include "Engine/Audio/AudioEngine.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -28,7 +29,7 @@ namespace Engine
 	class Application
 	{
 	public:
-		Application(const std::string& name = "Engine - Denis Wong", uint32_t width = 1920, uint32_t height = 1080);
+		Application(const std::string& name = "Aurora 87", uint32_t width = 1920, uint32_t height = 1080);
 		~Application();
 
 		void Run();
@@ -41,6 +42,9 @@ namespace Engine
 		inline static Application& Get() { return *s_Instance; }
 		inline Camera& GetCamera() { return *m_Camera; }
 		inline RenderSettings& GetRenderSettings() { return *m_RenderSettings; }
+		inline ImGuiLayer& GetImGuiLayer() { return *m_ImGuiLayer; }
+		inline AudioEngine& GetAudioEngine() { return m_AudioEngine; }
+		inline LayerStack& GetLayerStack() { return m_LayerStack; }
 
 		inline float GetDeltaTime() const { return m_DeltaTime; }
 		inline float GetLastFrame() const { return m_LastFrame; }
@@ -53,6 +57,7 @@ namespace Engine
 		std::shared_ptr<ImGuiLayer> m_ImGuiLayer;
 		std::unique_ptr<Camera> m_Camera;
 		std::unique_ptr<RenderSettings> m_RenderSettings;
+		AudioEngine m_AudioEngine;
 		LayerStack m_LayerStack;
 
 		bool m_Running = true;
