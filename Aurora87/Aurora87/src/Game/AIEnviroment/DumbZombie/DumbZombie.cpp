@@ -51,7 +51,7 @@ namespace AIEnviroment {
 			m_CurrentStateDumbZombie->Execute(this);
 
 		}
-		std::cout << m_targetPosition.x << ", " << m_targetPosition.y << ", " << m_targetPosition.z << std::endl;
+		//std::cout << m_targetPosition.x << ", " << m_targetPosition.y << ", " << m_targetPosition.z << std::endl;
 	}
 
 	void DumbZombie::ChangeFiniteStateDumbZombie(FiniteStateDumbZombie* finiteStateDumbZombie)

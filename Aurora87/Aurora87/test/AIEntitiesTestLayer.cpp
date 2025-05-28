@@ -96,6 +96,10 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	AIEnviroment::LittleHealthEntity* k = new AIEnviroment::LittleHealthEntity();
 	AIEnviroment::NormalHealthEntity* k1 = new AIEnviroment::NormalHealthEntity();
 	AIEnviroment::BigHealthEntity* k2 = new AIEnviroment::BigHealthEntity();
+	GameEntityManager::Instance().RegisterEntity(k);
+	GameEntityManager::Instance().RegisterEntity(k1);
+	GameEntityManager::Instance().RegisterEntity(k2);
+
 	m_Player->SetTypesHealth(k);
 	m_Player->SetTypesHealth(k1);
 	m_Player->SetTypesHealth(k2);
@@ -142,8 +146,8 @@ void Test::AIEntitiesTestLayer::OnUpdate(float deltaTime)
 	Collision::AABBPLANES aabbPlanes(aabb);
 	Collision::GeometricsBox geometricsBox;
 	Collision::AABB ab = geometricsBox.Calculate_AABB(m_TestCube->GetMesh());
-	std::cout << "AABB de la caja de prueba: " << std::endl;
-	std::cout << ab.m_min.x << ", " << ab.m_min.y << ", " << ab.m_min.z << std::endl; 
+	//std::cout << "AABB de la caja de prueba: " << std::endl;
+	//std::cout << ab.m_min.x << ", " << ab.m_min.y << ", " << ab.m_min.z << std::endl; 
 	// Dibujar el texto
 	m_TextShader->Bind();
 	m_TextRenderer->RenderText(*m_TextShader, "Black Ops One Font", 10.0f, 10.0f, 1.0f, { 1.0f,1.0f,1.0f });

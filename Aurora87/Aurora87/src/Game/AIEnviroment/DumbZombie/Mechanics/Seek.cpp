@@ -34,7 +34,7 @@ namespace AIEnviroment {
 		glm::vec3 direction = glm::normalize(targetPosition - currentPosition);
 
 		glm::vec3 desiredVelocity = direction * entity->GetSpeed();
-		std::cout << "Zombie " << entity->GetID()<< " ID Position: " << entity->GetPosition().x << ", " << entity->GetPosition().y << ", " << entity->GetPosition().z << std::endl;
+		//std::cout << "Zombie " << entity->GetID()<< " ID Position: " << entity->GetPosition().x << ", " << entity->GetPosition().y << ", " << entity->GetPosition().z << std::endl;
 
 
 		float distanceToPlayer = glm::length(targetPosition - currentPosition);

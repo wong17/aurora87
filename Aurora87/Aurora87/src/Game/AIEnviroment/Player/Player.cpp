@@ -23,6 +23,7 @@ namespace AIEnviroment
 		, m_deltaTime(0.0f)
 		, m_distanceToZombie(0.0)
 	{
+		EventManager::GetInstance()->AddListener(EventType::PLAYER_CHANGE_GUN, this);
 		EventManager::GetInstance()->AddListener(EventType::PLAYER_RESPAWN, this);
 		EventManager::GetInstance()->AddListener(EventType::ZOMBIE_ATTACK, this);
 		EventManager::GetInstance()->AddListener(EventType::ZOMBIE_CHARGE_ATTACK, this);
@@ -35,6 +36,7 @@ namespace AIEnviroment
 	Player::~Player()
 	{
 		EventManager::GetInstance()->RemoveListener(EventType::PLAYER_RESPAWN, this);
+		EventManager::GetInstance()->RemoveListener(EventType::PLAYER_CHANGE_GUN, this);
 		EventManager::GetInstance()->RemoveListener(EventType::ZOMBIE_ATTACK, this);
 		EventManager::GetInstance()->RemoveListener(EventType::ZOMBIE_CHARGE_ATTACK, this);
 		EventManager::GetInstance()->RemoveListener(EventType::PLAYER_ROTATE, this);
@@ -57,13 +59,19 @@ namespace AIEnviroment
 		}
 	}
 
-	void Player::ChangeFiniteStatePlayer(FiniteStatePlayer* finiteStateDumbZombie)
+	void Player::ChangeFiniteStatePlayer(FiniteStatePlayer* finiteStatePlayer)
 	{
-		assert(m_CurrentStatePlayer && finiteStateDumbZombie);
+		assert(m_CurrentStatePlayer && finiteStatePlayer);
 		m_CurrentStatePlayer->Exit(this);
 
-		m_CurrentStatePlayer = finiteStateDumbZombie;
+		m_CurrentStatePlayer = finiteStatePlayer;
 		m_CurrentStatePlayer->Enter(this);
+	}
+
+	void Player::ChangeGunUsed(GunsManager* currentGun)
+	{
+		assert(m_CurrentGun && currentGun);
+		m_CurrentGun = currentGun;
 	}
 
 	void Player::Respawn()
@@ -147,6 +155,26 @@ namespace AIEnviroment
 						Respawn();
 					}
 				}
+			}
+		}
+		if (event.type == EventType::PLAYER_CHANGE_GUN) {
+			int index = event.GetInt("GunIndex");
+			switch (index)
+			{
+			case 0:
+				std::cout << "Primera arma cargada" << std::endl;
+				break;
+			case 1:
+				std::cout << "Segunda arma cargada" << std::endl;
+				break;
+			case 2:
+				std::cout << "Tercera arma cargada" << std::endl;
+				break;
+			case 3:
+				std::cout << "Cuarta arma cargada" << std::endl;
+				break;
+			default:
+				break;
 			}
 		}
 	}
