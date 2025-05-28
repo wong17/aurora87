@@ -249,13 +249,22 @@
     <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\OpenGL\Animation.cpp">
+    <ClCompile Include="vendor\dr_libs\dr_wav.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\OpenGL\Animator.cpp">
+    <ClCompile Include="src\Engine\Audio\AudioBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\OpenGL\ModelAnimation.cpp">
+    <ClCompile Include="src\Engine\Audio\AudioEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\AudioSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\WAVLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1178,18 +1187,6 @@
     <ClInclude Include="vendor\dds-ktx\dds-ktx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\OpenGL\Animator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\OpenGL\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\OpenGL\ModelAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\OpenGL\Bone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -1276,5 +1273,10 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\fonts\BlackOpsOne-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\audio\El-matador.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>
