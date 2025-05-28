@@ -33,7 +33,10 @@
 #include "AIEnviroment/Base/GameEntityManager.h"
 #include "AIEnviroment/Player/Player.h"
 #include <AIEnviroment/DumbZombie/DumbZombie.h>
-
+#include <AIEnviroment/GameLogic/CameraGame.h>
+#include <AIEnviroment/Equipaments/Health/TypesHealth/LittleHealthEntity.h>
+#include <AIEnviroment/Equipaments/Health/TypesHealth/NormalHealthEntity.h>
+#include <AIEnviroment/Equipaments/Health/TypesHealth/BigHealthEntity.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -86,10 +89,10 @@ namespace Test {
 
 		// Text Renderer
 		std::shared_ptr<Engine::TextRenderer> m_TextRenderer = nullptr;
-		 Engine::Shader* m_ShaderRenderer;
-		std::shared_ptr<Engine::CameraGame> m_GameCamera = nullptr;
+		std::shared_ptr<Engine::Shader> m_ShaderRenderer = nullptr;
+		//std::shared_ptr<Engine::> m_GameCamera = nullptr;
 		std::shared_ptr<Engine::Shader> m_TextShader;
-
+		std::shared_ptr<Engine::CameraGame> m_GameCamera = nullptr;
 		// Player
 		Player* m_Player = nullptr;
 
