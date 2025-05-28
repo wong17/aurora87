@@ -176,6 +176,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\Engine\Meshes\Pentagon.cpp" />
     <ClCompile Include="src\Engine\Meshes\Plane.cpp" />
     <ClCompile Include="src\Engine\Meshes\Pyramid.cpp" />
+    <ClCompile Include="src\Engine\Meshes\RectButton.cpp" />
     <ClCompile Include="src\Engine\OpenGL\AssimpTextureLoader.cpp" />
     <ClCompile Include="src\Engine\OpenGL\CubemapTexture.cpp" />
     <ClCompile Include="src\Engine\OpenGL\ShadowMap.cpp" />
@@ -205,11 +206,13 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\Engine\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\Engine\OpenGL\VertexBuffer.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\UI\Button3D.cpp" />
     <ClCompile Include="test\AIEntitiesTestLayer.cpp" />
     <ClCompile Include="test\ShadowMappingTestLayer.cpp" />
     <ClCompile Include="test\SimpleGammaCorrectionTestLayer.cpp" />
     <ClCompile Include="test\MultipleEntitiesTestLayer.cpp" />
     <ClCompile Include="test\MultipleModelsTestLayer.cpp" />
+    <ClCompile Include="test\UITestLayer.cpp" />
     <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp" />
     <ClCompile Include="vendor\Glad\glad.c" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
@@ -266,6 +269,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\Meshes\PrimitiveFactory.h" />
     <ClInclude Include="src\Engine\Meshes\PrimitiveMesh.h" />
     <ClInclude Include="src\Engine\Meshes\Pyramid.h" />
+    <ClInclude Include="src\Engine\Meshes\RectButton.h" />
     <ClInclude Include="src\Engine\OpenGL\AssimpTextureLoader.h" />
     <ClInclude Include="src\Engine\OpenGL\AssimpTypes.h" />
     <ClInclude Include="src\Engine\OpenGL\CubemapTexture.h" />
@@ -321,11 +325,13 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\OpenGL\VertexBufferElement.h" />
     <ClInclude Include="src\Engine\OpenGL\VertexBufferLayout.h" />
     <ClInclude Include="src\AIEnviroment\GameLogic\TagginEntities.h" />
+    <ClInclude Include="src\UI\Button3D.h" />
     <ClInclude Include="test\AIEntitiesTestLayer.h" />
     <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
     <ClInclude Include="test\MultipleEntitiesTestLayer.h" />
     <ClInclude Include="test\MultipleModelsTestLayer.h" />
+    <ClInclude Include="test\UITestLayer.h" />
     <ClInclude Include="vendor\AL\al.h" />
     <ClInclude Include="vendor\AL\alc.h" />
     <ClInclude Include="vendor\AL\alext.h" />
@@ -551,6 +557,8 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <None Include="res\shaders\test\shadow-mapping-vertex.glsl" />
     <None Include="res\shaders\test\texture-instanced-vertex-shader.glsl" />
     <None Include="res\shaders\test\texture-vertex-shader.glsl" />
+    <None Include="res\shaders\test\ui-fragment-shader.glsl" />
+    <None Include="res\shaders\test\ui-vertex-shader.glsl" />
     <None Include="res\shaders\text_rendering\text-rendering-fragment-shader.glsl" />
     <None Include="res\shaders\text_rendering\text-rendering-vertex-shader.glsl" />
     <None Include="vendor\assimp\color4.inl" />
@@ -564,6 +572,10 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\models\ModelMenu\texture.png" />
+    <Image Include="res\textures\Button\exitHover.png" />
+    <Image Include="res\textures\Button\exitNormal.png" />
+    <Image Include="res\textures\Button\playHover.png" />
+    <Image Include="res\textures\Button\playNormal.png" />
     <Image Include="res\textures\container.jpg" />
     <Image Include="res\textures\container2.png" />
     <Image Include="res\textures\skybox\back.jpg" />
@@ -572,6 +584,12 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <Image Include="res\textures\skybox\left.jpg" />
     <Image Include="res\textures\skybox\right.jpg" />
     <Image Include="res\textures\skybox\top.jpg" />
+    <Image Include="res\textures\skybox_sp\back_space.png" />
+    <Image Include="res\textures\skybox_sp\bottom_space.png" />
+    <Image Include="res\textures\skybox_sp\front_space.png" />
+    <Image Include="res\textures\skybox_sp\left_space.png" />
+    <Image Include="res\textures\skybox_sp\right_space.png" />
+    <Image Include="res\textures\skybox_sp\top_space.png" />
     <Image Include="res\textures\wood.png" />
   </ItemGroup>
   <ItemGroup>

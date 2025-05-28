@@ -249,6 +249,15 @@
     <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test\UITestLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Button3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Meshes\RectButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1169,6 +1178,15 @@
     <ClInclude Include="vendor\dds-ktx\dds-ktx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="test\UITestLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Button3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Meshes\RectButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -1217,6 +1235,8 @@
     <None Include="res\shaders\test\shadow-mapping-fragment.glsl" />
     <None Include="res\shaders\test\debug-quad-vertex.glsl" />
     <None Include="res\shaders\test\debug-quad-fragment.glsl" />
+    <None Include="res\shaders\test\ui-vertex-shader.glsl" />
+    <None Include="res\shaders\test\ui-fragment-shader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\container2.png">
@@ -1247,6 +1267,36 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\wood.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Button\playHover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Button\playNormal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Button\exitHover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Button\exitNormal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox_sp\bottom_space.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox_sp\back_space.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox_sp\front_space.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox_sp\top_space.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox_sp\left_space.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox_sp\right_space.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

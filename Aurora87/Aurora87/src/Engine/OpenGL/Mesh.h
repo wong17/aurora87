@@ -129,6 +129,28 @@ namespace Engine
 
 		bool NeedsGammaCorrection() const;
 
+		// Apply the texture to the entity
+		void SetTexture(std::shared_ptr<Engine::Texture> texture, MaterialTextureType type = MaterialTextureType::Diffuse)
+		{
+			// Find if a texture of that type already exists
+			for (auto& texData : m_Textures)
+			{
+				if (texData.Type == type)
+				{
+					texData.Texture = texture;
+					return;
+				}
+			}
+			// If it doesn't exist, add the texture
+			m_Textures.emplace_back(
+				type,
+				texture,
+				MaterialTextureUniformName(type),
+				0,
+				texture->GetSpecification().SRGB
+			);
+		}
+
 	private:
 		void BindTextures(Shader& shader);
 

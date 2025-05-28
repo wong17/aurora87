@@ -4,6 +4,7 @@
 #include "MultipleModelsTestLayer.h"
 #include "SimpleGammaCorrectionTestLayer.h"
 #include "ShadowMappingTestLayer.h"
+#include "UITestLayer.h"
 
 #include <iostream>
 #include <memory>
@@ -16,7 +17,8 @@ int main(void)
 	//app->PushLayer(std::make_shared<Test::MultipleModelsTestLayer>());
 	//app->PushLayer(std::make_shared<Test::SimpleGammaCorrectionTestLayer>());
 	//app->PushLayer(std::make_shared<Test::ShadowMappingTestLayer>());
-	app->PushLayer(std::make_shared<Test::AIEntitiesTestLayer>());
+	//app->PushLayer(std::make_shared<Test::AIEntitiesTestLayer>());
+	app->PushLayer(std::make_shared<Test::UITestLayer>());
 	app->Run();
 
 	return 0;

@@ -9,6 +9,7 @@
 #include "Engine/Meshes/Hexagon.h"
 #include "Engine/Meshes/Icosphere.h"
 #include "Engine/Meshes/Plane.h"
+#include "Engine/Meshes/RectButton.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -67,6 +68,7 @@ namespace Engine
 		REGISTER_PRIMITIVE(Hexagon, Hexagon)
 		REGISTER_PRIMITIVE(Icosphere, Icosphere)
 		REGISTER_PRIMITIVE(Plane, Plane)
+		REGISTER_PRIMITIVE(RectButton, RectButton)
 #undef REGISTER_PRIMITIVE
 	};
 }
