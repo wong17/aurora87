@@ -193,6 +193,14 @@ namespace Engine
             uint32_t unit)
             : Type(type), Texture(texture), UniformName(uName), TextureUnitIndex(unit) {}
 
+        TextureData(
+            MaterialTextureType type,
+            std::shared_ptr<Engine::Texture> texture,
+            std::string uName,
+            bool srgb)
+            : Type(type), Texture(texture), UniformName(uName), TextureUnitIndex(0), SRGB(srgb) {
+        }
+
 		TextureData(
             MaterialTextureType type, 
             std::shared_ptr<Engine::Texture> texture, 
