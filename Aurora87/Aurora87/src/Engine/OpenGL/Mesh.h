@@ -129,6 +129,8 @@ namespace Engine
 
 		bool NeedsGammaCorrection() const;
 
+		void SetTextures(const std::vector<TextureData>& textures, bool clearAll = false);
+
 	private:
 		void BindTextures(Shader& shader);
 

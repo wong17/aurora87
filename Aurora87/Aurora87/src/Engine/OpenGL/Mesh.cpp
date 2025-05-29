@@ -296,14 +296,39 @@ namespace Engine
 		return false;
 	}
 
+	void Mesh::SetTextures(const std::vector<TextureData>& textures, bool clearAll)
+	{
+		if (clearAll) 
+		{
+			m_Textures.clear();
+			m_TextureCounts.clear();
+		}
+
+		for (const auto& td : textures)
+		{
+			bool exists = std::any_of(m_Textures.begin(), m_Textures.end(), [&](const TextureData& existing) 
+				{
+					return existing.Type == td.Type	&& existing.Texture->GetRendererID() == td.Texture->GetRendererID();
+				}
+			);
+			if (!exists)
+			{
+				m_Textures.push_back(td);
+				m_TextureCounts[td.Type]++;
+			}
+		}
+	}
+
 	void Mesh::BindTextures(Shader& shader)
 	{
 		std::unordered_map<MaterialTextureType, int> typeCounters;
-		for (auto& td : m_Textures) {
+		for (auto& td : m_Textures) 
+		{
 			std::string uniformName = MaterialTextureUniformName(td.Type);
 			int arrayIndex = typeCounters[td.Type]++;
 
-			if (IsTextureTypeArray(td.Type)) {
+			if (IsTextureTypeArray(td.Type)) 
+			{
 				uniformName += "[" + std::to_string(arrayIndex) + "]";
 			}
 

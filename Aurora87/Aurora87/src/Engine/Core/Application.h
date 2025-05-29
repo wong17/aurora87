@@ -49,6 +49,8 @@ namespace Engine
 		inline float GetDeltaTime() const { return m_DeltaTime; }
 		inline float GetLastFrame() const { return m_LastFrame; }
 
+		void Close() { m_Running = false; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
