@@ -2,6 +2,19 @@
 
 namespace Engine
 {
+	static GLint CalculateUnpackAlignment(uint32_t width, uint32_t bytesPerPixel) 
+	{
+		uint32_t rowBytes = width * bytesPerPixel;
+		
+		for (GLint a : {8, 4, 2, 1}) 
+		{
+			if ((rowBytes % a) == 0)
+				return a;
+		}
+
+		return 1;
+	}
+
 	static GLenum ImageFormatToOpenGLDataFormat(ImageFormat format)
 	{
 		switch (format)
@@ -179,26 +192,31 @@ namespace Engine
 		}
 		
 		// Actualizar especificaciones
-		m_Width = width;
-		m_Height = height;
+		m_Width = static_cast<uint32_t>(width);
+		m_Height = static_cast<uint32_t>(height);
 		m_Specification.Width = width;
 		m_Specification.Height = height;
 
 		// Detectar formato automáticamente sino está especificado, deducirlo de los canales
 		if (m_Specification.Format == ImageFormat::None) {
-			if (hdrData) {
+			if (hdrData) 
+			{
 				m_Specification.Format = ImageFormat::RGBA32F;
 				channels = 4;
 			}
-			else {
-				switch (channels) {
-				case 1: m_Specification.Format = ImageFormat::R8; break;
-				case 2: m_Specification.Format = ImageFormat::RG8; break;
-				case 3: m_Specification.Format = m_Specification.SRGB ? ImageFormat::SRGB8 : ImageFormat::RGB8; break;
-				case 4: m_Specification.Format = m_Specification.SRGB ? ImageFormat::SRGBA8 : ImageFormat::RGBA8; break;
-				default:
-					std::cerr << "Error: Cantidad de canales no soportado " << channels << " en " << path << "\n";
-					return;
+			else 
+			{
+				switch (channels) 
+				{
+					case 1: m_Specification.Format = ImageFormat::R8; break;
+					case 2: m_Specification.Format = ImageFormat::RG8; break;
+					case 3: m_Specification.Format = m_Specification.SRGB ? ImageFormat::SRGB8 : ImageFormat::RGB8; break;
+					case 4: m_Specification.Format = m_Specification.SRGB ? ImageFormat::SRGBA8 : ImageFormat::RGBA8; break;
+					default:
+						stbi_image_free(ldrData);
+						stbi_image_free(hdrData);
+						std::cerr << "Texture::LoadFromFile: Cantidad de canales no soportado " << channels << " en " << path << "\n";
+						return;
 				}
 			}
 		}
@@ -209,19 +227,33 @@ namespace Engine
 
 		// Crear la textura usando DSA
 		GLsizei levels = m_Specification.GenerateMips ? Utils::CalculateMipLevels(m_Width, m_Height) : 1;
-		m_Specification.MipLevels = static_cast<int>(levels);
+		m_Specification.MipLevels = static_cast<uint32_t>(levels);
 		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID));
 		GLCall(glTextureStorage2D(m_RendererID, levels, m_InternalFormat, m_Width, m_Height));
 
+		uint32_t bpp = channels;
+		GLint defaultAlign = 0;
+		glGetIntegerv(GL_UNPACK_ALIGNMENT, &defaultAlign);
+
+		GLint neededAlign = CalculateUnpackAlignment(m_Width, bpp);
+
+		if (neededAlign != defaultAlign)
+			glPixelStorei(GL_UNPACK_ALIGNMENT, neededAlign);
+
 		// Subir datos
-		if (hdrData) {
+		if (hdrData) 
+		{
 			GLCall(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_FLOAT, hdrData));
 			stbi_image_free(hdrData);
 		}
-		else {
+		else 
+		{
 			GLCall(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, ldrData));
 			stbi_image_free(ldrData);
 		}
+
+		if (neededAlign != defaultAlign)
+			glPixelStorei(GL_UNPACK_ALIGNMENT, defaultAlign);
 
 		ApplyTextureParameters();
 
