@@ -1,4 +1,5 @@
 #include "AK47_Entity.h"
+#include "GunsMechanics/AK47_Mechanics/Load.h"
 namespace AIEnviroment
 {
 
@@ -38,6 +39,9 @@ namespace AIEnviroment
 
 	void AK47_Entity::HandleEvent(const EventData& eventData)
 	{
+		if (eventData.type == EventType::CHARGING_AK47) {
+			this->ChangeFiniteStateAK7(AIEnviroment::Load::Instance());
+		}
 	}
 
 }

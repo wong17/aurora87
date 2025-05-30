@@ -11,6 +11,7 @@ namespace AIEnviroment {
 	{
 	private:
 		FiniteStateAK7* m_CurrentStateAK7;
+		std::vector<BulletManager*> m_BullentsInInventory;
 	public:
 		AK47_Entity();
 		~AK47_Entity();
@@ -19,6 +20,9 @@ namespace AIEnviroment {
 		std::string GetType() const override { return "AK-47"; }
 		void HandleEvent(const EventData& eventData) override;
 		EntityCategory GetCategory() const override { return EntityCategory::ITEM; }
-
+		void SetBulletsInCharge(BulletManager* bullet) { m_BullentsInInventory.push_back(bullet); }
+		std::vector<BulletManager*> GetBulletsInCharge() const { return m_BullentsInInventory; }
+		glm::vec3 GetPosition() const override { return GunsManager::GetPosition(); }
 	};
-}
+	}
+

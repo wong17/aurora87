@@ -6,6 +6,8 @@
 #include <AIEnviroment/Player/FiniteStatePlayer.h>
 #include <AIEnviroment/Equipaments/Health/Health.h>
 #include <AIEnviroment/Equipaments/Guns/GunsManager.h>
+#include <AIEnviroment/Equipaments/Chargers/ChargersManager.h>
+#include <AIEnviroment/Equipaments/Guns/GunsMechanics/AK47_Mechanics/Load.h>
 namespace AIEnviroment
 {
 	class Player : public BaseGameEntity, public EventListener
@@ -31,6 +33,7 @@ namespace AIEnviroment
 		float m_distanceToZombie;
 		std::vector<Health*> TypesHealth;
 		std::vector<GunsManager*> GunsInventory;
+		std::vector<ChargersManager*> ChagerInventory;
 		GunsManager* m_CurrentGun;
 	public:
 

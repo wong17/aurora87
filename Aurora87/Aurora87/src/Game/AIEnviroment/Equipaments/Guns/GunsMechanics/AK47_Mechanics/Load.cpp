@@ -1,6 +1,7 @@
 #include "Load.h"
 #include "AIEnviroment/Equipaments/Guns/AK47_Entity.h"
 #include "Idle.h"
+#include <AIEnviroment/Equipaments/Guns/Bullets/BulletAK_47.h>
 namespace AIEnviroment {
 	Load* Load::Instance()
 	{
@@ -17,8 +18,17 @@ namespace AIEnviroment {
 	}
 	void Load::Execute(AK47_Entity* entity)
 	{
+
 		entity->SetLoadingColdownTimer(entity->GetLoadingCooldownTimer() + entity->GetDeltaTime());
 		if (entity->GetLoadingCooldownTimer() >= entity->GetLoadingColdown()) {
+			for (int i = 0; i <= entity->GetMaxBullets(); i++) {
+				BulletAK_47* bullet = new BulletAK_47();
+				bullet->SetDagame(entity->GetAttackDamage());
+				bullet->SetPosition(entity->GetPosition());
+				bullet->SetDirection(entity->GetDirection());
+				entity->SetBulletsInCharge(bullet);
+				entity->SetCountBullets(entity->GetCountBullets() + 1);
+			}
 			entity->ChangeFiniteStateAK7(AIEnviroment::Idle::Instance());
 		}
 	}

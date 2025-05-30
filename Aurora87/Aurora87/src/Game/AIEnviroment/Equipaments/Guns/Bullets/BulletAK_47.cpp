@@ -17,4 +17,12 @@ namespace AIEnviroment {
     {
     }
 
+    void BulletAK_47::Update()
+    {
+    }
+
+    void BulletAK_47::ChangeFiniteStateAK7()
+    {
+    }
+
 }

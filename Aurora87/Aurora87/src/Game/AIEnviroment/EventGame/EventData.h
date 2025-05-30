@@ -15,6 +15,8 @@ namespace AIEnviroment
 	//EventType is an enum class that defines the different types of events that can occur in the game.
 	enum class EventType {
 		NONE,
+	    CHARGING_AK47,
+		RELOADING,
 		PLAYER_CHANGE_GUN,
 		AK47_SHOOT,
 		PLAYER_REGISTER,

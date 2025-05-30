@@ -13,7 +13,7 @@ namespace AIEnviroment
 		, m_targetPosition(0.0f, 0.0f, 0.0f)
 		, m_targetDirection(0.0f, 0.0f, -1.0f)
 		, m_targetVelocity(0.0f, 0.0f, 0.0f)
-		, m_speed(0.2)
+		, m_speed(0.2f)
 		, m_health(100.0f)
 		, m_attackRange(0.0f)
 		, m_attackDamage(0.0f)
@@ -22,6 +22,7 @@ namespace AIEnviroment
 		, m_zombieTargetID(-1)
 		, m_deltaTime(0.0f)
 		, m_distanceToZombie(0.0)
+		,m_CurrentGun(nullptr)
 	{
 		EventManager::GetInstance()->AddListener(EventType::PLAYER_CHANGE_GUN, this);
 		EventManager::GetInstance()->AddListener(EventType::PLAYER_RESPAWN, this);
@@ -159,24 +160,34 @@ namespace AIEnviroment
 		}
 		if (event.type == EventType::PLAYER_CHANGE_GUN) {
 			int index = event.GetInt("GunIndex");
-			switch (index)
-			{
-			case 0:
-				std::cout << "Primera arma cargada" << std::endl;
-				break;
-			case 1:
-				std::cout << "Segunda arma cargada" << std::endl;
-				break;
-			case 2:
-				std::cout << "Tercera arma cargada" << std::endl;
-				break;
-			case 3:
-				std::cout << "Cuarta arma cargada" << std::endl;
-				break;
-			default:
-				break;
+			const auto& guns = this->GetGunsInventory();
+
+			if (index < 0 || index >= guns.size()) {
+				std::cout << "Indice de arma fuera de rango." << std::endl;
+				return;
+			}
+
+			if (!guns[index]) {
+				std::cout << "No hay arma en la ranura " << index << "." << std::endl;
+				return;
+			}
+
+			if (guns[index] == m_CurrentGun) {
+				std::cout << "El arma ya está equipada." << std::endl;
+				return;
+			}
+
+			std::cout << "Arma en ranura " << index << " equipada." << std::endl;
+			this->ChangeGunUsed(guns[index]);
+		}
+		if (event.type == EventType::RELOADING) {
+			auto& typeGun = m_CurrentGun;
+			if (typeGun->GetTypeGun() == TypesGun::AK_47) {
+				EventData AkRealoading(EventType::CHARGING_AK47);
+				EventManager::GetInstance()->DispatchEvent(AkRealoading);
 			}
 		}
+
 	}
 
 	//void Player::ClosestZombieTarget() {

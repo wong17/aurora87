@@ -166,7 +166,40 @@ namespace Engine {
 			LavaTexture.Set("woodTexture", false);
 			EventManager::GetInstance()->DispatchEvent(LavaTexture);
 		}
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		{
+			EventData gunZeroIndex(AIEnviroment::EventType::PLAYER_CHANGE_GUN);
+			gunZeroIndex.Set("GunIndex", 0);
+			EventManager::GetInstance()->DispatchEvent(gunZeroIndex);
 
+		}
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		{
+			EventData gunFirstIndex(AIEnviroment::EventType::PLAYER_CHANGE_GUN);
+			gunFirstIndex.Set("GunIndex", 1);
+			EventManager::GetInstance()->DispatchEvent(gunFirstIndex);
+
+		}
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		{
+			EventData gunZeroIndex(AIEnviroment::EventType::PLAYER_CHANGE_GUN);
+			gunZeroIndex.Set("GunIndex", 2);
+			EventManager::GetInstance()->DispatchEvent(gunZeroIndex);
+
+		}
+		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+		{
+			EventData gunThirdIndex(AIEnviroment::EventType::PLAYER_CHANGE_GUN);
+			gunThirdIndex.Set("GunIndex", 3);
+			EventManager::GetInstance()->DispatchEvent(gunThirdIndex);
+
+		}	
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		{
+			EventData gunReload(AIEnviroment::EventType::RELOADING);
+			EventManager::GetInstance()->DispatchEvent(gunReload);
+
+		}
 
 		if (hidden) {
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);

@@ -20,6 +20,12 @@ namespace AIEnviroment {
 	void Idle::Exit(AK47_Entity* entity)
 	{
 	}
+	void Idle::HandleEvent(const EventData& eventData)
+	{
+		if (eventData.type == EventType::CHARGING_AK47) {
+
+		}
+	}
 	Idle* Idle::m_instance = nullptr;
 
 }
