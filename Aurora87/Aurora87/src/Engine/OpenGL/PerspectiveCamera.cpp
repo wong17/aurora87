@@ -31,15 +31,13 @@ namespace Engine
 
 	void PerspectiveCamera::SetYaw(float yaw)
 	{
-		m_Yaw = yaw;
+		m_Yaw = std::clamp(yaw, m_MinYaw, m_MaxYaw);
 		RecalculateViewMatrix();
 	}
 
 	void PerspectiveCamera::SetPitch(float pitch)
 	{
-		// Limitar el rango de pitch para evitar problemas de gimbal lock o bloqueo Cardan
-		pitch = std::clamp(pitch, -89.0f, 89.0f); // Limitar el rango de pitch entre -89 y 89 grados
-		m_Pitch = pitch;
+		m_Pitch = std::clamp(pitch, m_MinPitch, m_MaxPitch);
 		RecalculateViewMatrix();
 	}
 
@@ -93,39 +91,33 @@ namespace Engine
 					window.SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				}
 				else
+				{
 					window.SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				}
 				return;
 			}
+		}
 
-			if (!m_MouseCaptured)
-				return;
-
+		if (event.GetEventType() == Engine::EventType::KeyPressed && m_KeyboardEnabled)
+		{
+			auto& keyEvent = static_cast<Engine::KeyPressedEvent&>(event);
 			float deltaTime = Engine::Application::Get().GetDeltaTime();
 			switch (keyEvent.GetKeyCode())
 			{
-				case 'W':
-					ProcessKeyboard(Engine::CameraMovement::FORWARD, deltaTime);
-					break;
-				case 'S':
-					ProcessKeyboard(Engine::CameraMovement::BACKWARD, deltaTime);
-					break;
-				case 'A':
-					ProcessKeyboard(Engine::CameraMovement::LEFT, deltaTime);
-					break;
-				case 'D':
-					ProcessKeyboard(Engine::CameraMovement::RIGHT, deltaTime);
-					break;
-			default:
-				break;
+				case 'W': ProcessKeyboard(CameraMovement::FORWARD, deltaTime); break;
+				case 'S': ProcessKeyboard(CameraMovement::BACKWARD, deltaTime); break;
+				case 'A': ProcessKeyboard(CameraMovement::LEFT, deltaTime); break;
+				case 'D': ProcessKeyboard(CameraMovement::RIGHT, deltaTime); break;
+				default: break;
 			}
 		}
 		else if (event.GetEventType() == Engine::EventType::MouseMoved)
 		{
-			auto& mouseEvent = static_cast<Engine::MouseMovedEvent&>(event);
 			// Solo procesamos el movimiento del mouse si el cursor está capturado
-			if (!m_MouseCaptured)
+			if (!m_MouseEnabled || !m_MouseCaptured)
 				return;
 
+			auto& mouseEvent = static_cast<Engine::MouseMovedEvent&>(event);
 			float xPos = mouseEvent.GetX();
 			float yPos = mouseEvent.GetY();
 
@@ -154,33 +146,29 @@ namespace Engine
 
 	void PerspectiveCamera::ProcessKeyboard(CameraMovement movement, float deltaTime)
 	{
+		if (!m_KeyboardEnabled)
+			return;
+
 		float velocity = m_MovementSpeed * deltaTime;
 		glm::vec3 position = m_Position;
 
 		switch (movement)
 		{
-		case CameraMovement::FORWARD:
-			position += velocity * m_Front;
-			break;
-		case CameraMovement::BACKWARD:
-			position -= velocity * m_Front;
-			break;
-		case CameraMovement::LEFT:
-			position -= velocity * m_Right;
-			break;
-		case CameraMovement::RIGHT:
-			position += velocity * m_Right;
-			break;
-		default:
-			std::cout << "Invalid Camera Movement" << std::endl;
-			break;
+			case CameraMovement::FORWARD:	position += velocity * m_Front; break;
+			case CameraMovement::BACKWARD:	position -= velocity * m_Front; break;
+			case CameraMovement::LEFT:		position -= velocity * m_Right; break;
+			case CameraMovement::RIGHT:		position += velocity * m_Right; break;
+			default: std::cout << "PerspectiveCamera::ProcessKeyboard: Invalid Camera Movement" << std::endl; break;
 		}
 		// Actualiza la posición de la cámara y recalcula la matriz de vista
 		SetPosition(position);
 	}
 
-	void PerspectiveCamera::ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch)
+	void PerspectiveCamera::ProcessMouseMovement(float xOffset, float yOffset)
 	{
+		if (!m_MouseEnabled)
+			return;
+
 		// Esto es para invertir el movimiento del mouse
 		xOffset *= m_MouseSensitivity;
 		yOffset *= m_MouseSensitivity;
@@ -188,10 +176,8 @@ namespace Engine
 		m_Yaw += xOffset;
 		m_Pitch += yOffset;
 		// Limitar el rango de pitch para evitar problemas de gimbal lock o bloqueo Cardan
-		if (constrainPitch)
-		{
-			m_Pitch = std::clamp(m_Pitch, -89.0f, 89.0f);
-		}
+		m_Yaw = std::clamp(m_Yaw, m_MinYaw, m_MaxYaw);
+		m_Pitch = std::clamp(m_Pitch, m_MinPitch, m_MaxPitch);
 		RecalculateViewMatrix();
 	}
 
