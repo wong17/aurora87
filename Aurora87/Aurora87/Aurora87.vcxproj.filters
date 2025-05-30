@@ -282,6 +282,9 @@
     <ClCompile Include="src\Game\AIEnviroment\Equipaments\Chargers\ChargerEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\AIEnviroment\GameLogic\GameCameraBeta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1257,6 +1260,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\AIEnviroment\Equipaments\Chargers\ChargerEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\AIEnviroment\GameLogic\GameCameraBeta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

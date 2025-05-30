@@ -13,7 +13,7 @@ namespace AIEnviroment
 		, m_targetPosition(0.0f, 0.0f, 0.0f)
 		, m_targetDirection(0.0f, 0.0f, -1.0f)
 		, m_targetVelocity(0.0f, 0.0f, 0.0f)
-		, m_speed(0.7)
+		, m_speed(0.2)
 		, m_health(100.0f)
 		, m_attackRange(0.0f)
 		, m_attackDamage(0.0f)
@@ -86,7 +86,7 @@ namespace AIEnviroment
 			{
 				std::random_device rd;
 				std::mt19937 gen(rd());
-				std::uniform_real_distribution<float> dis(-1.0f, 1.0f);
+				std::uniform_real_distribution<float> dis(-0.1f, 0.1f);
 				float randomX = dis(gen);
 				float randomY = dis(gen);
 				float randomZ = dis(gen);
@@ -94,9 +94,9 @@ namespace AIEnviroment
 				m_health = 100.0f;
 				m_position = glm::vec3(randomX, randomY, randomZ);
 				EventData respawnEvent(EventType::RANDOM_SPAWN);
-				respawnEvent.Set("newPositionX", m_position.x);
-				respawnEvent.Set("newPositionY", m_position.y);
-				respawnEvent.Set("newPositionZ", m_position.z);
+				respawnEvent.Set("newPositionX", m_position.x );
+				respawnEvent.Set("newPositionY", m_position.y );
+				respawnEvent.Set("newPositionZ", m_position.z );
 				respawnEvent.Set("playerRandomSpawnID", GetID());
 				EventManager::GetInstance()->DispatchEvent(respawnEvent);
 			}

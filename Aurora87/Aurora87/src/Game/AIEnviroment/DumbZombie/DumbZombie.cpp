@@ -14,12 +14,12 @@ namespace AIEnviroment {
 		, m_targetVelocity(0.0f, 0.0f, 0.0f)
 		, m_velocity(0.0f, 0.0f, 0.0f)
 		, m_targetPositionOffset(0.0f, 0.0f, 0.0f)
-		, AttackRange(0.1f)
+		, AttackRange(0.0001f)
 		, AttackDamage(15.0f)
 		, AttackCooldown(2.0f)
 		, AttackCooldownTimer(2.0f)
 		, m_playerTargetID(-1)
-		, m_deltaTime(0.01666f)
+		, m_deltaTime(0.0f)
 	{
 		EventManager::GetInstance()->AddListener(EventType::PLAYER_RESPAWN, this);
 		EventManager::GetInstance()->AddListener(EventType::PLAYER_ATTACK, this);
@@ -51,7 +51,7 @@ namespace AIEnviroment {
 			m_CurrentStateDumbZombie->Execute(this);
 
 		}
-		std::cout << m_targetPosition.x << ", " << m_targetPosition.y << ", " << m_targetPosition.z << std::endl;
+		//std::cout << m_targetPosition.x << ", " << m_targetPosition.y << ", " << m_targetPosition.z << std::endl;
 	}
 
 	void DumbZombie::ChangeFiniteStateDumbZombie(FiniteStateDumbZombie* finiteStateDumbZombie)
@@ -106,34 +106,36 @@ namespace AIEnviroment {
 	}
 	void DumbZombie::ClosestPlayerTarget()
 	{
-		auto& allEntities = AIEnviroment::GameEntityManager::Instance().GetAllEntities();
+		float closestDistance = std::numeric_limits<float>::max();
+		Player* ClosestPlayer = nullptr;
+		glm::vec3 currentPosition = this->GetPosition();
 
-		double closestDistance = std::numeric_limits<float>::max();
-		AIEnviroment::BaseGameEntity* closestPlayer = nullptr;
+		for (const auto& pair : GameEntityManager::Instance().GetAllEntities())
+		{
+			Player* entity = dynamic_cast<Player*>(pair.second);
+			if (entity && entity->GetType() == "Player")
+			{
+				float distance = glm::length(entity->GetPosition() - currentPosition);
+				if (distance < closestDistance)
+				{
+					closestDistance = distance;
 
-		for (auto& pair : allEntities) {
-			auto* entity = pair.second;
-
-			if (entity->GetID() == this->GetID()) continue; 
-			if (entity->GetCategory() != EntityCategory::PLAYER) continue;
-
-			double distance = glm::length(entity->GetPosition() - this->GetPosition());
-			double range = m_detectionRadius + entity->BRadius();
-
-			if (distance < range && distance < closestDistance) {
-				closestDistance = distance;
-				closestPlayer = entity;
+					ClosestPlayer = entity;
+				}
 			}
+
 		}
-
-		if (closestPlayer) {
-			m_targetPosition = closestPlayer->GetPosition();
-			m_playerTargetID = closestPlayer->GetID();
-
-		
+		if (ClosestPlayer)
+		{
+			m_playerTargetID = ClosestPlayer->GetID();
+			m_targetPosition = ClosestPlayer->GetPosition();
+			std::cout << "Player closest:" << std::endl;
+			std::cout << ClosestPlayer->GetPosition().x << std::endl;
+			std::cout << ClosestPlayer->GetPosition().y << std::endl;
+			std::cout << ClosestPlayer->GetPosition().z << std::endl;
 		}
 		else {
-			std::cout << "Error: No hay jugador cercano en rango" << std::endl;
+			std::cout << "Error:No hay id de jugador" << std::endl;
 		}
 	}
 

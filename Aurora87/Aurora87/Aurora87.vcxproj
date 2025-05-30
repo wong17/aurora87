@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\AIEnviroment\GameLogic\GameCameraBeta.cpp" />
     <ClCompile Include="src\Game\AIEnviroment\Equipaments\Chargers\ChargerEntity.cpp" />
     <ClCompile Include="src\Game\AIEnviroment\Equipaments\Health\Mechanics\LittleHealth\HealthingLittle.cpp" />
     <ClCompile Include="src\Game\AIEnviroment\Equipaments\Health\Mechanics\NormalHealth\HealthingNormal.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="src\Game\AIEnviroment\Equipaments\Health\Mechanics\LittleHealth\WasPickedLittle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game\AIEnviroment\GameLogic\GameCameraBeta.h" />
     <ClInclude Include="src\Game\AIEnviroment\Equipaments\Chargers\ChargerEntity.h" />
     <ClInclude Include="src\Game\AIEnviroment\Equipaments\Chargers\ChargersManager.h" />
     <ClInclude Include="src\Game\AIEnviroment\Equipaments\Guns\Bullets\BulletManager.h" />

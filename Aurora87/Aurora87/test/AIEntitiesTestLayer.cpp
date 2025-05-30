@@ -71,7 +71,7 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	auto& app = Engine::Application::Get();
 
 	// Orthographic Camera
-	m_GameCamera = std::make_shared<Engine::CameraGame>(
+	m_GameCamera = std::make_shared<Engine::CameraGameBeta>(
 		app.GetWindow().GetWidth(), app.GetWindow().GetHeight(), glm::vec3(0.0f, 0.0f, 0.f));
 
 	// Text Renderer
@@ -117,7 +117,7 @@ void Test::AIEntitiesTestLayer::OnUpdate(float deltaTime)
 	glm::mat4 view = m_GameCamera->View;
 	glm::mat4 projection = m_GameCamera->Projection;
 	m_GameCamera->Inputs(app.GetWindow().GetNativeWindow(), m_Player->GetID());
-	m_GameCamera->Matrix(45.0f, 0.1f, 200.0f);
+	m_GameCamera->Matrix(45.0f, 0.1f, 100.0f);
 	// Actualizar la matriz de vista y proyección de todas las entidades
 	m_SceneRenderer->SetViewProjection(view, projection);
 
@@ -142,8 +142,8 @@ void Test::AIEntitiesTestLayer::OnUpdate(float deltaTime)
 	Collision::AABBPLANES aabbPlanes(aabb);
 	Collision::GeometricsBox geometricsBox;
 	Collision::AABB ab = geometricsBox.Calculate_AABB(m_TestCube->GetMesh());
-	std::cout << "AABB de la caja de prueba: " << std::endl;
-	std::cout << ab.m_min.x << ", " << ab.m_min.y << ", " << ab.m_min.z << std::endl; 
+	//std::cout << "AABB de la caja de prueba: " << std::endl;
+	//std::cout << ab.m_min.x << ", " << ab.m_min.y << ", " << ab.m_min.z << std::endl; 
 	// Dibujar el texto
 	m_TextShader->Bind();
 	m_TextRenderer->RenderText(*m_TextShader, "Black Ops One Font", 10.0f, 10.0f, 1.0f, { 1.0f,1.0f,1.0f });
@@ -180,9 +180,9 @@ void Test::AIEntitiesTestLayer::OnEvent(Engine::Event& event)
 
 void Test::AIEntitiesTestLayer::OnMouseScroll(Engine::MouseScrolledEvent& event)
 {
-	//auto* perspectiveCamera = static_cast<Engine::PerspectiveCamera*>(&Engine::Application::Get().GetCamera());
+	auto* CameraGameBeta = static_cast<Engine::CameraGameBeta*>(&Engine::Application::Get().GetCamera());
 
-	glm::mat4 projection = m_GameCamera->Projection;
+	glm::mat4 projection = CameraGameBeta->GetProjectionMatrix();
 
 	// Actualizar la matriz de proyección en el shader
 	m_CameraUniformBuffer->Bind();

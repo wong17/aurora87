@@ -175,6 +175,9 @@ namespace Engine
 			std::cout << "Invalid Camera Movement" << std::endl;
 			break;
 		}
+		std::cout << position.x << std::endl;
+		std::cout << position.y << std::endl;
+		std::cout << position.y << std::endl;
 		// Actualiza la posición de la cámara y recalcula la matriz de vista
 		SetPosition(position);
 	}

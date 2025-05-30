@@ -1,4 +1,9 @@
 #pragma once
+#pragma once  
+#include "Entity.h"  
+#include <unordered_map>  
+#include <typeindex>  
+#include <memory>  
 
 #include "Engine/OpenGL/UniformBuffer.h"
 #include "Engine/OpenGL/Model.h"
@@ -41,7 +46,21 @@ namespace Engine
                 return entity->GetID() < other.entity->GetID(); 
             }
         };
+        template<typename T>
+        T& GetComponent(const std::shared_ptr<Entity>& entity) {
+            auto type = std::type_index(typeid(T));
+            if (m_Components.find(type) != m_Components.end() &&
+                m_Components[type].find(entity->GetID()) != m_Components[type].end()) {
+                return *std::static_pointer_cast<T>(m_Components[type][entity->GetID()]);
+            }
+            throw std::runtime_error("Component not found!");
+        }
 
+        template<typename T>
+        void AddComponent(const std::shared_ptr<Entity>& entity, const T& component) {
+            auto type = std::type_index(typeid(T));
+            m_Components[type][entity->GetID()] = std::make_shared<T>(component);
+        }
         explicit EntityManager(UniformBuffer& globalUniformBuffer) : m_GlobalUniformBuffer(globalUniformBuffer) { }
 
         std::shared_ptr<Entity> CreateEntity(
@@ -82,6 +101,7 @@ namespace Engine
         // Asigna un índice para uso en uniform buffers. Si hay índices reciclados disponibles, reutiliza uno;
         // de lo contrario, genera uno nuevo.
         uint32_t AllocateIndex();
+        std::unordered_map<std::type_index, std::unordered_map<int, std::shared_ptr<void>>> m_Components;
 
         // Busca el registro (Record) correspondiente al ID de entidad dado usando búsqueda binaria.
         // Requiere que m_Records esté ordenado por ID de entidad.

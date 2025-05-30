@@ -60,7 +60,7 @@ namespace AIEnviroment
 		{
 			int playerID = event.GetInt("playerMovedID");
 			BaseGameEntity* baseEntity = GameEntityManager::Instance().GetEntity(playerID);
-			dynamic_cast<Player*>(baseEntity)->SetSpeed(20.0);
+			dynamic_cast<Player*>(baseEntity)->SetSpeed(0.7);
 
 		}
 	}

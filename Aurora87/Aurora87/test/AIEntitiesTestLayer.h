@@ -54,6 +54,7 @@
 #include <string>
 #include <filesystem>
 #include <AIEnviroment/GameLogic/CameraGame.h>
+#include <AIEnviroment/GameLogic/GameCameraBeta.h>
 
 namespace Test {
 	class AIEntitiesTestLayer : public Engine::Layer
@@ -73,7 +74,7 @@ namespace Test {
 
 		// Figuras de prueba
 		std::shared_ptr<Engine::Entity> m_TestCube, m_TestPyramid, m_TestPentagon, m_TestHexagon, m_TestIcosphere, m_Model;
-		unsigned int m_ShapeInstanceCount = 1000;
+		unsigned int m_ShapeInstanceCount = 1;
 		float m_Angle = 0.0f;
 		float m_AngularSpeed = glm::radians(90.0f);
 		float m_Radius = 3.0f;
@@ -92,7 +93,8 @@ namespace Test {
 		std::shared_ptr<Engine::Shader> m_ShaderRenderer = nullptr;
 		//std::shared_ptr<Engine::> m_GameCamera = nullptr;
 		std::shared_ptr<Engine::Shader> m_TextShader;
-		std::shared_ptr<Engine::CameraGame> m_GameCamera = nullptr;
+		std::shared_ptr<Engine::CameraGameBeta> m_GameCamera = nullptr;
+		//std::shared_ptr<Engine::OrthographicCamera> m_GameCamera = nullptr;
 		// Player
 		Player* m_Player = nullptr;
 
