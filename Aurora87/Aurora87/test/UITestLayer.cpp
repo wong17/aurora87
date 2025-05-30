@@ -105,6 +105,12 @@ namespace Test
 		m_OrthographicShadowCamera = std::make_shared<Engine::OrthographicShadowCamera>(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
 		m_OrthographicShadowCamera->SetLightParams(m_LightPosition, m_LightDirection);
 		m_ShadowMap = std::make_shared<Engine::ShadowMap>(m_OrthographicShadowCamera, width, height);
+		
+		// Limitar el movimiento de la camara
+		auto* camera = static_cast<Engine::PerspectiveCamera*>(&app.GetCamera());
+		camera->EnableKeyboard(false);
+		camera->SetYawLimits(camera->GetYaw() - 10.0f, camera->GetYaw() + 10.0f);
+		camera->SetPitchLimits(-10.0f, 10.0f);
 
 		// Disable cursor
 		app.GetWindow().SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);

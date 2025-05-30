@@ -44,6 +44,42 @@ namespace Engine
 		void SetNearClip(float nearClip);
 		void SetFarClip(float farClip);
 	
+		inline void SetMouseSensitivity(float sens) { m_MouseSensitivity = sens; }
+		inline void SetMovementSpeed(float speed) { m_MovementSpeed = speed; }
+
+		inline void EnableKeyboard(bool enabled) { m_KeyboardEnabled = enabled; }
+		inline void EnableMouse(bool enabled) 
+		{
+			m_MouseEnabled = enabled;
+			if (!enabled) m_FirstMouse = true;
+		}
+
+		inline void SetYawLimits(float minYaw, float maxYaw) 
+		{
+			m_MinYaw = minYaw;
+			m_MaxYaw = maxYaw;
+			m_Yaw = std::clamp(m_Yaw, m_MinYaw, m_MaxYaw);
+			RecalculateViewMatrix();
+		}
+
+		inline void ResetYawLimits() 
+		{
+			SetYawLimits(-180.0f, 180.0f);
+		}
+
+		inline void SetPitchLimits(float minPitch, float maxPitch) 
+		{
+			m_MinPitch = minPitch;
+			m_MaxPitch = maxPitch;
+			m_Pitch = std::clamp(m_Pitch, m_MinPitch, m_MaxPitch);
+			RecalculateViewMatrix();
+		}
+
+		inline void ResetPitchLimits() 
+		{
+			SetPitchLimits(-89.0f, 89.0f);
+		}
+
 		inline const glm::vec3& GetFront() const { return m_Front; }
 		inline const glm::vec3& GetRight() const { return m_Right; }
 		inline const glm::vec3& GetUp() const { return m_Up; }
@@ -63,7 +99,7 @@ namespace Engine
 
 		void OnEvent(Event& event) override;
 		void ProcessKeyboard(CameraMovement movement, float deltaTime);
-		void ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch = true);
+		void ProcessMouseMovement(float xOffset, float yOffset);
 
 	protected:
 		void RecalculateViewMatrix() override;
@@ -78,8 +114,16 @@ namespace Engine
 		float m_Pitch = 0.0f;	// Rotación inicial en el eje X en grados (plano vertical)
 		float m_Roll = 0.0f;	// Rotación inicial en el eje Z en grados (plano de profundidad) 
 
+		float m_MinYaw = -180.f;
+		float m_MaxYaw = 180.f;
+		float m_MinPitch = -89.f;
+		float m_MaxPitch = 89.f;
+
 		float m_MouseSensitivity = 0.1f;	// Sensibilidad del mouse para el movimiento de la cámara
 		float m_MovementSpeed = 100.0f;		// Velocidad de movimiento de la cámara (en unidades por segundo)
+
+		bool  m_KeyboardEnabled = true;
+		bool  m_MouseEnabled = true;
 
 		float m_LastX = 0.0f;
 		float m_LastY = 0.0f;
