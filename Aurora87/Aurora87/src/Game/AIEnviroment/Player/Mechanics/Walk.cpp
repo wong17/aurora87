@@ -51,9 +51,9 @@ namespace AIEnviroment
 			int playerID = event.GetInt("playerMovedID");
 			BaseGameEntity* baseEntity = GameEntityManager::Instance().GetEntity(playerID);
 			dynamic_cast<Player*>(baseEntity)->SetPosition(newPosition);
-			std::cout << "Player ID: " << playerID << " moved to position: "
+	/*		std::cout << "Player ID: " << playerID << " moved to position: "
 				<< newPosition.x << ", " << newPosition.y << ", " << newPosition.z << std::endl;
-			
+			*/
 
 		}
 		if (event.type == AIEnviroment::EventType::PLAYER_SPEED)

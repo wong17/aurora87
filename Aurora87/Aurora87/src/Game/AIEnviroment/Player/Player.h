@@ -5,12 +5,14 @@
 #include <AIEnviroment/EventGame/EventManager.h>
 #include <AIEnviroment/Player/FiniteStatePlayer.h>
 #include <AIEnviroment/Equipaments/Health/Health.h>
+#include <AIEnviroment/Equipaments/Guns/GunsManager.h>
 namespace AIEnviroment
 {
 	class Player : public BaseGameEntity, public EventListener
 	{
 	private:
 		 FiniteStatePlayer* m_CurrentStatePlayer;
+
 		glm::vec3 m_position;
 		glm::vec3 m_direction;
 		glm::vec3 m_velocity;
@@ -28,12 +30,15 @@ namespace AIEnviroment
 		float m_deltaTime;
 		float m_distanceToZombie;
 		std::vector<Health*> TypesHealth;
+		std::vector<GunsManager*> GunsInventory;
+		GunsManager* m_CurrentGun;
 	public:
 
 		Player();
 		~Player();
 		void Update();
-		void ChangeFiniteStatePlayer(FiniteStatePlayer* finiteStateDumbZombie);
+		void ChangeFiniteStatePlayer(FiniteStatePlayer* finiteStatePlayer);
+		void ChangeGunUsed(GunsManager* finiteStateDumbZombie);
 
 		glm::vec3 GetPosition() const override { return m_position; }
 		double BRadius() const override { return 10.0f; }
@@ -81,6 +86,8 @@ namespace AIEnviroment
 		}
 		void SetTypesHealth(AIEnviroment::Health* health) { TypesHealth.push_back(health); }
 		std::vector<AIEnviroment::Health*> GetTypesHealth() const { return TypesHealth; }
-	};
+		std::vector<AIEnviroment::GunsManager*> GetGunsInventory() const { return GunsInventory; }
+		void SetGunsInventory(GunsManager* gun) { GunsInventory.push_back(gun); }
+ 	};
 
 }

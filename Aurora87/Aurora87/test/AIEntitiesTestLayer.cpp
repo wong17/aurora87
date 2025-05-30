@@ -96,6 +96,10 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	AIEnviroment::LittleHealthEntity* k = new AIEnviroment::LittleHealthEntity();
 	AIEnviroment::NormalHealthEntity* k1 = new AIEnviroment::NormalHealthEntity();
 	AIEnviroment::BigHealthEntity* k2 = new AIEnviroment::BigHealthEntity();
+	GameEntityManager::Instance().RegisterEntity(k);
+	GameEntityManager::Instance().RegisterEntity(k1);
+	GameEntityManager::Instance().RegisterEntity(k2);
+
 	m_Player->SetTypesHealth(k);
 	m_Player->SetTypesHealth(k1);
 	m_Player->SetTypesHealth(k2);
