@@ -98,7 +98,8 @@ namespace Engine
 				{ ShaderDataType::Float3, "u_BaseColor" },
 				{ ShaderDataType::Float,  "u_MetallicFactor" },
 				{ ShaderDataType::Float,  "u_RoughnessFactor" },
-				{ ShaderDataType::Bool,   "u_UseGamma" }
+				{ ShaderDataType::Bool,   "u_UseGamma" },
+				{ ShaderDataType::Bool,   "u_UseShadows" }
 			};
 		}
 

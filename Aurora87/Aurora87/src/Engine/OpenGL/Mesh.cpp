@@ -493,6 +493,11 @@ namespace Engine
 				int v = NeedsGammaCorrection() ? 1 : 0;
 				ubo.SetData(&v, sizeof(int), globalOffset);
 			}
+			else if (name == "u_UseShadows")
+			{
+				int v = (g_EnableShadows.load() ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
 		}
 
 		ubo.BindRange(baseOffset, alignedStride);
