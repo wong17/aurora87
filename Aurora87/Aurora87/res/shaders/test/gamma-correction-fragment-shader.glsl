@@ -10,7 +10,11 @@ in VS_OUT
 out vec4 FragColor;
 
 uniform sampler2D u_Texture;
-uniform bool u_UseGamma;
+
+layout(std140, binding = 3) uniform TextureBlock {
+	bool u_UseGamma;
+};
+
 uniform vec3 u_LightPosition;
 uniform vec3 u_ViewPosition;
 

@@ -419,27 +419,82 @@ namespace Engine
 
 	void Mesh::UploadTextureBlock(UniformBuffer& ubo, uint32_t entityIndex)
 	{
-		TextureBlockData block{};
-		block.NumDiffuse = (CountTexturesOfType(MaterialTextureType::Diffuse) > 0 ? 1 : 0);
-		block.NumSpecular = (CountTexturesOfType(MaterialTextureType::Specular) > 0 ? 1 : 0);
-		block.NumHeight = (CountTexturesOfType(MaterialTextureType::Height) > 0 ? 1 : 0);
-		block.NumNormal = (CountTexturesOfType(MaterialTextureType::Normal) > 0 ? 1 : 0);
-		block.NumEmissive = (CountTexturesOfType(MaterialTextureType::Emissive) > 0 ? 1 : 0);
-		block.NumAO = (CountTexturesOfType(MaterialTextureType::AmbientOcclusion) > 0 ? 1 : 0);
-		block.NumOpacity = (CountTexturesOfType(MaterialTextureType::Opacity) > 0 ? 1 : 0);
-		block.NumRoughness = (CountTexturesOfType(MaterialTextureType::Roughness) > 0 ? 1 : 0);
-		block.NumMetallic = (CountTexturesOfType(MaterialTextureType::Metallic) > 0 ? 1 : 0);
-
-		block.BaseColor = m_BaseColor;
-		block.MetallicFactor = m_Metallic;
-		block.RoughnessFactor = m_Roughness;
-		block.UseGamma = NeedsGammaCorrection();
-
 		uint32_t alignedStride = ubo.GetAlignedStride();
 		uint32_t baseOffset = entityIndex * alignedStride;
 
-		ubo.Bind();
-		ubo.SetData(&block, sizeof(TextureBlockData), baseOffset);
+		const auto& layoutElems = ubo.GetLayout().GetElements();
+		for (auto const& elem : layoutElems)
+		{
+			const std::string& name = elem.Name;
+			uint32_t           offset = elem.Offset;
+			uint32_t           globalOffset = baseOffset + offset;
+
+			if (name == "u_NumDiffuseTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Diffuse) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumSpecularTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Specular) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumHeightTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Height) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumNormalTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Normal) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumEmissiveTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Emissive) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumAmbientOcclusionTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::AmbientOcclusion) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumOpacityTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Opacity) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumRoughnessTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Roughness) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_NumMetallicTextures")
+			{
+				int v = (CountTexturesOfType(MaterialTextureType::Metallic) > 0 ? 1 : 0);
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+			else if (name == "u_BaseColor")
+			{
+				ubo.SetData(glm::value_ptr(m_BaseColor), sizeof(glm::vec3), globalOffset);
+			}
+			else if (name == "u_MetallicFactor")
+			{
+				float v = m_Metallic;
+				ubo.SetData(&v, sizeof(float), globalOffset);
+			}
+			else if (name == "u_RoughnessFactor")
+			{
+				float v = m_Roughness;
+				ubo.SetData(&v, sizeof(float), globalOffset);
+			}
+			else if (name == "u_UseGamma")
+			{
+				int v = NeedsGammaCorrection() ? 1 : 0;
+				ubo.SetData(&v, sizeof(int), globalOffset);
+			}
+		}
+
 		ubo.BindRange(baseOffset, alignedStride);
 	}
 

@@ -179,25 +179,5 @@ namespace Engine
 		std::unordered_map<MaterialTextureType, int> m_TextureCounts;
 
 		GLenum m_DrawMode = GL_TRIANGLES;
-
-		struct TextureBlockData
-		{
-			int NumDiffuse;
-			int NumSpecular;
-			int NumHeight;
-			int NumNormal;
-			int NumEmissive;
-			int NumAO;
-			int NumOpacity;
-			int NumRoughness;
-			int NumMetallic;
-
-			glm::vec3 BaseColor;
-			float pad0;		// padding para mantener std140
-			float MetallicFactor;
-			float RoughnessFactor;
-			float pad1;		// padding para mantener std140
-			bool UseGamma;	// en std140 ocupa 4 bytes
-		};
 	};
 }
