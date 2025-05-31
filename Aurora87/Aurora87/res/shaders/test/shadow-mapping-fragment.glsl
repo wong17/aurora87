@@ -15,6 +15,7 @@ uniform sampler2D u_ShadowMap;
 
 layout(std140, binding = 3) uniform TextureBlock {
 	bool u_UseGamma;
+	bool u_UseShadows;
 };
 
 uniform vec3 u_LightPosition;
@@ -37,6 +38,9 @@ vec3 GammaCorrect(vec3 color)
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
+	if (!u_UseShadows)
+		return 0.0;
+
 	// perform perspective divide
 	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 	// transform to [0,1] range

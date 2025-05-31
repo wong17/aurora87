@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Engine/Core/DebugGL.h"
+
+#include "Engine/Scene/GlobalSceneSettings.h"
+
 #include "Shader.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
