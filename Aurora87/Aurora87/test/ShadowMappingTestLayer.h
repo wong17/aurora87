@@ -35,6 +35,7 @@
 #include "Engine/Scene/TransformComponent.h"
 #include "Engine/Scene/Entity.h"
 #include "Engine/Scene/EntityManager.h"
+#include "Engine/Scene/GlobalSceneSettings.h"
 
 #include "Engine/Meshes/Cube.h"
 #include "Engine/Meshes/PrimitiveFactory.h"

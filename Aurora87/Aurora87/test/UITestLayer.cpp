@@ -32,7 +32,12 @@ namespace Test
 		// Uniform Buffer
 		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
 		m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
-		m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetTextureBlockLayout(), 3);
+		Engine::UniformBufferLayout textureBlockLayout =
+		{
+			{ Engine::ShaderDataType::Int, "u_UseGamma"   },
+			{ Engine::ShaderDataType::Int, "u_UseShadows" }
+		};
+		m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(textureBlockLayout, 3);
 
 		// Skybox
 		std::vector<std::string> faces
