@@ -42,7 +42,9 @@ namespace Engine
             }
         };
 
-        explicit EntityManager(UniformBuffer& globalUniformBuffer) : m_GlobalUniformBuffer(globalUniformBuffer) { }
+        explicit EntityManager(UniformBuffer& globalUniformBuffer, UniformBuffer& globalTextureBlockUniformBuffer) 
+            : m_GlobalUniformBuffer(globalUniformBuffer), m_GlobalTextureBlockUniformBuffer(globalTextureBlockUniformBuffer)
+        { }
 
         std::shared_ptr<Entity> CreateEntity(
             std::shared_ptr<Model> model, 
@@ -76,6 +78,7 @@ namespace Engine
         const std::vector<std::shared_ptr<Entity>> GetAllEntities() const;
         const std::vector<Record>& GetRecords() const { return m_Records; }
         UniformBuffer& GetGlobalUniformBuffer() const { return m_GlobalUniformBuffer; }
+        UniformBuffer& GetGlobalTextureBlockUniformBuffer() const { return m_GlobalTextureBlockUniformBuffer; }
         size_t GetEntityCount() const { return m_Records.size(); }
 
     private:
@@ -92,6 +95,7 @@ namespace Engine
         Entity::EntityID GenerateUniqueID() { return m_NextEntityID++; }
 
         UniformBuffer& m_GlobalUniformBuffer;
+        UniformBuffer& m_GlobalTextureBlockUniformBuffer;
         std::vector<Record> m_Records;
         std::unordered_map<std::string, std::shared_ptr<Entity>> m_EntityMap;
         std::unordered_map<Entity::EntityID, std::shared_ptr<Entity>> m_IDMap;

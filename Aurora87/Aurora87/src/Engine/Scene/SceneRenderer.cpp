@@ -28,9 +28,18 @@ namespace Engine
 		for (const auto& rec : em.GetRecords())
 		{
 			if (rec.instanceCount <= 0)
-				rec.entity->Draw(bindTextures, em.GetGlobalUniformBuffer(), rec.uniformBufferIndex);
+				rec.entity->Draw(
+					bindTextures, 
+					em.GetGlobalUniformBuffer(),
+					em.GetGlobalTextureBlockUniformBuffer(),
+					rec.uniformBufferIndex);
 			else
-				rec.entity->DrawInstanced(bindTextures, em.GetGlobalUniformBuffer(), rec.uniformBufferIndex, rec.instanceCount);
+				rec.entity->DrawInstanced(
+					bindTextures, 
+					em.GetGlobalUniformBuffer(), 
+					em.GetGlobalTextureBlockUniformBuffer(),
+					rec.uniformBufferIndex, 
+					rec.instanceCount);
 		}
 	}
 }

@@ -73,6 +73,34 @@ namespace Engine
 				{ ShaderDataType::Mat4, "u_ModelMatrix" }
 			};
 		}
+		static UniformBufferLayout GetDefaultPBRFactorsLayout()
+		{
+			return
+			{
+				{ ShaderDataType::Float3, "u_BaseColor" },
+				{ ShaderDataType::Float, "u_MetallicFactor" },
+				{ ShaderDataType::Float, "u_RoughnessFactor" }
+			};
+		}
+		static UniformBufferLayout GetTextureBlockLayout()
+		{
+			return
+			{
+				{ ShaderDataType::Int,    "u_NumDiffuseTextures" },
+				{ ShaderDataType::Int,    "u_NumSpecularTextures" },
+				{ ShaderDataType::Int,    "u_NumHeightTextures" },
+				{ ShaderDataType::Int,    "u_NumNormalTextures" },
+				{ ShaderDataType::Int,    "u_NumEmissiveTextures" },
+				{ ShaderDataType::Int,    "u_NumAmbientOcclusionTextures" },
+				{ ShaderDataType::Int,    "u_NumOpacityTextures" },
+				{ ShaderDataType::Int,    "u_NumRoughnessTextures" },
+				{ ShaderDataType::Int,    "u_NumMetallicTextures" },
+				{ ShaderDataType::Float3, "u_BaseColor" },
+				{ ShaderDataType::Float,  "u_MetallicFactor" },
+				{ ShaderDataType::Float,  "u_RoughnessFactor" },
+				{ ShaderDataType::Bool,   "u_UseGamma" }
+			};
+		}
 
 	private:
 		uint32_t m_RendererID;

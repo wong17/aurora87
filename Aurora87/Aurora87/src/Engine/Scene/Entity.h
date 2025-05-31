@@ -33,10 +33,17 @@ namespace Engine
 		void DrawDepth(Shader& depthShader);
 		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
 
-		void Draw(bool bindTextures);
-		void Draw(bool bindTextures, UniformBuffer& uniformBuffer, uint32_t entityIndex);
-		void DrawInstanced(bool bindTextures, uint32_t instanceCount = 0);
-		void DrawInstanced(bool bindTextures, UniformBuffer& uniformBuffer, uint32_t entityIndex, uint32_t instanceCount = 0);
+		void Draw(UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, bool bindTextures);
+		void Draw(bool bindTextures, 
+			UniformBuffer& modelUniformBuffer, 
+			UniformBuffer& textureBlockUniformBuffer,
+			uint32_t entityIndex);
+		void DrawInstanced(UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, bool bindTextures, uint32_t instanceCount = 0);
+		void DrawInstanced(bool bindTextures, 
+			UniformBuffer& modelUniformBuffer, 
+			UniformBuffer& textureBlockUniformBuffer,
+			uint32_t entityIndex, 
+			uint32_t instanceCount = 0);
 
 		std::shared_ptr<Entity> AddChild(std::shared_ptr<Model> childModel, std::shared_ptr<Shader> shader, const std::string& name);
 		void RemoveChild(const std::shared_ptr<Entity>& child);
