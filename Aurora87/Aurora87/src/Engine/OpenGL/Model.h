@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "AssimpTextureLoader.h"
 #include "ModelAnimation.h"
+#include "UniformBuffer.h"
 
 #include <glad/glad.h>
 #include <assimp/Importer.hpp>
@@ -49,8 +50,8 @@ namespace Engine
 		void SetInstanceTransforms(const std::vector<glm::mat4>& mats, const VertexBufferLayout& instanceLayout = Mesh::InstanceLayout());
 		void DrawDepth(Shader& depthShader);
 		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
-		void Draw(Shader& shader, bool bindTextures = true);
-		void DrawInstanced(Shader& shader, uint32_t instanceCount = 0, bool bindTextures = true);
+		void Draw(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, bool bindTextures = true);
+		void DrawInstanced(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, uint32_t instanceCount = 0, bool bindTextures = true);
 
 		size_t GetAnimationCount() const;
 		const std::vector<std::string>& GetAnimationNames() const;

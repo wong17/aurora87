@@ -8,6 +8,7 @@
 #include "VertexBufferLayout.h"
 #include "ShaderDataTypes.h"
 #include "AssimpTypes.h"
+#include "UniformBuffer.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -63,8 +64,8 @@ namespace Engine
 		void SetDrawMode(GLenum drawMode) { m_DrawMode = drawMode; }
 		void DrawDepth(Shader& depthShader);
 		void DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount = 0);
-		void Draw(Shader& shader, bool bindTextures = true);
-		void DrawInstanced(Shader& shader, uint32_t instanceCount = 0, bool bindTextures = true);
+		void Draw(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, bool bindTextures = true);
+		void DrawInstanced(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, uint32_t instanceCount = 0, bool bindTextures = true);
 		bool CheckTextureLimit(MaterialTextureType type) const;
 
 		// Layouts por defecto
@@ -131,8 +132,19 @@ namespace Engine
 
 		void SetTextures(const std::vector<TextureData>& textures, bool clearAll = false);
 
+		glm::vec3 GetBaseColor() const { return m_BaseColor; }
+		float GetMetallic() const { return m_Metallic; }
+		float GetRoughness() const { return m_Roughness; }
+		void SetBaseColor(const glm::vec3& color) { m_BaseColor = color; }
+		void SetMetallic(float metallic) { m_Metallic = metallic; }
+		void SetRoughness(float roughness) { m_Roughness = roughness; }
+
 	private:
 		void BindTextures(Shader& shader);
+
+		void BindFirstTextureByType(Shader& shader);
+		void BindAndCountTexture(Shader& shader, int& textureUnit, MaterialTextureType type, const std::string& arrayUniform);
+		void UploadTextureBlock(UniformBuffer& ubo, uint32_t entityIndex);
 
 		int CountTexturesOfType(MaterialTextureType type) const;
 		void CalculateTextureCounts();
@@ -146,6 +158,7 @@ namespace Engine
 		std::vector<Vertex> m_Vertices;
 		std::vector<unsigned int> m_Indices;
 		std::vector<TextureData> m_Textures;
+
 		glm::vec3 m_BaseColor = glm::vec3(1.0f);
 		float m_Metallic = 0.0f;
 		float m_Roughness = 1.0f;
@@ -166,5 +179,25 @@ namespace Engine
 		std::unordered_map<MaterialTextureType, int> m_TextureCounts;
 
 		GLenum m_DrawMode = GL_TRIANGLES;
+
+		struct TextureBlockData
+		{
+			int NumDiffuse;
+			int NumSpecular;
+			int NumHeight;
+			int NumNormal;
+			int NumEmissive;
+			int NumAO;
+			int NumOpacity;
+			int NumRoughness;
+			int NumMetallic;
+
+			glm::vec3 BaseColor;
+			float pad0;		// padding para mantener std140
+			float MetallicFactor;
+			float RoughnessFactor;
+			float pad1;		// padding para mantener std140
+			bool UseGamma;	// en std140 ocupa 4 bytes
+		};
 	};
 }

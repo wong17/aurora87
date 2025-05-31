@@ -43,11 +43,13 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	// Uniform Buffer
 	m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
 	m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
+	m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetTextureBlockLayout(), 3);
 	m_CameraUniformBuffer->BindToShader("Camera", { *shapesShader, *modelShader });
 	m_ModelUniformBuffer->BindToShader("Model", { *shapesShader, *modelShader });
+	m_TextureUniformBuffer->BindToShader("TextureBlock", { *shapesShader, *modelShader });
 
 	// Entity Manager
-	m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer);
+	m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer, *m_TextureUniformBuffer);
 	m_TestCube = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreateCube(texture1), shapesShader, "TestCube");
 	m_TestPyramid = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePyramid(texture2), shapesShader, "TestPyramid");
 	m_TestPentagon = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePentagon(texture1), shapesShader, "TestPentagon");

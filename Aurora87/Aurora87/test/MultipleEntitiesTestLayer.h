@@ -79,6 +79,7 @@ namespace Test
 		// Uniform Buffer
 		std::shared_ptr<Engine::UniformBuffer> m_CameraUniformBuffer;
 		std::shared_ptr<Engine::UniformBuffer> m_ModelUniformBuffer;
+		std::shared_ptr<Engine::UniformBuffer> m_TextureUniformBuffer = nullptr;
 		
 		// Text Renderer
 		std::shared_ptr<Engine::TextRenderer> m_TextRenderer = nullptr;

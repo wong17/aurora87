@@ -15,7 +15,7 @@
 
 namespace Engine
 {
-    constexpr int MAX_TEXTURES_PER_TYPE = 7;
+    constexpr int MAX_TEXTURES_PER_TYPE = 2;
 
 	// Enum para los tipos de texturas
     enum class MaterialTextureType
@@ -39,8 +39,10 @@ namespace Engine
 		Unknown
     };
 
-    inline bool IsTextureTypeArray(MaterialTextureType type) {
-        switch (type) {
+    inline bool IsTextureTypeArray(MaterialTextureType type) 
+    {
+        switch (type) 
+        {
             case MaterialTextureType::BaseColor:
             case MaterialTextureType::MetallicRoughness:
                 return false;
@@ -49,8 +51,10 @@ namespace Engine
         }
     }
 
-    inline bool HasReachedTextureLimit(MaterialTextureType type, int currentCount) {
-        if (!IsTextureTypeArray(type)) {
+    inline bool HasReachedTextureLimit(MaterialTextureType type, int currentCount) 
+    {
+        if (!IsTextureTypeArray(type)) 
+        {
             // Para texturas unicas, maximo 1
             return currentCount >= 1;
         }
@@ -144,7 +148,8 @@ namespace Engine
         {".obj", {
             MaterialTextureType::Diffuse,
             MaterialTextureType::Specular,
-            MaterialTextureType::Normal
+            MaterialTextureType::Normal,
+            MaterialTextureType::Emissive
         }}
     };
 

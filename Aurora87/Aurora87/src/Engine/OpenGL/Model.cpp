@@ -193,7 +193,11 @@ namespace Engine
 			mesh.DrawInstancedDepth(depthShader, instanceCount);
 	}
 
-	void Model::Draw(Shader& shader, bool bindTextures)
+	void Model::Draw(
+		Shader& shader,
+		UniformBuffer& textureBlockUniformBuffer,
+		uint32_t entityIndex,
+		bool bindTextures)
 	{
 		shader.Bind();
 
@@ -213,10 +217,15 @@ namespace Engine
 		}
 
 		for (auto& mesh : m_Meshes)
-			mesh.Draw(shader, bindTextures);
+			mesh.Draw(shader, textureBlockUniformBuffer, entityIndex, bindTextures);
 	}
 
-	void Model::DrawInstanced(Shader& shader, uint32_t instanceCount, bool bindTextures)
+	void Model::DrawInstanced(
+		Shader& shader,
+		UniformBuffer& textureBlockUniformBuffer,
+		uint32_t entityIndex,
+		uint32_t instanceCount, 
+		bool bindTextures)
 	{
 		shader.Bind();
 
@@ -236,7 +245,7 @@ namespace Engine
 		}
 
 		for (auto& mesh : m_Meshes)
-			mesh.DrawInstanced(shader, instanceCount, bindTextures);
+			mesh.DrawInstanced(shader, textureBlockUniformBuffer, entityIndex, instanceCount, bindTextures);
 	}
 
 	size_t Model::GetAnimationCount() const

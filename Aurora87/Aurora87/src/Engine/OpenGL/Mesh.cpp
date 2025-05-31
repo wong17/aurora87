@@ -72,8 +72,6 @@ namespace Engine
 		std::cout << " - Vertex Buffer Index: " << mesh.GetVertexArray()->GetVertexBufferIndex() << std::endl;
 	}
 
-	struct TexInfo { int unit, kind; };
-
 	Mesh::Mesh(
 		const std::vector<float>& rawVertices,
 		const VertexBufferLayout& layout,
@@ -214,16 +212,17 @@ namespace Engine
 		}
 	}
 
-	void Mesh::Draw(Shader& shader, bool bindTextures)
+	void Mesh::Draw(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, bool bindTextures)
 	{
 		shader.Bind();
-		shader.SetInt("u_UseGamma", NeedsGammaCorrection());
-		shader.SetFloat3("u_BaseColor", m_BaseColor);
-		shader.SetFloat("u_MetallicFactor", m_Metallic);
-		shader.SetFloat("u_RoughnessFactor", m_Roughness);
+
+		UploadTextureBlock(textureBlockUniformBuffer, entityIndex);
 
 		if (bindTextures)
-			BindTextures(shader);
+		{
+			//BindTextures(shader);
+			BindFirstTextureByType(shader);
+		}
 
 		if (m_VertexArray == nullptr) 
 		{
@@ -242,7 +241,7 @@ namespace Engine
 		}
 	}
 
-	void Mesh::DrawInstanced(Shader& shader, uint32_t instanceCount, bool bindTextures)
+	void Mesh::DrawInstanced(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, uint32_t instanceCount, bool bindTextures)
 	{
 		if (!m_HasInstancing)
 			throw std::runtime_error("Mesh::DrawInstanced(): no se han configurado instancias (SetInstanceTransforms)");
@@ -251,18 +250,17 @@ namespace Engine
 		if (instanceCount == 0) 
 		{
 			std::cout << "Mesh::DrawInstanced(): instanceCount es 0, llamando a Draw()" << std::endl;
-			Draw(shader, bindTextures);
+			Draw(shader, textureBlockUniformBuffer, bindTextures);
 			return;
 		}
 
-		shader.Bind();
-		shader.SetInt("u_UseGamma", NeedsGammaCorrection());
-		shader.SetFloat3("u_BaseColor", m_BaseColor);
-		shader.SetFloat("u_MetallicFactor", m_Metallic);
-		shader.SetFloat("u_RoughnessFactor", m_Roughness);
+		UploadTextureBlock(textureBlockUniformBuffer, entityIndex);
 
 		if (bindTextures)
-			BindTextures(shader);
+		{
+			//BindTextures(shader);
+			BindFirstTextureByType(shader);
+		}
 
 		if (m_VertexArray == nullptr) 
 		{
@@ -322,29 +320,127 @@ namespace Engine
 	void Mesh::BindTextures(Shader& shader)
 	{
 		std::unordered_map<MaterialTextureType, int> typeCounters;
+		int textureUnit = 0;
 		for (auto& td : m_Textures) 
 		{
-			std::string uniformName = MaterialTextureUniformName(td.Type);
-			int arrayIndex = typeCounters[td.Type]++;
+			MaterialTextureType type = td.Type;
+			int arrayIndex = typeCounters[type]++;
+			std::string baseName = MaterialTextureUniformName(type);
 
-			if (IsTextureTypeArray(td.Type)) 
-			{
+			std::string uniformName = baseName;
+			if (IsTextureTypeArray(type))
 				uniformName += "[" + std::to_string(arrayIndex) + "]";
-			}
 
 			td.Texture->Bind(td.TextureUnitIndex);
 			shader.SetInt(uniformName, td.TextureUnitIndex);
+			textureUnit++;
 		}
 
-		shader.SetInt("u_NumDiffuseTextures", CountTexturesOfType(MaterialTextureType::Diffuse));
-		shader.SetInt("u_NumSpecularTextures", CountTexturesOfType(MaterialTextureType::Specular));
-		shader.SetInt("u_NumHeightTextures", CountTexturesOfType(MaterialTextureType::Height));
-		shader.SetInt("u_NumNormalTextures", CountTexturesOfType(MaterialTextureType::Normal));
-		shader.SetInt("u_NumEmissiveTextures", CountTexturesOfType(MaterialTextureType::Emissive));
-		shader.SetInt("u_NumAmbientOcclusionTextures", CountTexturesOfType(MaterialTextureType::AmbientOcclusion));
-		shader.SetInt("u_NumOpacityTextures", CountTexturesOfType(MaterialTextureType::Opacity));
-		shader.SetInt("u_NumRoughnessTextures", CountTexturesOfType(MaterialTextureType::Roughness));
-		shader.SetInt("u_NumMetallicTextures", CountTexturesOfType(MaterialTextureType::Metallic));
+		// gltf
+		if (auto it = std::find_if(
+			m_Textures.begin(), m_Textures.end(),
+			[](auto const& td) { return td.Type == MaterialTextureType::BaseColor; });
+			it != m_Textures.end())
+		{
+			it->Texture->Bind(textureUnit);
+			shader.SetInt("u_AlbedoMap", textureUnit);
+			textureUnit++;
+		}
+		if (auto it = std::find_if(
+			m_Textures.begin(), m_Textures.end(),
+			[](auto const& td) { return td.Type == MaterialTextureType::MetallicRoughness; });
+			it != m_Textures.end())
+		{
+			it->Texture->Bind(textureUnit);
+			shader.SetInt("u_MetallicRoughnessMap", textureUnit);
+			textureUnit++;
+		}
+	}
+
+	void Mesh::BindFirstTextureByType(Shader& shader)
+	{
+		std::unordered_map<MaterialTextureType, const TextureData*> firstOfType;
+		for (const auto& td : m_Textures)
+		{
+			if (firstOfType.find(td.Type) == firstOfType.end())
+				firstOfType[td.Type] = &td;
+		}
+
+		int textureUnit = 0;
+		if (firstOfType.count(MaterialTextureType::Diffuse))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Diffuse, "u_texture_diffuse");
+		if (firstOfType.count(MaterialTextureType::Specular))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Specular, "u_texture_specular");
+		if (firstOfType.count(MaterialTextureType::Normal))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Normal, "u_texture_normal");
+		if (firstOfType.count(MaterialTextureType::Height))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Height, "u_texture_height");
+		if (firstOfType.count(MaterialTextureType::Emissive))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Emissive, "u_texture_emissive");
+		if (firstOfType.count(MaterialTextureType::AmbientOcclusion))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::AmbientOcclusion, "u_texture_ambient_occlusion");
+		if (firstOfType.count(MaterialTextureType::Opacity))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Opacity, "u_texture_opacity");
+		if (firstOfType.count(MaterialTextureType::Roughness))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Roughness, "u_texture_roughness");
+		if (firstOfType.count(MaterialTextureType::Metallic))
+			BindAndCountTexture(shader, textureUnit, MaterialTextureType::Metallic, "u_texture_metallic");
+
+		// gltf
+		if (firstOfType.count(MaterialTextureType::BaseColor))
+		{
+			auto td = firstOfType[MaterialTextureType::BaseColor];
+			td->Texture->Bind(textureUnit);
+			shader.SetInt("u_AlbedoMap", textureUnit);
+			textureUnit++;
+		}
+		if (firstOfType.count(MaterialTextureType::MetallicRoughness))
+		{
+			auto td = firstOfType[MaterialTextureType::MetallicRoughness];
+			td->Texture->Bind(textureUnit);
+			shader.SetInt("u_MetallicRoughnessMap", textureUnit);
+			textureUnit++;
+		}
+	}
+
+	void Mesh::BindAndCountTexture(Shader& shader, int& textureUnit, MaterialTextureType type, const std::string& arrayUniform)
+	{
+		for (const auto& td : m_Textures)
+		{
+			if (td.Type == type)
+			{
+				td.Texture->Bind(textureUnit);
+				shader.SetInt(arrayUniform + "[0]", textureUnit);
+				textureUnit++;
+				break;
+			}
+		}
+	}
+
+	void Mesh::UploadTextureBlock(UniformBuffer& ubo, uint32_t entityIndex)
+	{
+		TextureBlockData block{};
+		block.NumDiffuse = (CountTexturesOfType(MaterialTextureType::Diffuse) > 0 ? 1 : 0);
+		block.NumSpecular = (CountTexturesOfType(MaterialTextureType::Specular) > 0 ? 1 : 0);
+		block.NumHeight = (CountTexturesOfType(MaterialTextureType::Height) > 0 ? 1 : 0);
+		block.NumNormal = (CountTexturesOfType(MaterialTextureType::Normal) > 0 ? 1 : 0);
+		block.NumEmissive = (CountTexturesOfType(MaterialTextureType::Emissive) > 0 ? 1 : 0);
+		block.NumAO = (CountTexturesOfType(MaterialTextureType::AmbientOcclusion) > 0 ? 1 : 0);
+		block.NumOpacity = (CountTexturesOfType(MaterialTextureType::Opacity) > 0 ? 1 : 0);
+		block.NumRoughness = (CountTexturesOfType(MaterialTextureType::Roughness) > 0 ? 1 : 0);
+		block.NumMetallic = (CountTexturesOfType(MaterialTextureType::Metallic) > 0 ? 1 : 0);
+
+		block.BaseColor = m_BaseColor;
+		block.MetallicFactor = m_Metallic;
+		block.RoughnessFactor = m_Roughness;
+		block.UseGamma = NeedsGammaCorrection();
+
+		uint32_t alignedStride = ubo.GetAlignedStride();
+		uint32_t baseOffset = entityIndex * alignedStride;
+
+		ubo.Bind();
+		ubo.SetData(&block, sizeof(TextureBlockData), baseOffset);
+		ubo.BindRange(baseOffset, alignedStride);
 	}
 
 	int Mesh::CountTexturesOfType(MaterialTextureType type) const
