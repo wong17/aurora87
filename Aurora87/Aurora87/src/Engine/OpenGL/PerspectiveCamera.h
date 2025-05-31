@@ -58,13 +58,14 @@ namespace Engine
 		{
 			m_MinYaw = minYaw;
 			m_MaxYaw = maxYaw;
+			m_YawLimitsEnabled = true;
 			m_Yaw = std::clamp(m_Yaw, m_MinYaw, m_MaxYaw);
 			RecalculateViewMatrix();
 		}
 
 		inline void ResetYawLimits() 
 		{
-			SetYawLimits(-180.0f, 180.0f);
+			m_YawLimitsEnabled = false;
 		}
 
 		inline void SetPitchLimits(float minPitch, float maxPitch) 
@@ -114,10 +115,12 @@ namespace Engine
 		float m_Pitch = 0.0f;	// Rotación inicial en el eje X en grados (plano vertical)
 		float m_Roll = 0.0f;	// Rotación inicial en el eje Z en grados (plano de profundidad) 
 
-		float m_MinYaw = -180.f;
-		float m_MaxYaw = 180.f;
+		float m_MinYaw = 0.0f;
+		float m_MaxYaw = 360.0f;
 		float m_MinPitch = -89.f;
 		float m_MaxPitch = 89.f;
+
+		bool m_YawLimitsEnabled = false;
 
 		float m_MouseSensitivity = 0.1f;	// Sensibilidad del mouse para el movimiento de la cámara
 		float m_MovementSpeed = 100.0f;		// Velocidad de movimiento de la cámara (en unidades por segundo)

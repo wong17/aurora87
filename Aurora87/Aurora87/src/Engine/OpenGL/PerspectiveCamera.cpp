@@ -175,8 +175,11 @@ namespace Engine
 		// Actualiza los ángulos de yaw y pitch
 		m_Yaw += xOffset;
 		m_Pitch += yOffset;
-		// Limitar el rango de pitch para evitar problemas de gimbal lock o bloqueo Cardan
-		m_Yaw = std::clamp(m_Yaw, m_MinYaw, m_MaxYaw);
+		
+		if (m_YawLimitsEnabled) 
+		{
+			m_Yaw = std::clamp(m_Yaw, m_MinYaw, m_MaxYaw);
+		}
 		m_Pitch = std::clamp(m_Pitch, m_MinPitch, m_MaxPitch);
 		RecalculateViewMatrix();
 	}
