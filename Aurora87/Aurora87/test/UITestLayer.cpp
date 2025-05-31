@@ -32,6 +32,7 @@ namespace Test
 		// Uniform Buffer
 		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
 		m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
+		m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetTextureBlockLayout(), 3);
 
 		// Skybox
 		std::vector<std::string> faces
@@ -50,7 +51,7 @@ namespace Test
 
 	
 		// Entity Manager
-		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer);
+		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer, *m_TextureUniformBuffer);
 
 		// Trabsform System
 		m_TransformSystem = std::make_shared<Engine::TransformSystem>(*m_EntityManager);

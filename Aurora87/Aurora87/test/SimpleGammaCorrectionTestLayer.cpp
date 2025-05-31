@@ -51,11 +51,13 @@ namespace Test
 		// Uniform Buffer
 		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
 		m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
+		m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetTextureBlockLayout(), 3);
 		m_CameraUniformBuffer->BindToShader("Camera", { *m_ShapesShader, *m_PlaneShader });
 		m_ModelUniformBuffer->BindToShader("Model", { *m_ShapesShader, *m_PlaneShader });
+		m_TextureUniformBuffer->BindToShader("TextureBlock", { *m_ShapesShader, *m_PlaneShader });
 
 		// Entity Manager
-		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer);
+		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer, *m_TextureUniformBuffer);
 		m_TestCube = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreateCube(texture1), m_ShapesShader, "TestCube");
 		m_TestPentagon = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePentagon(texture2), m_ShapesShader, "TestPentagon");
 		m_TestPlane = m_EntityManager->CreateEntity(Engine::PrimitiveFactory::CreatePlane(texture3), m_PlaneShader, "TestPlane");

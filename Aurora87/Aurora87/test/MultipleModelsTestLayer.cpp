@@ -35,11 +35,13 @@ namespace Test
 		// Uniform Buffer
 		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
 		m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
+		m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetTextureBlockLayout(), 3);
 		m_CameraUniformBuffer->BindToShader("Camera", { *modelShader });
 		m_ModelUniformBuffer->BindToShader("Model", { *modelShader });
+		m_TextureUniformBuffer->BindToShader("TextureBlock", { *modelShader });
 
 		// Entity Manager
-		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer);
+		m_EntityManager = std::make_unique<Engine::EntityManager>(*m_ModelUniformBuffer, *m_TextureUniformBuffer);
 		m_Model = m_EntityManager->CreateEntity(std::make_shared<Engine::Model>("res/models/nanosuit/nanosuit.obj"), modelShader, "Model");
 
 		//Collision::GeometricsBox geo = Collision::GeometricsBox();
