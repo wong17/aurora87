@@ -474,6 +474,16 @@ namespace Engine
 				int v = (CountTexturesOfType(MaterialTextureType::Metallic) > 0 ? 1 : 0);
 				ubo.SetData(&v, sizeof(int), globalOffset);
 			}
+			else if (name == "u_HasAlbedoMap")
+			{
+				int hasAlbedo = (CountTexturesOfType(MaterialTextureType::BaseColor) > 0 ? 1 : 0);
+				ubo.SetData(&hasAlbedo, sizeof(int), globalOffset);
+			}
+			else if (name == "u_HasMetallicRoughnessMap")
+			{
+				int hasMR = (CountTexturesOfType(MaterialTextureType::MetallicRoughness) > 0 ? 1 : 0);
+				ubo.SetData(&hasMR, sizeof(int), globalOffset);
+			}
 			else if (name == "u_BaseColor")
 			{
 				ubo.SetData(glm::value_ptr(m_BaseColor), sizeof(glm::vec3), globalOffset);
