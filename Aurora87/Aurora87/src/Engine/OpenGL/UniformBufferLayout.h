@@ -18,9 +18,19 @@ namespace Engine
         {
             CalculateOffsetsAndStride();
         }
+        UniformBufferLayout(const std::vector<UniformBufferElement>& elements)
+            : m_Elements(elements)
+        {
+            CalculateOffsetsAndStride();
+        }
 		~UniformBufferLayout() = default;
 
         inline const std::vector<UniformBufferElement>& GetElements() const { return m_Elements; }
+        inline void SetElements(const std::vector<UniformBufferElement>& elements) 
+        { 
+            m_Elements = elements; 
+            CalculateOffsetsAndStride(); 
+		}
         inline uint32_t GetStride() const { return m_Stride; }
 
         const UniformBufferElement& GetElement(const std::string& name) const 
