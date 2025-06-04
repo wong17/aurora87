@@ -49,7 +49,7 @@ namespace Engine
 			const std::vector<TextureData>& textures = {},
 			const VertexBufferLayout& layout = DefaultModelLayout(),
 			GLenum drawMode = GL_TRIANGLES,
-			glm::vec3 baseColor = glm::vec3(1.0f),
+			glm::vec4 baseColor = glm::vec4(1.0f),
 			float metallic = 0.0f,
 			float roughness = 1.0f);
 
@@ -58,7 +58,7 @@ namespace Engine
 			const std::vector<TextureData>& textures = {}, 
 			const VertexBufferLayout& layout = DefaultModelLayout(),
 			GLenum drawMode = GL_TRIANGLES,
-			glm::vec3 baseColor = glm::vec3(1.0f), 
+			glm::vec4 baseColor = glm::vec4(1.0f), 
 			float metallic = 0.0f, 
 			float roughness = 1.0f);
 
@@ -162,7 +162,7 @@ namespace Engine
 		std::vector<unsigned int> m_Indices;
 		std::vector<TextureData> m_Textures;
 
-		glm::vec3 m_BaseColor = glm::vec3(1.0f);
+		glm::vec4 m_BaseColor = glm::vec4(1.0f);
 		float m_Metallic = 0.0f;
 		float m_Roughness = 1.0f;
 

@@ -3,7 +3,10 @@
 #include "UniformBufferLayout.h"
 #include "UniformBufferElement.h"
 #include "Shader.h"
+
 #include "Engine/Core/DebugGL.h"
+
+#include "Engine/Scene/GlobalSceneSettings.h"
 
 #include <glad/glad.h>
 
@@ -73,15 +76,6 @@ namespace Engine
 				{ ShaderDataType::Mat4, "u_ModelMatrix" }
 			};
 		}
-		static UniformBufferLayout GetDefaultPBRFactorsLayout()
-		{
-			return
-			{
-				{ ShaderDataType::Float3, "u_BaseColor" },
-				{ ShaderDataType::Float, "u_MetallicFactor" },
-				{ ShaderDataType::Float, "u_RoughnessFactor" }
-			};
-		}
 		static UniformBufferLayout GetTextureBlockLayout()
 		{
 			return
@@ -95,12 +89,62 @@ namespace Engine
 				{ ShaderDataType::Int,    "u_NumOpacityTextures" },
 				{ ShaderDataType::Int,    "u_NumRoughnessTextures" },
 				{ ShaderDataType::Int,    "u_NumMetallicTextures" },
-				{ ShaderDataType::Float3, "u_BaseColor" },
+
+				{ ShaderDataType::Int,    "u_HasAlbedoMap" },
+				{ ShaderDataType::Int,    "u_HasMetallicRoughnessMap" },
+
+				{ ShaderDataType::Float4, "u_BaseColor" },
 				{ ShaderDataType::Float,  "u_MetallicFactor" },
 				{ ShaderDataType::Float,  "u_RoughnessFactor" },
-				{ ShaderDataType::Bool,   "u_UseGamma" },
-				{ ShaderDataType::Bool,   "u_UseShadows" }
+
+				{ ShaderDataType::Int,   "u_UseGamma" },
+				{ ShaderDataType::Int,   "u_UseShadows" }
 			};
+		}
+		static UniformBufferLayout GetLightBlockLayout(int maxDirLights, int maxPointLights, int maxSpotLights)
+		{
+			std::vector<UniformBufferElement> elements;
+
+			elements.push_back({ ShaderDataType::Int, "u_NumDirectionalLights" });
+			elements.push_back({ ShaderDataType::Int, "u_NumPointLights" });
+			elements.push_back({ ShaderDataType::Int, "u_NumSpotLights" });
+
+			elements.push_back({ ShaderDataType::Float4, "u_GlobalAmbient" });
+
+			for (int i = 0; i < maxDirLights; i++)
+			{
+				elements.push_back({ ShaderDataType::Float4, "directionalLights[" + std::to_string(i) + "].direction" });
+				elements.push_back({ ShaderDataType::Float4, "directionalLights[" + std::to_string(i) + "].ambient" });
+				elements.push_back({ ShaderDataType::Float4, "directionalLights[" + std::to_string(i) + "].diffuse" });
+				elements.push_back({ ShaderDataType::Float4, "directionalLights[" + std::to_string(i) + "].specular" });
+			}
+
+			for (int i = 0; i < maxPointLights; i++)
+			{
+				elements.push_back({ ShaderDataType::Float4, "pointLights[" + std::to_string(i) + "].position" });
+				elements.push_back({ ShaderDataType::Float,  "pointLights[" + std::to_string(i) + "].constant" });
+				elements.push_back({ ShaderDataType::Float,  "pointLights[" + std::to_string(i) + "].linear" });
+				elements.push_back({ ShaderDataType::Float,  "pointLights[" + std::to_string(i) + "].quadratic" });
+				elements.push_back({ ShaderDataType::Float4, "pointLights[" + std::to_string(i) + "].ambient" });
+				elements.push_back({ ShaderDataType::Float4, "pointLights[" + std::to_string(i) + "].diffuse" });
+				elements.push_back({ ShaderDataType::Float4, "pointLights[" + std::to_string(i) + "].specular" });
+			}
+
+			for (int i = 0; i < maxSpotLights; i++)
+			{
+				elements.push_back({ ShaderDataType::Float4, "spotLights[" + std::to_string(i) + "].position" });
+				elements.push_back({ ShaderDataType::Float4, "spotLights[" + std::to_string(i) + "].direction" });
+				elements.push_back({ ShaderDataType::Float,  "spotLights[" + std::to_string(i) + "].cutOff" });
+				elements.push_back({ ShaderDataType::Float,  "spotLights[" + std::to_string(i) + "].outerCutOff" });
+				elements.push_back({ ShaderDataType::Float,  "spotLights[" + std::to_string(i) + "].constant" });
+				elements.push_back({ ShaderDataType::Float,  "spotLights[" + std::to_string(i) + "].linear" });
+				elements.push_back({ ShaderDataType::Float,  "spotLights[" + std::to_string(i) + "].quadratic" });
+				elements.push_back({ ShaderDataType::Float4, "spotLights[" + std::to_string(i) + "].ambient" });
+				elements.push_back({ ShaderDataType::Float4, "spotLights[" + std::to_string(i) + "].diffuse" });
+				elements.push_back({ ShaderDataType::Float4, "spotLights[" + std::to_string(i) + "].specular" });
+			}
+
+			return UniformBufferLayout(elements);
 		}
 
 	private:

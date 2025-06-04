@@ -41,7 +41,7 @@ void Test::AIEntitiesTestLayer::OnAttach()
 	m_Skybox = std::make_unique<Engine::Skybox>(faces, m_SkyboxShader);
 
 	// Uniform Buffer
-	m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
+	m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0, 1u);
 	m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
 	m_TextureUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetTextureBlockLayout(), 3);
 	m_CameraUniformBuffer->BindToShader("Camera", { *shapesShader, *modelShader });

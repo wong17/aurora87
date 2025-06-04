@@ -63,7 +63,7 @@ namespace Test
 		m_Skybox = std::make_unique<Engine::Skybox>(faces, m_SkyboxShader);
 
 		// Uniform Buffer
-		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
+		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0, 1u);
 		m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
 		Engine::UniformBufferLayout textureBlockLayout =
 		{

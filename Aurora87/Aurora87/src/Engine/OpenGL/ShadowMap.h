@@ -34,8 +34,8 @@ namespace Engine
 	public:
 		// Width y Height deberian ser multiplos de 1024
 		ShadowMap(std::shared_ptr<ShadowCamera> camera,
-			unsigned int width = 1024,
-			unsigned int height = 1024,
+			unsigned int width = 2048,
+			unsigned int height = 2048,
 			DepthTextureSpecification texSpec = {});
 		~ShadowMap();
 
