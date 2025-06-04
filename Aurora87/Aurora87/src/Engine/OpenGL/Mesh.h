@@ -138,7 +138,7 @@ namespace Engine
 		glm::vec3 GetBaseColor() const { return m_BaseColor; }
 		float GetMetallic() const { return m_Metallic; }
 		float GetRoughness() const { return m_Roughness; }
-		void SetBaseColor(const glm::vec3& color) { m_BaseColor = color; }
+		void SetBaseColor(const glm::vec4& color) { m_BaseColor = color; }
 		void SetMetallic(float metallic) { m_Metallic = metallic; }
 		void SetRoughness(float roughness) { m_Roughness = roughness; }
 

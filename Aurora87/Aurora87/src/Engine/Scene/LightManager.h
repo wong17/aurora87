@@ -41,7 +41,7 @@ namespace Engine
         std::vector<PointLight> m_PointLights;
         std::vector<SpotLight> m_SpotLights;
 
-		glm::vec3 m_GlobalAmbientColor = glm::vec3(0.005f);
+		glm::vec4 m_GlobalAmbientColor = glm::vec4(0.005f, 0.005f, 0.005f, 0.0f);
 
         int m_MaxDirLights = 0;
         int m_MaxPointLights = 0;

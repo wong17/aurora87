@@ -4,7 +4,7 @@ namespace Engine
 {
     LightManager::LightManager(std::shared_ptr<UniformBuffer> lightUBO, int maxDir, int maxPoint, int maxSpot)
         : m_LightUBO(lightUBO), m_MaxDirLights(maxDir), m_MaxPointLights(maxPoint), m_MaxSpotLights(maxSpot),
-        m_GlobalAmbientColor(0.05f, 0.05f, 0.05f)
+        m_GlobalAmbientColor(0.05f, 0.05f, 0.05f, 0.05f)
     { }
 
     int LightManager::AddDirectionalLight(const DirectionalLight& dl)
@@ -54,7 +54,7 @@ namespace Engine
 
     void LightManager::SetGlobalAmbient(const glm::vec3& ambientColor)
     {
-        m_GlobalAmbientColor = ambientColor;
+        m_GlobalAmbientColor = glm::vec4(ambientColor, 0.0f);
     }
 
     void LightManager::PopLastDirectionalLight()
