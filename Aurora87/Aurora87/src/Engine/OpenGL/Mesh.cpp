@@ -77,7 +77,7 @@ namespace Engine
 		const VertexBufferLayout& layout,
 		GLenum drawMode)
 		: m_Indices(), m_Textures(), m_Layout(layout), m_DrawMode(drawMode), 
-		m_BaseColor(glm::vec3(1.0f)), m_Metallic(0.0f), m_Roughness(1.0f)
+		m_BaseColor(glm::vec4(1.0f)), m_Metallic(0.0f), m_Roughness(1.0f)
 	{
 		SetupRawVertices(rawVertices);
 		m_HasEBO = false;
@@ -89,7 +89,7 @@ namespace Engine
 		const VertexBufferLayout& layout,
 		GLenum drawMode)
 		: m_Indices(), m_Textures(textures), m_Layout(layout), m_DrawMode(drawMode), 
-		m_BaseColor(glm::vec3(1.0f)), m_Metallic(0.0f), m_Roughness(1.0f)
+		m_BaseColor(glm::vec4(1.0f)), m_Metallic(0.0f), m_Roughness(1.0f)
 	{
 		CalculateTextureCounts();
 		SetupRawVertices(rawVertices);
@@ -103,7 +103,7 @@ namespace Engine
 		const VertexBufferLayout& layout,
 		GLenum drawMode)
 		: m_Indices(indices), m_Textures(), m_Layout(layout), m_DrawMode(drawMode), 
-		m_BaseColor(glm::vec3(1.0f)), m_Metallic(0.0f), m_Roughness(1.0f)
+		m_BaseColor(glm::vec4(1.0f)), m_Metallic(0.0f), m_Roughness(1.0f)
 	{
 		SetupRawVertices(rawVertices);
 		m_HasEBO = !m_Indices.empty();
@@ -116,7 +116,7 @@ namespace Engine
 		const std::vector<TextureData>& textures,
 		const VertexBufferLayout& layout,
 		GLenum drawMode,
-		glm::vec3 baseColor,
+		glm::vec4 baseColor,
 		float metallic,
 		float roughness)
 		: m_Vertices(vertices), m_Indices(), m_Textures(textures), m_Layout(layout),
@@ -133,7 +133,7 @@ namespace Engine
 		const std::vector<TextureData>& textures, 
 		const VertexBufferLayout& layout,
 		GLenum drawMode,
-		glm::vec3 baseColor, 
+		glm::vec4 baseColor, 
 		float metallic, 
 		float roughness)
 		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures), m_Layout(layout),
@@ -486,7 +486,7 @@ namespace Engine
 			}
 			else if (name == "u_BaseColor")
 			{
-				ubo.SetData(glm::value_ptr(m_BaseColor), sizeof(glm::vec3), globalOffset);
+				ubo.SetData(glm::value_ptr(m_BaseColor), sizeof(glm::vec4), globalOffset);
 			}
 			else if (name == "u_MetallicFactor")
 			{

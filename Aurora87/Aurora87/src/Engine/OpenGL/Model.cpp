@@ -409,7 +409,7 @@ namespace Engine
 		// 3. Texturas (Extraer las texturas)
 		auto textures = ExtractTextures(mesh, scene, nextTexUnit);
 		// 4) Factores PBR
-		glm::vec3 baseColor;
+		glm::vec4 baseColor;
 		float metallic, roughness;
 		ExtractPBRFactors(mesh, scene, baseColor, metallic, roughness);
 		// 5) Modo de dibujo
@@ -699,19 +699,19 @@ namespace Engine
 		return td;
 	}
 
-	void Model::ExtractPBRFactors(aiMesh* mesh, const aiScene* scene, glm::vec3& outBaseColor, float& outMetallic, float& outRoughness) const
+	void Model::ExtractPBRFactors(aiMesh* mesh, const aiScene* scene, glm::vec4& outBaseColor, float& outMetallic, float& outRoughness) const
 	{
-		outBaseColor = glm::vec3(1.0f);
+		outBaseColor = glm::vec4(1.0f);
 		outMetallic = 0.0f;
 		outRoughness = 1.0f;
 
 		aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 		if (m_Extension == ".gltf" || m_Extension == ".glb") 
 		{
-			aiColor3D baseColor(1, 1, 1);
+			aiColor4D baseColor(1.0f);
 			if (mat->Get(AI_MATKEY_BASE_COLOR, baseColor) == AI_SUCCESS) 
 			{
-				outBaseColor = glm::vec3(baseColor.r, baseColor.g, baseColor.b);
+				outBaseColor = glm::vec4(baseColor.r, baseColor.g, baseColor.b, baseColor.a);
 			}
 
 			ai_real metallic = 0.0f;
@@ -728,10 +728,10 @@ namespace Engine
 		}
 		else if (m_Extension == ".fbx") 
 		{
-			aiColor3D diffuse(1, 1, 1);
+			aiColor4D diffuse(1.0f);
 			if (mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse) == AI_SUCCESS) 
 			{
-				outBaseColor = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+				outBaseColor = glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
 			}
 
 			// Metallic
@@ -760,10 +760,10 @@ namespace Engine
 		}
 		else if (m_Extension == ".obj")
 		{
-			aiColor3D diffuse(1.0f, 1.0f, 1.0f);
+			aiColor4D diffuse(1.0f);
 			if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse))
 			{
-				outBaseColor = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+				outBaseColor = glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
 			}
 
 			outMetallic = 0.0f;

@@ -76,7 +76,7 @@ namespace Engine
 		std::vector<Vertex> ExtractVertices(aiMesh* mesh) const;
 		std::vector<unsigned int> ExtractIndices(aiMesh* mesh) const;
 		std::vector<TextureData> ExtractTextures(aiMesh* mesh, const aiScene* scene, uint32_t& nextTexUnit);
-		void ExtractPBRFactors(aiMesh* mesh, const aiScene* scene, glm::vec3& outBaseColor, float& outMetallic, float& outRoughness) const;
+		void ExtractPBRFactors(aiMesh* mesh, const aiScene* scene, glm::vec4& outBaseColor, float& outMetallic, float& outRoughness) const;
 		GLenum DetermineDrawMode(aiMesh* mesh) const;
 		// Funciones para cargar texturas
 		std::vector<aiString> CollectTexturePaths(aiMaterial* mat, MaterialTextureType mtt) const;
