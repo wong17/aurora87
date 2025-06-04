@@ -49,10 +49,20 @@ namespace Engine
             m_Stride = 0;
             for (auto& element : m_Elements) 
             {
+                uint32_t align = Std140BaseAlignment(element.Type);
+                uint32_t size = Std140Size(element.Type);
+
+                uint32_t padding = (align - (offset % align)) % align;
+                offset += padding;
+
                 element.Offset = offset;
-                offset += element.Size;
-                m_Stride += element.Size;
+
+                offset += size;
             }
+            m_Stride = offset;
+
+            if (m_Stride % 16 != 0)
+                m_Stride += 16 - (m_Stride % 16);
         }
     private:
         std::vector<UniformBufferElement> m_Elements;
