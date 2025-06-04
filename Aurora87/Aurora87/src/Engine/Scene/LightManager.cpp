@@ -5,8 +5,7 @@ namespace Engine
     LightManager::LightManager(std::shared_ptr<UniformBuffer> lightUBO, int maxDir, int maxPoint, int maxSpot)
         : m_LightUBO(lightUBO), m_MaxDirLights(maxDir), m_MaxPointLights(maxPoint), m_MaxSpotLights(maxSpot),
         m_GlobalAmbientColor(0.05f, 0.05f, 0.05f)
-    {
-    }
+    { }
 
     int LightManager::AddDirectionalLight(const DirectionalLight& dl)
     {
@@ -80,75 +79,54 @@ namespace Engine
     {
         m_LightUBO->Bind();
         uint32_t offsetBase = 0;
+		auto& layout = m_LightUBO->GetLayout();
 
         int numDir = static_cast<int>(m_DirectionalLights.size());
         int numPnt = static_cast<int>(m_PointLights.size());
         int numSpt = static_cast<int>(m_SpotLights.size());
-        m_LightUBO->SetData(&numDir, sizeof(int), offsetBase + m_LightUBO->GetLayout().GetElement("u_NumDirectionalLights").Offset);
-        m_LightUBO->SetData(&numPnt, sizeof(int), offsetBase + m_LightUBO->GetLayout().GetElement("u_NumPointLights").Offset);
-        m_LightUBO->SetData(&numSpt, sizeof(int), offsetBase + m_LightUBO->GetLayout().GetElement("u_NumSpotLights").Offset);
+        m_LightUBO->SetData(&numDir, sizeof(int), offsetBase + layout.GetElement("u_NumDirectionalLights").Offset);
+        m_LightUBO->SetData(&numPnt, sizeof(int), offsetBase + layout.GetElement("u_NumPointLights").Offset);
+        m_LightUBO->SetData(&numSpt, sizeof(int), offsetBase + layout.GetElement("u_NumSpotLights").Offset);
 
-        m_LightUBO->SetData(glm::value_ptr(m_GlobalAmbientColor), sizeof(glm::vec3),
-            offsetBase + m_LightUBO->GetLayout().GetElement("u_GlobalAmbient").Offset);
+        m_LightUBO->SetData(glm::value_ptr(m_GlobalAmbientColor), sizeof(glm::vec4), offsetBase + layout.GetElement("u_GlobalAmbient").Offset);
 
         for (int i = 0; i < numDir; ++i)
         {
             const auto& L = m_DirectionalLights[i];
             std::string base = "directionalLights[" + std::to_string(i) + "]";
-            m_LightUBO->SetData(glm::value_ptr(L.Direction), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".direction").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Ambient), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".ambient").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Diffuse), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".diffuse").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Specular), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".specular").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Direction), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".direction").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Ambient), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".ambient").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Diffuse), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".diffuse").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Specular), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".specular").Offset);
         }
 
         for (int i = 0; i < numPnt; ++i)
         {
             const auto& L = m_PointLights[i];
             std::string base = "pointLights[" + std::to_string(i) + "]";
-            m_LightUBO->SetData(glm::value_ptr(L.Position), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".position").Offset);
-            m_LightUBO->SetData(&L.Constant, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".constant").Offset);
-            m_LightUBO->SetData(&L.Linear, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".linear").Offset);
-            m_LightUBO->SetData(&L.Quadratic, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".quadratic").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Ambient), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".ambient").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Diffuse), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".diffuse").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Specular), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".specular").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Position), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".position").Offset);
+            m_LightUBO->SetData(&L.Constant, sizeof(float), offsetBase + layout.GetElement(base + ".constant").Offset);
+            m_LightUBO->SetData(&L.Linear, sizeof(float), offsetBase + layout.GetElement(base + ".linear").Offset);
+            m_LightUBO->SetData(&L.Quadratic, sizeof(float), offsetBase + layout.GetElement(base + ".quadratic").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Ambient), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".ambient").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Diffuse), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".diffuse").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Specular), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".specular").Offset);
         }
 
         for (int i = 0; i < numSpt; ++i)
         {
             const auto& L = m_SpotLights[i];
             std::string base = "spotLights[" + std::to_string(i) + "]";
-            m_LightUBO->SetData(glm::value_ptr(L.Position), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".position").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Direction), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".direction").Offset);
-            m_LightUBO->SetData(&L.CutOff, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".cutOff").Offset);
-            m_LightUBO->SetData(&L.OuterCutOff, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".outerCutOff").Offset);
-            m_LightUBO->SetData(&L.Constant, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".constant").Offset);
-            m_LightUBO->SetData(&L.Linear, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".linear").Offset);
-            m_LightUBO->SetData(&L.Quadratic, sizeof(float),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".quadratic").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Ambient), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".ambient").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Diffuse), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".diffuse").Offset);
-            m_LightUBO->SetData(glm::value_ptr(L.Specular), sizeof(glm::vec3),
-                offsetBase + m_LightUBO->GetLayout().GetElement(base + ".specular").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Position), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".position").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Direction), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".direction").Offset);
+            m_LightUBO->SetData(&L.CutOff, sizeof(float), offsetBase + layout.GetElement(base + ".cutOff").Offset);
+            m_LightUBO->SetData(&L.OuterCutOff, sizeof(float), offsetBase + layout.GetElement(base + ".outerCutOff").Offset);
+            m_LightUBO->SetData(&L.Constant, sizeof(float), offsetBase + layout.GetElement(base + ".constant").Offset);
+            m_LightUBO->SetData(&L.Linear, sizeof(float), offsetBase + layout.GetElement(base + ".linear").Offset);
+            m_LightUBO->SetData(&L.Quadratic, sizeof(float), offsetBase + layout.GetElement(base + ".quadratic").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Ambient), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".ambient").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Diffuse), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".diffuse").Offset);
+            m_LightUBO->SetData(glm::value_ptr(L.Specular), sizeof(glm::vec4), offsetBase + layout.GetElement(base + ".specular").Offset);
         }
 
         m_LightUBO->BindRange(0, m_LightUBO->GetAlignedStride());
