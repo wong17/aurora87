@@ -30,7 +30,7 @@ namespace Test
 		m_ButtonShader->SetInt("u_ShadowMap", 1);
 
 		// Uniform Buffer
-		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0);
+		m_CameraUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetCameraLayout(), 0, 1u);
 		m_ModelUniformBuffer = std::make_shared<Engine::UniformBuffer>(Engine::UniformBuffer::GetModelLayout(), 1);
 		Engine::UniformBufferLayout textureBlockLayout =
 		{
