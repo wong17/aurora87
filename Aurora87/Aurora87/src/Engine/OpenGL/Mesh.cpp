@@ -422,91 +422,62 @@ namespace Engine
 		uint32_t alignedStride = ubo.GetAlignedStride();
 		uint32_t baseOffset = entityIndex * alignedStride;
 
+		int numDiffuseTextures = (CountTexturesOfType(MaterialTextureType::Diffuse) > 0 ? 1 : 0);
+		int numSpecularTextures = (CountTexturesOfType(MaterialTextureType::Specular) > 0 ? 1 : 0);
+		int numHeightTextures = (CountTexturesOfType(MaterialTextureType::Height) > 0 ? 1 : 0);
+		int numNormalTextures = (CountTexturesOfType(MaterialTextureType::Normal) > 0 ? 1 : 0);
+		int numEmissiveTextures = (CountTexturesOfType(MaterialTextureType::Emissive) > 0 ? 1 : 0);
+		int numAmbientOcclusionTextures = (CountTexturesOfType(MaterialTextureType::AmbientOcclusion) > 0 ? 1 : 0);
+		int numOpacityTextures = (CountTexturesOfType(MaterialTextureType::Opacity) > 0 ? 1 : 0);
+		int numRoughnessTextures = (CountTexturesOfType(MaterialTextureType::Roughness) > 0 ? 1 : 0);
+		int numMetallicTextures = (CountTexturesOfType(MaterialTextureType::Metallic) > 0 ? 1 : 0);
+
+		int hasAlbedoMap = (CountTexturesOfType(MaterialTextureType::BaseColor) > 0 ? 1 : 0);
+		int hasMetallicRoughnessMap = (CountTexturesOfType(MaterialTextureType::MetallicRoughness) > 0 ? 1 : 0);
+
+		glm::vec4 baseColor4 = m_BaseColor;
+		float metallicFactor = m_Metallic;
+		float roughnessFactor = m_Roughness;
+
+		int useGamma = (NeedsGammaCorrection() ? 1 : 0);
+		int useShadows = (g_EnableShadows.load() ? 1 : 0);
+
+		std::unordered_map<std::string, std::pair<const void*, size_t>> valueMap = {
+			{ "u_NumDiffuseTextures",            { &numDiffuseTextures,           sizeof(int) } },
+			{ "u_NumSpecularTextures",           { &numSpecularTextures,          sizeof(int) } },
+			{ "u_NumHeightTextures",             { &numHeightTextures,            sizeof(int) } },
+			{ "u_NumNormalTextures",             { &numNormalTextures,            sizeof(int) } },
+			{ "u_NumEmissiveTextures",           { &numEmissiveTextures,          sizeof(int) } },
+			{ "u_NumAmbientOcclusionTextures",   { &numAmbientOcclusionTextures,  sizeof(int) } },
+			{ "u_NumOpacityTextures",            { &numOpacityTextures,           sizeof(int) } },
+			{ "u_NumRoughnessTextures",          { &numRoughnessTextures,         sizeof(int) } },
+			{ "u_NumMetallicTextures",           { &numMetallicTextures,          sizeof(int) } },
+
+			{ "u_HasAlbedoMap",                  { &hasAlbedoMap,                 sizeof(int) } },
+			{ "u_HasMetallicRoughnessMap",       { &hasMetallicRoughnessMap,      sizeof(int) } },
+
+			{ "u_BaseColor",                     { glm::value_ptr(baseColor4),    sizeof(glm::vec4) } },
+			{ "u_MetallicFactor",                { &metallicFactor,               sizeof(float) } },
+			{ "u_RoughnessFactor",               { &roughnessFactor,              sizeof(float) } },
+
+			{ "u_UseGamma",                      { &useGamma,                     sizeof(int) } },
+			{ "u_UseShadows",                    { &useShadows,                   sizeof(int) } },
+		};
+
+		ubo.Bind();
 		const auto& layoutElems = ubo.GetLayout().GetElements();
 		for (auto const& elem : layoutElems)
 		{
+			uint32_t offset = elem.Offset;
+			uint32_t globalOffset = baseOffset + offset;
 			const std::string& name = elem.Name;
-			uint32_t           offset = elem.Offset;
-			uint32_t           globalOffset = baseOffset + offset;
 
-			if (name == "u_NumDiffuseTextures")
+			auto it = valueMap.find(name);
+			if (it != valueMap.end())
 			{
-				int v = (CountTexturesOfType(MaterialTextureType::Diffuse) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumSpecularTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Specular) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumHeightTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Height) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumNormalTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Normal) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumEmissiveTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Emissive) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumAmbientOcclusionTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::AmbientOcclusion) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumOpacityTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Opacity) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumRoughnessTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Roughness) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_NumMetallicTextures")
-			{
-				int v = (CountTexturesOfType(MaterialTextureType::Metallic) > 0 ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_HasAlbedoMap")
-			{
-				int hasAlbedo = (CountTexturesOfType(MaterialTextureType::BaseColor) > 0 ? 1 : 0);
-				ubo.SetData(&hasAlbedo, sizeof(int), globalOffset);
-			}
-			else if (name == "u_HasMetallicRoughnessMap")
-			{
-				int hasMR = (CountTexturesOfType(MaterialTextureType::MetallicRoughness) > 0 ? 1 : 0);
-				ubo.SetData(&hasMR, sizeof(int), globalOffset);
-			}
-			else if (name == "u_BaseColor")
-			{
-				ubo.SetData(glm::value_ptr(m_BaseColor), sizeof(glm::vec4), globalOffset);
-			}
-			else if (name == "u_MetallicFactor")
-			{
-				float v = m_Metallic;
-				ubo.SetData(&v, sizeof(float), globalOffset);
-			}
-			else if (name == "u_RoughnessFactor")
-			{
-				float v = m_Roughness;
-				ubo.SetData(&v, sizeof(float), globalOffset);
-			}
-			else if (name == "u_UseGamma")
-			{
-				int v = NeedsGammaCorrection() ? 1 : 0;
-				ubo.SetData(&v, sizeof(int), globalOffset);
-			}
-			else if (name == "u_UseShadows")
-			{
-				int v = (g_EnableShadows.load() ? 1 : 0);
-				ubo.SetData(&v, sizeof(int), globalOffset);
+				const void* ptrData = it->second.first;
+				uint32_t sizeInBytes = static_cast<uint32_t>(it->second.second);
+				ubo.SetData(ptrData, sizeInBytes, globalOffset);
 			}
 		}
 
