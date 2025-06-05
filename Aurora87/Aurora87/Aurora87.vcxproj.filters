@@ -249,6 +249,51 @@
     <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Audio\AudioBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\AudioEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\AudioSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\WAVLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Meshes\RectButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\OpenGL\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\OpenGL\Animator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\OpenGL\ModelAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Button3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test\MainSceneTestLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test\UITestLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\dr_libs\dr_wav.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scene\GlobalSceneSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scene\LightManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1178,6 +1223,48 @@
     <ClInclude Include="src\Engine\Meshes\RectButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Audio\AudioBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\AudioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\AudioSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\WAVLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\OpenGL\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\OpenGL\Animator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\OpenGL\Bone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\OpenGL\ModelAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MainSceneTestLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dr_libs\dr_wav.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Scene\GlobalSceneSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\OpenGL\LightStructs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Scene\LightManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -1228,30 +1315,16 @@
     <None Include="res\shaders\test\debug-quad-fragment.glsl" />
     <None Include="res\shaders\test\ui-vertex-shader.glsl" />
     <None Include="res\shaders\test\ui-fragment-shader.glsl" />
+    <None Include="res\shaders\skydome\skydome-vertex-shader.glsl" />
+    <None Include="res\shaders\skydome\skydome-fragment-shader.glsl" />
+    <None Include="res\shaders\model\s-m-vertex-shader.glsl" />
+    <None Include="res\shaders\model\s-m-fragment-shader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\container2.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\skybox\back.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\skybox\bottom.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\skybox\front.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\skybox\left.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\skybox\right.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\skybox\top.jpg">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\models\ModelMenu\texture.png">
@@ -1288,6 +1361,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\skybox_sp\right_space.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox\Space_Top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox\Space_Back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox\Space_Bottom.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox\Space_Front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox\Space_Left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\skybox\Space_Right.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -21,10 +21,14 @@ namespace Engine
 		std::string Title;
 		uint32_t Width;
 		uint32_t Height;
+		bool BorderlessFullscreen = false;
 
-		WindowProperties(const std::string& title, uint32_t width, uint32_t height)
-			: Title(title), Width(width), Height(height) {
-		}
+		WindowProperties(
+			const std::string& title, 
+			uint32_t width, 
+			uint32_t height, 
+			bool borderlessFullscreen = false)
+			: Title(title), Width(width), Height(height), BorderlessFullscreen(borderlessFullscreen) { }
 	};
 
 	class Window

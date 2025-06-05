@@ -7,7 +7,7 @@ namespace Engine
 	Application::Application(const std::string& name, uint32_t width, uint32_t height)
 	{
 		s_Instance = this;
-		m_Window = std::make_unique<Window>(WindowProperties(name, width, height));
+		m_Window = std::make_unique<Window>(WindowProperties(name, width, height, true));
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		
 		m_RenderSettings = std::make_unique<RenderSettings>(*m_Window);

@@ -192,6 +192,8 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\Engine\Scene\Entity.cpp" />
     <ClCompile Include="src\Engine\Scene\EntityManager.cpp" />
     <ClCompile Include="src\Engine\OpenGL\Mesh.cpp" />
+    <ClCompile Include="src\Engine\Scene\GlobalSceneSettings.cpp" />
+    <ClCompile Include="src\Engine\Scene\LightManager.cpp" />
     <ClCompile Include="src\Engine\Scene\SceneRenderer.cpp" />
     <ClCompile Include="src\Engine\OpenGL\Skybox.cpp" />
     <ClCompile Include="src\Engine\OpenGL\Skydome.cpp" />
@@ -216,6 +218,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\UI\Button3D.cpp" />
     <ClCompile Include="test\AIEntitiesTestLayer.cpp" />
+    <ClCompile Include="test\MainSceneTestLayer.cpp" />
     <ClCompile Include="test\ShadowMappingTestLayer.cpp" />
     <ClCompile Include="test\SimpleGammaCorrectionTestLayer.cpp" />
     <ClCompile Include="test\MultipleEntitiesTestLayer.cpp" />
@@ -290,6 +293,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\OpenGL\AssimpTypes.h" />
     <ClInclude Include="src\Engine\OpenGL\Bone.h" />
     <ClInclude Include="src\Engine\OpenGL\CubemapTexture.h" />
+    <ClInclude Include="src\Engine\OpenGL\LightStructs.h" />
     <ClInclude Include="src\Engine\OpenGL\Model.h" />
     <ClInclude Include="src\Engine\OpenGL\ModelAnimation.h" />
     <ClInclude Include="src\Engine\OpenGL\OrthographicShadowCamera.h" />
@@ -300,6 +304,8 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\Scene\Entity.h" />
     <ClInclude Include="src\Engine\Scene\EntityManager.h" />
     <ClInclude Include="src\Engine\OpenGL\Mesh.h" />
+    <ClInclude Include="src\Engine\Scene\GlobalSceneSettings.h" />
+    <ClInclude Include="src\Engine\Scene\LightManager.h" />
     <ClInclude Include="src\Engine\Scene\MeshComponent.h" />
     <ClInclude Include="src\Engine\Scene\ModelComponent.h" />
     <ClInclude Include="src\Engine\Scene\PhysicsComponent.h" />
@@ -345,6 +351,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\AIEnviroment\GameLogic\TagginEntities.h" />
     <ClInclude Include="src\UI\Button3D.h" />
     <ClInclude Include="test\AIEntitiesTestLayer.h" />
+    <ClInclude Include="test\MainSceneTestLayer.h" />
     <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
     <ClInclude Include="test\MultipleEntitiesTestLayer.h" />
@@ -559,8 +566,12 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <None Include="cpp.hint" />
     <None Include="res\models\backpack\backpack.mtl" />
     <None Include="res\models\ModelMenu\ModelMenu.mtl" />
+    <None Include="res\shaders\model\s-m-fragment-shader.glsl" />
+    <None Include="res\shaders\model\s-m-vertex-shader.glsl" />
     <None Include="res\shaders\skybox\skybox-fragment-shader.glsl" />
     <None Include="res\shaders\skybox\skybox-vertex-shader.glsl" />
+    <None Include="res\shaders\skydome\skydome-fragment-shader.glsl" />
+    <None Include="res\shaders\skydome\skydome-vertex-shader.glsl" />
     <None Include="res\shaders\test\basic-fragment-shader.glsl" />
     <None Include="res\shaders\test\basic-vertex-shader.glsl" />
     <None Include="res\shaders\test\debug-quad-fragment.glsl" />
@@ -597,12 +608,12 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <Image Include="res\textures\Button\playNormal.png" />
     <Image Include="res\textures\container.jpg" />
     <Image Include="res\textures\container2.png" />
-    <Image Include="res\textures\skybox\back.jpg" />
-    <Image Include="res\textures\skybox\bottom.jpg" />
-    <Image Include="res\textures\skybox\front.jpg" />
-    <Image Include="res\textures\skybox\left.jpg" />
-    <Image Include="res\textures\skybox\right.jpg" />
-    <Image Include="res\textures\skybox\top.jpg" />
+    <Image Include="res\textures\skybox\Space_Back.png" />
+    <Image Include="res\textures\skybox\Space_Bottom.png" />
+    <Image Include="res\textures\skybox\Space_Front.png" />
+    <Image Include="res\textures\skybox\Space_Left.png" />
+    <Image Include="res\textures\skybox\Space_Right.png" />
+    <Image Include="res\textures\skybox\Space_Top.png" />
     <Image Include="res\textures\skybox_sp\back_space.png" />
     <Image Include="res\textures\skybox_sp\bottom_space.png" />
     <Image Include="res\textures\skybox_sp\front_space.png" />

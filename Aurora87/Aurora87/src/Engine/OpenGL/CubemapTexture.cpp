@@ -23,7 +23,8 @@ namespace Engine
 
 	void CubemapTexture::LoadCubemap(const std::vector<std::string>& faces)
 	{
-		if (faces.size() != 6) {
+		if (faces.size() != 6) 
+		{
 			throw std::runtime_error("CubemapTexture::LoadCubemap: Se requieren 6 caras para crear un cubemap.");
 			return;
 		}
@@ -33,7 +34,8 @@ namespace Engine
 			int width, height, channels;
 			stbi_set_flip_vertically_on_load(false);
 			buffers[i] = stbi_load(faces[i].c_str(), &width, &height, &channels, 0);
-			if (!buffers[i]) {
+			if (!buffers[i]) 
+			{
 				std::cerr << "CubemapTexture::LoadCubemap: Error al cargar cara de cubemap " << faces[i] << std::endl;
 				for (auto ptr : buffers) 
 					if (ptr) stbi_image_free(ptr);
