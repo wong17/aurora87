@@ -62,7 +62,26 @@ namespace Engine
 #endif
 
 		// Crea la ventana
-		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+		if (m_WindowData.Properties.BorderlessFullscreen)
+		{
+			m_WindowData.Properties.Width = mode->width;
+			m_WindowData.Properties.Height = mode->height;
+
+			glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+		}
+		else
+		{
+			glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+		}
+
 		m_GLFWwindow = glfwCreateWindow(m_WindowData.Properties.Width, m_WindowData.Properties.Height, 
 			m_WindowData.Properties.Title.c_str(), nullptr, nullptr);
 		if (!m_GLFWwindow)
