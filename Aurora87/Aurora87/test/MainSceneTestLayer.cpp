@@ -67,6 +67,9 @@ namespace Test
 		InitializeLights();
 
 		auto& app = Engine::Application::Get();
+		auto* camera = static_cast<Engine::PerspectiveCamera*>(&app.GetCamera());
+		camera->SetFarClip(2000.0f);
+		camera->SetPosition({ 0.0f, 100.0f, 0.0f });
 
 		// Orthographic Camera
 		m_OrthographicCamera = std::make_shared<Engine::OrthographicCamera>(
@@ -157,7 +160,7 @@ namespace Test
 
 	void MainSceneTestLayer::InitializeLights()
 	{
-		m_LightManager->SetGlobalAmbient({ 1.0f, 1.0f, 1.0f });
+		m_LightManager->SetGlobalAmbient({ 0.5f, 0.5f, 0.5f });
 
 		Engine::DirectionalLight dir(glm::vec3(-0.3f, 1.0f, -0.3f), glm::vec3(0.2f));
 
@@ -168,5 +171,7 @@ namespace Test
 	{
 		m_MoonSurface = m_EntityManager->CreateEntity(
 			std::make_shared<Engine::Model>("D:\\Blender\\MoonSurface.glb"), m_MoonSurfaceShader, "MoonSurface");
+
+		m_MoonSurface->Scale(glm::vec3(10.0f));
 	}
 }
