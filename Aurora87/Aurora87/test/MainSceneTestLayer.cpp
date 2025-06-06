@@ -5,15 +5,18 @@ namespace Test
 	void MainSceneTestLayer::OnAttach()
 	{
 		// Shader Manager
-		m_MoonSurfaceShader = std::make_shared<Engine::Shader>(
+		auto& shaderManager = Engine::ShaderManager::Get();
+		m_MoonSurfaceShader = shaderManager.Load(
 			"res/shaders/model/s-m-vertex-shader.glsl", 
-			"res/shaders/model/s-m-fragment-shader.glsl"
-		);
+			"res/shaders/model/s-m-fragment-shader.glsl");
 
-		m_TextShader = std::make_unique<Engine::Shader>(
-			"res/shaders/text_rendering/text-rendering-vertex-shader.glsl",
-			"res/shaders/text_rendering/text-rendering-fragment-shader.glsl"
-		);
+		m_TextShader = shaderManager.Load(
+			"res/shaders/text_rendering/text-rendering-vertex-shader.glsl", 
+			"res/shaders/text_rendering/text-rendering-fragment-shader.glsl");
+
+		m_SkyboxShader = shaderManager.Load(
+			"res/shaders/skybox/skybox-vertex-shader.glsl", 
+			"res/shaders/skybox/skybox-fragment-shader.glsl");
 
 		// Skybox
 		std::vector<std::string> faces
@@ -25,9 +28,6 @@ namespace Test
 			"res/textures/skybox/Space_Front.png",
 			"res/textures/skybox/Space_Back.png"
 		};
-		m_SkyboxShader = std::make_shared<Engine::Shader>(
-			"res/shaders/skybox/skybox-vertex-shader.glsl",
-			"res/shaders/skybox/skybox-fragment-shader.glsl");
 		m_Skybox = std::make_unique<Engine::Skybox>(faces, m_SkyboxShader);
 
 		// Global lights
@@ -171,7 +171,7 @@ namespace Test
 	{
 		m_MoonSurface = m_EntityManager->CreateEntity(
 			std::make_shared<Engine::Model>("res/models/MoonSurface.glb"), m_MoonSurfaceShader, "MoonSurface");
-
+		
 		m_MoonSurface->Scale(glm::vec3(10.0f));
 	}
 }
