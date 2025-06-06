@@ -170,7 +170,7 @@ namespace Test
 	void MainSceneTestLayer::InitializeModels()
 	{
 		m_MoonSurface = m_EntityManager->CreateEntity(
-			std::make_shared<Engine::Model>("D:\\Blender\\MoonSurface.glb"), m_MoonSurfaceShader, "MoonSurface");
+			std::make_shared<Engine::Model>("res/models/MoonSurface.glb"), m_MoonSurfaceShader, "MoonSurface");
 
 		m_MoonSurface->Scale(glm::vec3(10.0f));
 	}

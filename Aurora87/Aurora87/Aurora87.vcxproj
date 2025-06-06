@@ -566,6 +566,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <None Include="cpp.hint" />
     <None Include="res\models\backpack\backpack.mtl" />
     <None Include="res\models\ModelMenu\ModelMenu.mtl" />
+    <None Include="res\models\MoonSurface.glb" />
     <None Include="res\shaders\model\s-m-fragment-shader.glsl" />
     <None Include="res\shaders\model\s-m-vertex-shader.glsl" />
     <None Include="res\shaders\skybox\skybox-fragment-shader.glsl" />
