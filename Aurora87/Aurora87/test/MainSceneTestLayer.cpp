@@ -68,7 +68,7 @@ namespace Test
 
 		auto& app = Engine::Application::Get();
 		auto* camera = static_cast<Engine::PerspectiveCamera*>(&app.GetCamera());
-		camera->SetFarClip(2000.0f);
+		camera->SetFarClip(3000.0f);
 		camera->SetPosition({ 0.0f, 100.0f, 0.0f });
 
 		// Orthographic Camera
