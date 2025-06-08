@@ -34,6 +34,14 @@ namespace Engine
 
         void UpdateSceneLights();
 
+        inline glm::vec3 GetGlobalAmbientColor() const 
+        { 
+            return glm::vec3(m_GlobalAmbientColor.r, m_GlobalAmbientColor.g, m_GlobalAmbientColor.b);
+        }
+        inline int GetMaxDirLights() const { return m_MaxDirLights; }
+        inline int GetMaxPointLights() const { return m_MaxPointLights; }
+        inline int GetMaxSpotLights() const { return m_MaxSpotLights; }
+
     private:
         std::shared_ptr<UniformBuffer> m_LightUBO = nullptr;
 
