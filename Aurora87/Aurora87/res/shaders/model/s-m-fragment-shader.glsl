@@ -279,11 +279,16 @@ float GetOpacity(vec4 baseTex)
     if (u_NumOpacityTextures > 0) 
     {
         alpha = texture(u_texture_opacity[0], fs_in.v_TexCoord).r;
-        // clip if almost transparent:
-        if (alpha < 0.1)
-            discard;
     }
-    // (Opcional: si pidieras llevar alpha del AlbedoMap: alpha *= baseTex.a;)
+    else
+    {
+        alpha = baseTex.a;
+    }
+
+    // clip if almost transparent
+    if (alpha < 0.1)
+        discard;
+
     return alpha;
 }
 
