@@ -106,7 +106,13 @@ namespace Test
 
 		// Models
 		std::shared_ptr<Engine::Entity> m_MoonSurface = nullptr;
+		std::shared_ptr<Engine::Entity> m_Earth = nullptr;
 		std::shared_ptr<Engine::Shader> m_MoonSurfaceShader = nullptr;
+
+		// Ligths
+		std::vector<Engine::DirectionalLight> m_DirLights;
+		std::vector<Engine::PointLight> m_PointLights;
+		std::vector<Engine::SpotLight> m_SpotLights;
 
 		bool m_WireframeMode = false;
 	};

@@ -294,6 +294,21 @@
     <ClCompile Include="src\Engine\Scene\LightManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\GraphEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImCurveEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGradient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImSequencer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Core\Application.h">
@@ -1263,6 +1278,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Scene\LightManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImZoomSlider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\GraphEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImCurveEdit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGradient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImSequencer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

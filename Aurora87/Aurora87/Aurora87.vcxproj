@@ -227,6 +227,11 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="vendor\dds-ktx\dds-ktx.cpp" />
     <ClCompile Include="vendor\dr_libs\dr_wav.cpp" />
     <ClCompile Include="vendor\Glad\glad.c" />
+    <ClCompile Include="vendor\ImGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="vendor\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="vendor\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="vendor\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_draw.cpp" />
@@ -550,6 +555,12 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="vendor\freetype\tttables.h" />
     <ClInclude Include="vendor\freetype\tttags.h" />
     <ClInclude Include="vendor\ft2build.h" />
+    <ClInclude Include="vendor\ImGuizmo\GraphEditor.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />
     <ClInclude Include="vendor\ImGui\imgui.h" />
     <ClInclude Include="vendor\ImGui\imgui_impl_glfw.h" />
