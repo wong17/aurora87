@@ -15,30 +15,36 @@
 namespace Engine
 {
 	// Depth Test
-	enum class DepthFunc {
+	enum class DepthFunc 
+	{
 		Never, Less, Equal, Lequal, Greater, NotEqual, Gequal, Always
 	};
 
 	// Cull Face
-	enum class CullFaceMode {
+	enum class CullFaceMode 
+	{
 		Front, Back, FrontAndBack
 	};
 
-	enum class FrontFace {
+	enum class FrontFace 
+	{
 		CW, CCW
 	};
 
 	// Stencil Test
-	enum class StencilFunc {
+	enum class StencilFunc 
+	{
 		Always, Never, Less, Equal, Lequal, Greater, NotEqual, Gequal
 	};
 
-	enum class StencilOp {
+	enum class StencilOp 
+	{
 		Keep, Zero, Replace, Incr, Decr, IncrWrap, DecrWrap, Invert
 	};
 
 	// Alpha Blending
-	enum class BlendFactor {
+	enum class BlendFactor 
+	{
 		Zero, One,
 		SrcColor, OneMinusSrcColor,
 		DstColor, OneMinusDstColor,
@@ -49,7 +55,8 @@ namespace Engine
 		SrcAlphaSaturate
 	};
 
-	enum class BlendEquation {
+	enum class BlendEquation 
+	{
 		Add, Subtract, ReverseSubtract, Min, Max
 	};
 
@@ -169,7 +176,8 @@ namespace Engine
 			m_BlendDstRGB = dstRGB;
 			glBlendFunc(_toGLBlendFactor(srcRGB), _toGLBlendFactor(dstRGB));
 		}
-		void SetBlendFactors(BlendFactor srcRGB, BlendFactor dstRGB, BlendFactor srcAlpha, BlendFactor dstAlpha) {
+		void SetBlendFactors(BlendFactor srcRGB, BlendFactor dstRGB, BlendFactor srcAlpha, BlendFactor dstAlpha) 
+		{
 			m_BlendSrcRGB = srcRGB; 
 			m_BlendDstRGB = dstRGB;
 			m_BlendSrcAlpha = srcAlpha;
@@ -192,18 +200,22 @@ namespace Engine
 			else
 				glDisable(GL_PROGRAM_POINT_SIZE);
 		}
-		void SetPointSizeValue(float size) {
+		void SetPointSizeValue(float size) 
+		{
 			m_PointSizeValue = size;
 			glPointSize(size);
 		}
 
-		inline void OnImGuiRender() {
+		inline void OnImGuiRender() 
+		{
 			if (!ImGui::CollapsingHeader("Render Settings")) {
 				// Clear Color
-				if (ImGui::Button("Pick Clear Color")) {
+				if (ImGui::Button("Pick Clear Color")) 
+				{
 					ImGui::OpenPopup("ClearColorPicker");
 				}
-				if (ImGui::BeginPopup("ClearColorPicker")) {
+				if (ImGui::BeginPopup("ClearColorPicker")) 
+				{
 					ImGui::Text("Select Clear Color");
 					ImGui::Separator();
 					ImGui::ColorPicker4("##picker", &m_ClearColor[0]);
@@ -242,7 +254,8 @@ namespace Engine
 				{
 					static const char* frontFaceNames[] = { "CW", "CCW" };
 					int frontFaceIdx = static_cast<int>(m_FrontFace);
-					if (ImGui::Combo("##frontFace", &frontFaceIdx, frontFaceNames, IM_ARRAYSIZE(frontFaceNames))) {
+					if (ImGui::Combo("##frontFace", &frontFaceIdx, frontFaceNames, IM_ARRAYSIZE(frontFaceNames))) 
+					{
 						m_FrontFace = (FrontFace)frontFaceIdx;
 						SetFrontFace(m_FrontFace);
 					}
@@ -250,7 +263,8 @@ namespace Engine
 
 				// Stencil Test
 				ImGui::Checkbox("Stencil Test", &m_StencilTest);
-				if (m_StencilTest) {
+				if (m_StencilTest) 
+				{
 					ImGui::Indent();
 					{
 						static const char* funcNames[] = { "Always","Never","Less","Equal","Lequal","Greater","NotEqual","Gequal" };
@@ -277,7 +291,8 @@ namespace Engine
 
 				// Alpha Blending
 				ImGui::Checkbox("Alpha Blending", &m_AlphaBlending);
-				if (m_AlphaBlending) {
+				if (m_AlphaBlending) 
+				{
 					ImGui::Indent();
 					{
 						static const char* bf[] = 
@@ -304,7 +319,8 @@ namespace Engine
 
 				// Point Size GLSL
 				ImGui::Checkbox("Point Size GLSL", &m_PointSize);
-				if (m_PointSize) {
+				if (m_PointSize) 
+				{
 					ImGui::Indent();
 					ImGui::SliderFloat("Point Size", &m_PointSizeValue, 1.0f, 100.0f);
 					SetPointSizeValue(m_PointSizeValue);
@@ -313,7 +329,8 @@ namespace Engine
 			}
 		}
 
-		void ResetFrame() const {
+		void ResetFrame() const 
+		{
 			// Clear Buffers
 			glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -361,8 +378,10 @@ namespace Engine
 		bool m_PointSize = false;
 		float m_PointSizeValue = 1.0f;
 
-		static GLenum _toGLDepthFunc(DepthFunc d) {
-			switch (d) {
+		static GLenum _toGLDepthFunc(DepthFunc d) 
+		{
+			switch (d) 
+			{
 				case DepthFunc::Never:    return GL_NEVER;
 				case DepthFunc::Less:     return GL_LESS;
 				case DepthFunc::Equal:    return GL_EQUAL;
@@ -375,8 +394,10 @@ namespace Engine
 			return GL_LESS;
 		}
 
-		static GLenum _toGLCullFace(CullFaceMode m) {
-			switch (m) {
+		static GLenum _toGLCullFace(CullFaceMode m) 
+		{
+			switch (m) 
+			{
 				case CullFaceMode::Front:        return GL_FRONT;
 				case CullFaceMode::Back:         return GL_BACK;
 				case CullFaceMode::FrontAndBack: return GL_FRONT_AND_BACK;
@@ -384,16 +405,20 @@ namespace Engine
 			return GL_BACK;
 		}
 
-		static GLenum _toGLFrontFace(FrontFace m) {
-			switch (m) {
+		static GLenum _toGLFrontFace(FrontFace m) 
+		{
+			switch (m) 
+			{
 				case FrontFace::CW:  return GL_CW;
 				case FrontFace::CCW: return GL_CCW;
 			}
 			return GL_CCW;
 		}
 
-		static GLenum _toGLStencilFunc(StencilFunc f) {
-			switch (f) {
+		static GLenum _toGLStencilFunc(StencilFunc f) 
+		{
+			switch (f) 
+			{
 				case StencilFunc::Always:    return GL_ALWAYS;
 				case StencilFunc::Never:     return GL_NEVER;
 				case StencilFunc::Less:      return GL_LESS;
@@ -406,8 +431,10 @@ namespace Engine
 			return GL_ALWAYS;
 		}
 
-		static GLenum _toGLStencilOp(StencilOp op) {
-			switch (op) {
+		static GLenum _toGLStencilOp(StencilOp op) 
+		{
+			switch (op) 
+			{
 				case StencilOp::Keep:        return GL_KEEP;
 				case StencilOp::Zero:        return GL_ZERO;
 				case StencilOp::Replace:     return GL_REPLACE;
@@ -420,8 +447,10 @@ namespace Engine
 			return GL_KEEP;
 		}
 
-		static GLenum _toGLBlendFactor(BlendFactor f) {
-			switch (f) {
+		static GLenum _toGLBlendFactor(BlendFactor f) 
+		{
+			switch (f) 
+			{
 				case BlendFactor::Zero:                 return GL_ZERO;
 				case BlendFactor::One:                  return GL_ONE;
 				case BlendFactor::SrcColor:             return GL_SRC_COLOR;
@@ -441,8 +470,10 @@ namespace Engine
 			return GL_ONE;
 		}
 
-		static GLenum _toGLBlendEquation(BlendEquation e) {
-			switch (e) {
+		static GLenum _toGLBlendEquation(BlendEquation e) 
+		{
+			switch (e) 
+			{
 				case BlendEquation::Add:				return GL_FUNC_ADD;
 				case BlendEquation::Subtract:			return GL_FUNC_SUBTRACT;
 				case BlendEquation::ReverseSubtract:	return GL_FUNC_REVERSE_SUBTRACT;
