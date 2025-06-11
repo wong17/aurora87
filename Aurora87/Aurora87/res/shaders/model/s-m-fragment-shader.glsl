@@ -137,35 +137,34 @@ vec3 ComputeLighting(vec3 albedo, vec3 N, vec3 emissive, float ao);
 
 void main() 
 {
-    // 1) BaseColor + alpha
+    // BaseColor + alpha
     vec4 baseTex = GetAlbedo();
     vec3 albedo = baseTex.rgb;
 
-    // 1a) Linealizacion (si corresponde)
+    // Linealizacion
     if (u_UseGamma)
         albedo = Linearize(albedo);
 
-    // 2) Normal (con o sin normal map)
+    // Normal
     vec3 N = GetNormal();
 
-    // 3) Metallic + Roughness
+    // Metallic + Roughness
     float metallic, roughness;
     GetMetallicRoughness(metallic, roughness);
 
-    // 4) Ambient Occlusion
+    // Ambient Occlusion
     float ao = GetAO();
 
-    // 5) Emissivo
+    // Emissivo
     vec3 emissive = GetEmissive();
 
-    // 6) Opacity / Alpha clip (si corresponde)
+    // Opacity / Alpha clip
     float alpha = GetOpacity(baseTex);
 
-    // 7) Iluminación Blinn‐Phong + Sombras
-    vec3 lighting = u_GlobalAmbient.xyz * albedo * ao;
-    lighting += ComputeLighting(albedo, N, emissive, ao);
+    // Iluminación Blinn‐Phong + Sombras
+    vec3 lighting = ComputeLighting(albedo, N, emissive, ao);
 
-    // 8) Corrección gamma final
+    // Corrección gamma final
     if (u_UseGamma)
         lighting = GammaCorrect(lighting);
 
@@ -235,28 +234,20 @@ void GetMetallicRoughness(out float metallic, out float roughness)
         return;
     }
 
-    metallic = u_MetallicFactor;
-    roughness = u_RoughnessFactor;
-
-    bool hasSeparateMetal = (u_NumMetallicTextures > 0);
-    bool hasSeparateRgh = (u_NumRoughnessTextures > 0);
-
-    if (!hasSeparateMetal && !hasSeparateRgh) 
+    float m = u_MetallicFactor;
+    float r = u_RoughnessFactor;
+    if (u_NumMetallicTextures > 0)
     {
-        vec4 mr = texture(u_MetallicRoughnessMap, fs_in.v_TexCoord);
-        metallic = mr.r;
-        roughness = mr.g;
-        return;
+        m = texture(u_texture_metallic[0], fs_in.v_TexCoord).r * u_MetallicFactor;
     }
 
-    if (hasSeparateMetal) 
+    if (u_NumRoughnessTextures > 0)
     {
-        metallic = texture(u_texture_metallic[0], fs_in.v_TexCoord).r * u_MetallicFactor;
+        r = texture(u_texture_roughness[0], fs_in.v_TexCoord).r * u_RoughnessFactor;
     }
-    if (hasSeparateRgh) 
-    {
-        roughness = texture(u_texture_roughness[0], fs_in.v_TexCoord).r * u_RoughnessFactor;
-    }
+
+    metallic = m;
+    roughness = r;
 }
 
 float GetAO() 
@@ -337,8 +328,6 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
-    // ambient
-    vec3 ambient = light.ambient.xyz;
     // diffuse
     vec3 L = normalize(-light.direction.xyz);
     float diff = max(dot(normal, L), 0.0);
@@ -348,13 +337,11 @@ vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
     float spec = pow(max(dot(normal, halfway), 0.0), 64.0);
     vec3 specular = light.specular.xyz * spec;
 
-    return ambient + diffuse + specular;
+    return diffuse + specular;
 }
 
 vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    // ambient
-    vec3 ambient = light.ambient.xyz;
     // diffuse
     vec3 L = normalize(light.position.xyz - fragPos);
     float diff = max(dot(normal, L), 0.0);
@@ -367,13 +354,11 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     float distance = length(light.position.xyz - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-    return (ambient + diffuse + specular) * attenuation;
+    return (diffuse + specular) * attenuation;
 }
 
 vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    // ambient
-    vec3 ambient = light.ambient.xyz;
     // diffuse
     vec3 L = normalize(light.position.xyz - fragPos);
     float diff = max(dot(normal, L), 0.0);
@@ -390,49 +375,33 @@ vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
-    return (ambient + diffuse + specular) * attenuation * intensity;
+    return (diffuse + specular) * attenuation * intensity;
 }
 
 vec3 ComputeLighting(vec3 albedo, vec3 N, vec3 emissive, float ao) 
 {
-    vec3 result = vec3(0.0);
     vec3 viewDir = normalize(u_ViewPosition - fs_in.v_FragPos);
+    vec3 color = u_GlobalAmbient.xyz * albedo * ao;
 
-    // 1) Directional Lights
-    for (int i = 0; i < u_NumDirectionalLights; ++i)
+    for (int i = 0; i < u_NumDirectionalLights; ++i) 
     {
-        result += CalculateDirectionalLight(directionalLights[i], N, viewDir) * albedo;
+        vec3 contrib = CalculateDirectionalLight(directionalLights[i], N, viewDir);
+        float shadow = ShadowCalculation(fs_in.v_FragPosLightSpace);
+        color += (1.0 - shadow) * contrib * albedo;
     }
 
-    // 2) Point Lights
-    for (int i = 0; i < u_NumPointLights; ++i)
+    for (int i = 0; i < u_NumPointLights; ++i) 
     {
-        result += CalculatePointLight(pointLights[i], N, fs_in.v_FragPos, viewDir) * albedo;
+        vec3 contrib = CalculatePointLight(pointLights[i], N, fs_in.v_FragPos, viewDir);
+        color += contrib * albedo;
     }
 
-    // 3) Spot Lights
-    for (int i = 0; i < u_NumSpotLights; ++i)
+    for (int i = 0; i < u_NumSpotLights; ++i) 
     {
-        result += CalculateSpotLight(spotLights[i], N, fs_in.v_FragPos, viewDir) * albedo;
+        vec3 contrib = CalculateSpotLight(spotLights[i], N, fs_in.v_FragPos, viewDir);
+        color += contrib * albedo;
     }
 
-    vec3 ambientSum = vec3(0.0);
-    for (int i = 0; i < u_NumDirectionalLights; ++i)
-    {
-        ambientSum += directionalLights[i].ambient.xyz * albedo;
-    }
-    for (int i = 0; i < u_NumPointLights; ++i)
-    {
-        ambientSum += pointLights[i].ambient.xyz * albedo;
-    }
-    for (int i = 0; i < u_NumSpotLights; ++i)
-    {
-        ambientSum += spotLights[i].ambient.xyz * albedo;
-    }
-
-    vec3 diffSpecSum = result - ambientSum;
-    float shadow = ShadowCalculation(fs_in.v_FragPosLightSpace);
-    vec3 color = ambientSum * ao + (1.0 - shadow) * diffSpecSum + emissive;
-
+    color += emissive;
     return color;
 }
