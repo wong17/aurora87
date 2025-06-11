@@ -131,4 +131,43 @@ namespace Engine
 
         m_LightUBO->BindRange(0, m_LightUBO->GetAlignedStride());
     }
+
+    PointLight LightManager::GetPointLight(int index) const
+    {
+        if (index < 0 || index >= static_cast<int>(m_PointLights.size())) 
+        {
+            std::cerr << "[LightManager] GetPointLight: index out of range: " << index
+                << " (size=" << m_PointLights.size() << ")\n";
+
+            throw std::out_of_range("LightManager::GetPointLight: index out of range");
+        }
+
+        return m_PointLights[index];
+    }
+
+    DirectionalLight LightManager::GetDirectionalLight(int index) const 
+    {
+        if (index < 0 || index >= static_cast<int>(m_DirectionalLights.size())) 
+        {
+            std::cerr << "[LightManager] GetDirectionalLight: index out of range: " << index
+                << " (size=" << m_DirectionalLights.size() << ")\n";
+
+            throw std::out_of_range("LightManager::GetDirectionalLight: index out of range");
+        }
+
+        return m_DirectionalLights[index];
+    }
+
+    SpotLight LightManager::GetSpotLight(int index) const 
+    {
+        if (index < 0 || index >= static_cast<int>(m_SpotLights.size())) 
+        {
+            std::cerr << "[LightManager] GetSpotLight: index out of range: " << index
+                << " (size=" << m_SpotLights.size() << ")\n";
+
+            throw std::out_of_range("LightManager::GetSpotLight: index out of range");
+        }
+
+        return m_SpotLights[index];
+    }
 }

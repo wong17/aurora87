@@ -187,5 +187,4 @@ namespace Engine
         glm::vec4 Diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
         glm::vec4 Specular = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
     };
-
 }

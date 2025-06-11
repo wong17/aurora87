@@ -42,6 +42,10 @@ namespace Engine
         inline int GetMaxPointLights() const { return m_MaxPointLights; }
         inline int GetMaxSpotLights() const { return m_MaxSpotLights; }
 
+        PointLight GetPointLight(int index) const;
+        DirectionalLight GetDirectionalLight(int index) const;
+        SpotLight GetSpotLight(int index) const;
+
     private:
         std::shared_ptr<UniformBuffer> m_LightUBO = nullptr;
 
