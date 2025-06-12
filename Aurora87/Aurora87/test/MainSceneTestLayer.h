@@ -39,6 +39,13 @@
 #include "Engine/Scene/EntityManager.h"
 #include "Engine/Scene/GlobalSceneSettings.h"
 #include "Engine/Scene/LightManager.h"
+#include "Engine/Scene/LightAnimationManager.h"
+#include "Engine/Scene/StepTween.h"
+#include "Engine/Scene/ColorCycleTween.h"
+#include "Engine/Scene/FlickerTween.h"
+#include "Engine/Scene/PulseTween.h"
+#include "Engine/Scene/Tween.h"
+#include "Engine/Scene/LightAnimationClip.h"
 
 #include "Engine/Meshes/Cube.h"
 #include "Engine/Meshes/PrimitiveFactory.h"
@@ -107,9 +114,11 @@ namespace Test
 		// Models
 		std::shared_ptr<Engine::Entity> m_MoonSurface = nullptr;
 		std::shared_ptr<Engine::Entity> m_Earth = nullptr;
+		std::shared_ptr<Engine::Entity> m_Player = nullptr;
 		std::shared_ptr<Engine::Shader> m_MoonSurfaceShader = nullptr;
 
 		// Ligths
+		std::shared_ptr<Engine::LightAnimationManager> m_LightAnimationManager = nullptr;
 		std::vector<Engine::DirectionalLight> m_DirLights;
 		std::vector<Engine::PointLight> m_PointLights;
 		std::vector<Engine::SpotLight> m_SpotLights;

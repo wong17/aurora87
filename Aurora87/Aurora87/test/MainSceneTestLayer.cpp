@@ -64,6 +64,7 @@ namespace Test
 			Engine::g_LightCounts.MaxDirectionalLights, 
 			Engine::g_LightCounts.MaxPointLights, 
 			Engine::g_LightCounts.MaxSpotLights);
+		m_LightAnimationManager = std::make_shared<Engine::LightAnimationManager>();
 		InitializeLights();
 
 		m_DirLights.reserve(Engine::g_LightCounts.MaxDirectionalLights);
@@ -95,6 +96,8 @@ namespace Test
 		app.GetRenderSettings().SetDepthTest(true);
 		app.GetRenderSettings().SetCullFace(true);
 		app.GetRenderSettings().SetAlphaBlending(true);
+
+		m_IsLoaded = true;
 	}
 
 	void MainSceneTestLayer::OnDetach()
@@ -113,6 +116,8 @@ namespace Test
 		m_MoonSurfaceShader->SetFloat3("u_ViewPosition", camera->GetPosition());
 
 		m_SceneRenderer->SetViewProjection(view, projection);
+
+		m_LightAnimationManager->Update(deltaTime);
 		
 		m_LightManager->UpdateSceneLights();
 
@@ -123,7 +128,7 @@ namespace Test
 
 		// Dibujar el texto
 		m_TextShader->Bind();
-		m_TextRenderer->RenderText(*m_TextShader, "Aurora", 10.0f, 10.0f, 1.0f, { 1.0f,1.0f,1.0f });
+		m_TextRenderer->RenderText(*m_TextShader, "Aurora 87", 10.0f, 10.0f, 1.0f, { 1.0f,1.0f,1.0f });
 	}
 
 	void MainSceneTestLayer::OnImGuiRender()
@@ -189,17 +194,39 @@ namespace Test
 			ImGui::PushID(200 + i);
 			ImGui::Text("Spot Light %d", i);
 			bool changed = false;
-			changed |= ImGui::DragFloat3("Position", &m_SpotLights[i].Position.x, 10.0f, -5000.0f, 5000.0f);
+
+			changed |= ImGui::DragFloat3("Position", &m_SpotLights[i].Position.x, 1.0f, -5000.0f, 5000.0f);
+
 			changed |= ImGui::DragFloat3("Direction", &m_SpotLights[i].Direction.x, 0.01f, -1.0f, 1.0f);
-			changed |= ImGui::DragFloat("InnerCut", &m_SpotLights[i].CutOff, 0.01f, 0.0f, 1.0f);
-			changed |= ImGui::DragFloat("OuterCut", &m_SpotLights[i].OuterCutOff, 0.01f, 0.0f, 1.0f);
+
+			float innerDeg = glm::degrees(acos(glm::clamp(m_SpotLights[i].CutOff, -1.0f, 1.0f)));
+			float outerDeg = glm::degrees(acos(glm::clamp(m_SpotLights[i].OuterCutOff, -1.0f, 1.0f)));
+			if (ImGui::DragFloat("Inner Angle (deg)", &innerDeg, 0.1f, 0.0f, 90.0f))
+			{
+				innerDeg = glm::clamp(innerDeg, 0.0f, outerDeg);
+				m_SpotLights[i].CutOff = glm::cos(glm::radians(innerDeg));
+				changed = true;
+			}
+			if (ImGui::DragFloat("Outer Angle (deg)", &outerDeg, 0.1f, 0.0f, 90.0f))
+			{
+				outerDeg = glm::clamp(outerDeg, innerDeg, 90.0f);
+				m_SpotLights[i].OuterCutOff = glm::cos(glm::radians(outerDeg));
+				changed = true;
+			}
+
+			changed |= ImGui::DragFloat("Constant", &m_SpotLights[i].Constant, 0.01f, 0.0f, 10.0f);
+			changed |= ImGui::DragFloat("Linear", &m_SpotLights[i].Linear, 0.001f, 0.0f, 1.0f);
+			changed |= ImGui::DragFloat("Quadratic", &m_SpotLights[i].Quadratic, 0.0001f, 0.0f, 1.0f);
+
 			changed |= ImGui::ColorEdit3("Diffuse", &m_SpotLights[i].Diffuse.x);
+
 			if (changed)
 			{
 				glm::vec3 d = glm::normalize(glm::vec3(m_SpotLights[i].Direction));
 				m_SpotLights[i].Direction = glm::vec4(d, 0.0f);
 				m_LightManager->SetSpotLight(i, m_SpotLights[i]);
 			}
+
 			ImGui::PopID();
 		}
 		ImGui::End();
@@ -231,7 +258,7 @@ namespace Test
 	void MainSceneTestLayer::InitializeLights()
 	{
 		// Global ambient light
-		m_LightManager->SetGlobalAmbient({ 0.005f, 0.005f, 0.005f });
+		m_LightManager->SetGlobalAmbient(glm::vec3(0.005f));
 
 		// Directional lights
 		Engine::DirectionalLight dir(
@@ -247,21 +274,37 @@ namespace Test
 
 		// Point lights
 		Engine::PointLight point(
-			glm::vec3(0.0f, 200.0f, 0.0f)
+			glm::vec3(290.0f, 95.0f, 0.0f)
 		);
+		point.Linear = 0.045f;
+		point.Quadratic = 0.0075f;
 		m_PointLights.clear();
 		m_PointLights.emplace_back(point);
 
 		for (size_t i = 0; i < m_PointLights.size(); ++i)
 			m_LightManager->AddPointLight(m_PointLights[i]);
 
+		size_t index = 0;
+		auto setterColor = [this, index](const glm::vec3& col) 
+			{
+			Engine::PointLight pl = m_PointLights[index];
+			pl.Diffuse = glm::vec4(col, 0.0f);
+			m_PointLights[index] = pl;
+			m_LightManager->SetPointLight(static_cast<int>(index), pl);
+			};
+		float velocidad = 0.1f;
+		auto colorTween = std::make_shared<Engine::ColorCycleTween>(velocidad, setterColor);
+
+		auto clip = std::make_shared<Engine::LightAnimationClip>();
+		clip->Tweens.push_back(colorTween);
+		m_LightAnimationManager->AddClip(clip);
+
 		// Spot lights
 		m_SpotLights.clear();
 		{
-			glm::vec3 pos = { -3680.0f, 1500.0f, 500.0f };
-			glm::vec3 target = { -3680.0f, 1500.0f, 0.0f };
-			glm::vec3 dir = glm::normalize(target - pos);
-			Engine::SpotLight spot(pos, dir, 10.0f, 12.0f);
+			glm::vec3 pos = { -0.0f, 80.0f, 0.0f };
+			glm::vec3 dir = { 0.0f, -1.0f, 0.0f};
+			Engine::SpotLight spot(pos, dir, 70.0f, 71.0f, 0.0f, 0.0f, 0.01f);
 			spot.Ambient = glm::vec4(glm::vec3(1.0f), 0.0f);
 			spot.Diffuse = glm::vec4(1.5f);
 			m_SpotLights.push_back(spot);
@@ -269,6 +312,25 @@ namespace Test
 
 		for (size_t i = 0; i < m_SpotLights.size(); ++i)
 			m_LightManager->AddSpotLight(m_SpotLights[i]);
+
+		{
+			int spotlightIndex = 0;
+
+			auto getter = [this, spotlightIndex]() {
+				return m_LightManager->GetSpotLight(spotlightIndex);
+				};
+			auto setter = [this, spotlightIndex](const Engine::SpotLight& spot) {
+				m_LightManager->SetSpotLight(spotlightIndex, spot);
+				};
+
+			auto flickerTween = std::make_shared<Engine::FlickerTween<Engine::SpotLight>>(
+				getter, setter, 0.2f
+			);
+
+			auto clip = std::make_shared<Engine::LightAnimationClip>();
+			clip->Tweens.push_back(flickerTween);
+			m_LightAnimationManager->AddClip(clip);
+		}
 	}
 
 	void MainSceneTestLayer::InitializeModels()
@@ -279,9 +341,13 @@ namespace Test
 		m_Earth = m_EntityManager->CreateEntity(
 			std::make_shared<Engine::Model>("res/models/Earth.glb"), m_MoonSurfaceShader, "Earth");
 
+		m_Player = m_EntityManager->CreateEntity(
+			std::make_shared<Engine::Model>("res/models/Player.glb"), m_MoonSurfaceShader, "Player");
+
 		m_MoonSurface->Scale(glm::vec3(10.0f));
 		m_Earth->Scale(glm::vec3(3.0f));
 		m_Earth->Rotate(glm::vec3(160.0f, 20.0f, 30.0f));
 		m_Earth->Translate(glm::vec3(-3680.0f, 1500.0f, 0.0f));
+		m_Player->Translate(glm::vec3(0.0f, 70.0f, 0.0f));
 	}
 }

@@ -175,6 +175,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\Engine\Audio\AudioManager.cpp" />
     <ClCompile Include="src\Engine\Audio\AudioSource.cpp" />
     <ClCompile Include="src\Engine\Audio\WAVLoader.cpp" />
+    <ClCompile Include="src\Engine\Core\TransitionLayer.cpp" />
     <ClCompile Include="src\Engine\Meshes\Cube.cpp" />
     <ClCompile Include="src\Engine\Meshes\Hexagon.cpp" />
     <ClCompile Include="src\Engine\Meshes\Icosphere.cpp" />
@@ -219,6 +220,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClCompile Include="src\UI\Button3D.cpp" />
     <ClCompile Include="test\AIEntitiesTestLayer.cpp" />
     <ClCompile Include="test\MainSceneTestLayer.cpp" />
+    <ClCompile Include="test\MainSceneTransitionLayer.cpp" />
     <ClCompile Include="test\ShadowMappingTestLayer.cpp" />
     <ClCompile Include="test\SimpleGammaCorrectionTestLayer.cpp" />
     <ClCompile Include="test\MultipleEntitiesTestLayer.cpp" />
@@ -281,6 +283,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\Audio\AudioSource.h" />
     <ClInclude Include="src\Engine\Audio\WAVLoader.h" />
     <ClInclude Include="src\Engine\Core\DebugGL.h" />
+    <ClInclude Include="src\Engine\Core\TransitionLayer.h" />
     <ClInclude Include="src\Engine\Core\OpenGLDebug.h" />
     <ClInclude Include="src\Engine\Core\RenderSettings.h" />
     <ClInclude Include="src\Engine\Meshes\Cube.h" />
@@ -306,15 +309,22 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\OpenGL\ShadowCamera.h" />
     <ClInclude Include="src\Engine\OpenGL\ShadowMap.h" />
     <ClInclude Include="src\Engine\Scene\CollisionComponent.h" />
+    <ClInclude Include="src\Engine\Scene\ColorCycleTween.h" />
     <ClInclude Include="src\Engine\Scene\Entity.h" />
     <ClInclude Include="src\Engine\Scene\EntityManager.h" />
     <ClInclude Include="src\Engine\OpenGL\Mesh.h" />
+    <ClInclude Include="src\Engine\Scene\FlickerTween.h" />
     <ClInclude Include="src\Engine\Scene\GlobalSceneSettings.h" />
+    <ClInclude Include="src\Engine\Scene\ILightTween.h" />
+    <ClInclude Include="src\Engine\Scene\LightAnimationClip.h" />
+    <ClInclude Include="src\Engine\Scene\LightAnimationManager.h" />
     <ClInclude Include="src\Engine\Scene\LightManager.h" />
     <ClInclude Include="src\Engine\Scene\MeshComponent.h" />
     <ClInclude Include="src\Engine\Scene\ModelComponent.h" />
     <ClInclude Include="src\Engine\Scene\PhysicsComponent.h" />
+    <ClInclude Include="src\Engine\Scene\PulseTween.h" />
     <ClInclude Include="src\Engine\Scene\Scene.h" />
+    <ClInclude Include="src\Engine\Scene\StepTween.h" />
     <ClInclude Include="src\Engine\Scene\TagComponent.h" />
     <ClInclude Include="src\Engine\Scene\TransformComponent.h" />
     <ClInclude Include="src\Engine\Scene\SceneRenderer.h" />
@@ -327,6 +337,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\Engine\OpenGL\UniformBuffer.h" />
     <ClInclude Include="src\Engine\OpenGL\UniformBufferElement.h" />
     <ClInclude Include="src\Engine\OpenGL\UniformBufferLayout.h" />
+    <ClInclude Include="src\Engine\Scene\Tween.h" />
     <ClInclude Include="src\Engine\Util\Utils.h" />
     <ClInclude Include="src\Engine\Core\Application.h" />
     <ClInclude Include="src\Engine\Core\Input.h" />
@@ -357,6 +368,7 @@ xcopy /Y /D /I "$(SolutionDir)Dependencies\dll\$(Configuration)\*.dll" "$(OutDir
     <ClInclude Include="src\UI\Button3D.h" />
     <ClInclude Include="test\AIEntitiesTestLayer.h" />
     <ClInclude Include="test\MainSceneTestLayer.h" />
+    <ClInclude Include="test\MainSceneTransitionLayer.h" />
     <ClInclude Include="test\ShadowMappingTestLayer.h" />
     <ClInclude Include="test\SimpleGammaCorrectionTestLayer.h" />
     <ClInclude Include="test\MultipleEntitiesTestLayer.h" />
