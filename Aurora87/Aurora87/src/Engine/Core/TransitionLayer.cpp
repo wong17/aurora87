@@ -27,23 +27,26 @@ namespace Engine
         if (m_AbortRequested)
             return;
 
-        if (m_NextLayerCreated && !m_HasPushedNextLayer)
+        if (m_NextLayerCreated && !m_LoadingCompleted)
         {
-            std::shared_ptr<Layer> nextLayerCopy;
+            std::lock_guard<std::mutex> lock(m_Mutex);
+            if (m_NextLayer)
             {
-                std::lock_guard<std::mutex> lock(m_Mutex);
-                nextLayerCopy = m_NextLayer;
-            }
-
-            if (nextLayerCopy)
-            {
-                Engine::Application::Get().PushLayer(nextLayerCopy);
-                m_HasPushedNextLayer = true;
+                m_LoadingCompleted = true;
             }
         }
 
-        if (m_HasPushedNextLayer && m_NextLayer && m_NextLayer->IsLoaded())
+        if (m_LoadingCompleted && m_TransitionReady && !m_HasPushedNextLayer)
         {
+            {
+                std::lock_guard<std::mutex> lock(m_Mutex);
+                if (m_NextLayer)
+                {
+                    Engine::Application::Get().PushLayer(m_NextLayer);
+                }
+            }
+
+            m_HasPushedNextLayer = true;
             Engine::Application::Get().PopLayer(shared_from_this());
         }
     }

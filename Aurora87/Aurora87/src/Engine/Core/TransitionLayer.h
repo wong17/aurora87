@@ -24,6 +24,11 @@ namespace Engine
         void OnUpdate(float deltaTime) override;
 
         void AbortLoading();
+        inline void SetTransitionReady(bool ready) { m_TransitionReady = ready; }
+
+    protected:
+        std::atomic<bool> m_LoadingCompleted = false;
+        std::atomic<bool> m_TransitionReady = false;
 
     private:
         LoadFunction m_LoadFunction;
