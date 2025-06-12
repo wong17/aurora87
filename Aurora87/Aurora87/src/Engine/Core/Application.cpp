@@ -12,8 +12,6 @@ namespace Engine
 		
 		m_RenderSettings = std::make_unique<RenderSettings>(*m_Window);
 
-		//m_Camera = std::make_unique<OrthographicCamera>(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
-
 		if (m_AudioEngine.Initialize() != InitResult::OK)
 		{
 			std::cerr << "Application::Application: Error inicializando AudioEngine\n";
@@ -43,6 +41,8 @@ namespace Engine
 		float fpsTimer = 0.0f;
 		int frameCount = 0;
 
+		m_IsRunning = true;
+
 		while (m_Running)
 		{
 			float currentFrame = static_cast<float>(glfwGetTime());
@@ -70,6 +70,8 @@ namespace Engine
 			for (auto& layer : m_LayerStack)
 				layer->OnUpdate(m_DeltaTime);
 
+			ProcessLayerOperations();
+
 			m_ImGuiLayer->Begin();
 
 			m_RenderSettings->OnImGuiRender();
@@ -80,12 +82,12 @@ namespace Engine
 
 			m_Window->OnUpdate();
 		}
+
+		m_IsRunning = false;
 	}
 
 	void Application::OnEvent(Event& e)
 	{
-		//std::cout << e << std::endl;
-
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&Application::OnWindowResize, this, std::placeholders::_1));
@@ -100,12 +102,38 @@ namespace Engine
 
 	void Application::PushLayer(std::shared_ptr<Layer> layer)
 	{
-		m_LayerStack.PushLayer(std::move(layer));
+		if (m_IsRunning) 
+		{
+			m_PendingOperations.push_back([this, layer]() { m_LayerStack.PushLayer(layer); });
+		}
+		else 
+		{
+			m_LayerStack.PushLayer(layer);
+		}
 	}
 
 	void Application::PushOverlay(std::shared_ptr<Layer> overlay)
 	{
-		m_LayerStack.PushOverlay(std::move(overlay));
+		if (m_IsRunning)
+		{
+			m_PendingOperations.push_back([this, overlay]() { m_LayerStack.PushOverlay(overlay); });
+		}
+		else
+		{
+			m_LayerStack.PushOverlay(overlay);
+		}
+	}
+
+	void Application::PopLayer(std::shared_ptr<Layer> layer)
+	{
+		if (m_IsRunning) 
+		{
+			m_PendingOperations.push_back([this, layer]() { m_LayerStack.PopLayer(layer.get()); });
+		}
+		else 
+		{
+			m_LayerStack.PopLayer(layer.get());
+		}
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -119,16 +147,6 @@ namespace Engine
 		// Si la ventana es minimizada, no hace falta actualizar la camara
 		if (e.GetWidth() == 0 || e.GetHeight() == 0) return false;
 
-		//glViewport(0, 0, newWidth, newHeight);
-		
-		// Se ajusta la camara para que el origen esté en la esquina inferior izquierda
-		/*if (m_Camera)
-		{
-			m_Camera->SetProjection(0.0f, static_cast<float>(newWidth), 0.0f, static_cast<float>(newHeight));
-			std::cout << "SetProjectionMatrix" << std::endl;
-		}*/
-
-		// Actualizar la proyección de la cámara de perspectiva
 		if (m_Camera)
 		{
 			auto perspectiveCamera = static_cast<PerspectiveCamera*>(m_Camera.get());
@@ -137,5 +155,14 @@ namespace Engine
 		}
 
 		return false;
+	}
+
+	void Application::ProcessLayerOperations()
+	{
+		for (auto& op : m_PendingOperations) 
+		{
+			op();
+		}
+		m_PendingOperations.clear();
 	}
 }

@@ -23,6 +23,7 @@
 #include <memory>
 #include <sstream>
 #include <iomanip>
+#include <functional>
 
 namespace Engine
 {
@@ -37,6 +38,7 @@ namespace Engine
 
 		void PushLayer(std::shared_ptr<Layer> layer);
 		void PushOverlay(std::shared_ptr<Layer> overlay);
+		void PopLayer(std::shared_ptr<Layer> layer);
 
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
@@ -49,11 +51,12 @@ namespace Engine
 		inline float GetDeltaTime() const { return m_DeltaTime; }
 		inline float GetLastFrame() const { return m_LastFrame; }
 
-		void Close() { m_Running = false; }
+		inline void Close() { m_Running = false; }
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
+		void ProcessLayerOperations();
 	private:
 		std::unique_ptr<Window> m_Window;
 		std::shared_ptr<ImGuiLayer> m_ImGuiLayer;
@@ -65,6 +68,9 @@ namespace Engine
 		bool m_Running = true;
 		float m_LastFrameTime = 0.0f;
 		float m_DeltaTime = 0.0f, m_LastFrame = 0.0f;
+
+		bool m_IsRunning = false;
+		std::vector<std::function<void()>> m_PendingOperations;
 
 		static Application* s_Instance;
 	};
