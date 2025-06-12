@@ -19,7 +19,8 @@ namespace Engine
 		// Configura callback de error por defecto
 		glfwSetErrorCallback(GLFWErrorCallback);
 		// Inicializa la ventana
-		if (!Init()) {
+		if (!Init()) 
+		{
 			std::cerr << "Error al inicializar la ventana GLFW." << std::endl;
 			m_GLFWwindow = nullptr;
 		}
@@ -30,12 +31,12 @@ namespace Engine
 		if (m_GLFWwindow)
 			Shutdown();
 
-		std::cout << "Window destroyed." << std::endl;
+		//std::cout << "Window destroyed." << std::endl;
 
 		glfwTerminate();
 		s_GLFWInitialized = false;
 
-		std::cout << "GLFW terminated." << std::endl;
+		//std::cout << "GLFW terminated." << std::endl;
 	}
 
 	bool Window::Init()

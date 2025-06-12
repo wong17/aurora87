@@ -6,17 +6,18 @@ namespace Engine
 	{
 		if (!shader)
 		{
-			std::cerr << "ShaderManager::Add Shader es null.\n";
+			std::cerr << "ShaderManager::Add Shader is null.\n";
 			return;
 		}
 		if (name.empty())
 		{
-			std::cerr << "ShaderManager::Add Shader name esta vacio.\n";
+			std::cerr << "ShaderManager::Add Shader name is empty.\n";
 			return;
 		}
 
-		if (Exists(name)) {
-			std::cout << "ShaderManager: Shader '" << name << "' ya existe.\n";
+		if (Exists(name)) 
+		{
+			std::cout << "ShaderManager: Shader '" << name << "' already exists.\n";
 			return;
 		}
 
@@ -27,7 +28,7 @@ namespace Engine
 	{
 		if (!shader)
 		{
-			std::cerr << "ShaderManager::Add Shader es null.\n";
+			std::cerr << "ShaderManager::Add Shader is null.\n";
 			return;
 		}
 
@@ -40,8 +41,9 @@ namespace Engine
 		auto shader = Shader::Create(vertexPath, fragmentPath);
 		const std::string& name = shader->GetName();
 
-		if (Exists(name)) {
-			std::cout << "ShaderManager: Shader '" << name << "' ya está cargado. Se reutilizará.\n";
+		if (Exists(name)) 
+		{
+            std::cout << "ShaderManager: Shader '" << name << "' is already loaded. It will be reused.\n";
 			return Get(name);
 		}
 
@@ -51,8 +53,9 @@ namespace Engine
 
 	std::shared_ptr<Shader> ShaderManager::Load(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		if (Exists(name)) {
-			std::cout << "ShaderManager: Shader '" << name << "' ya está cargado. Se reutilizará.\n";
+		if (Exists(name)) 
+		{
+			std::cout << "ShaderManager: Shader '" << name << "' is already loaded. It will be reused.\n";
 			return Get(name);
 		}
 
@@ -64,8 +67,9 @@ namespace Engine
 	std::shared_ptr<Shader> ShaderManager::Get(const std::string& name)
 	{
 		auto it = m_Shaders.find(name);
-		if (it == m_Shaders.end()) {
-			std::cerr << "ShaderManager: Shader '" << name << "' no existe.\n";
+		if (it == m_Shaders.end()) 
+		{
+			std::cerr << "ShaderManager: Shader '" << name << "' does not exists.\n";
 			return nullptr;
 		}
 
@@ -101,8 +105,9 @@ namespace Engine
 	void ShaderManager::Remove(const std::string& name)
 	{
 		auto it = m_Shaders.find(name);
-		if (it == m_Shaders.end()) {
-			std::cerr << "ShaderManager: Shader '" << name << "' no existe.\n";
+		if (it == m_Shaders.end()) 
+		{
+			std::cerr << "ShaderManager: Shader '" << name << "' does not exists.\n";
 			return;
 		}
 		m_Shaders.erase(it);
@@ -112,19 +117,22 @@ namespace Engine
 	{
 		if (!shader) return;
 
-		for (auto it = m_Shaders.begin(); it != m_Shaders.end(); ++it) {
-			if (it->second == shader) {
+		for (auto it = m_Shaders.begin(); it != m_Shaders.end(); ++it) 
+		{
+			if (it->second == shader) 
+			{
 				m_Shaders.erase(it);
 				return;
 			}
 		}
-		std::cerr << "ShaderManager: Shader no encontrado.\n";
+		std::cerr << "ShaderManager: Shader was not found.\n";
 	}
 
 	void ShaderManager::ListShaders() const
 	{
-		std::cout << "Shaders cargados:\n";
-		for (const auto& [name, shader] : m_Shaders) {
+		std::cout << "Shaders loaded:\n";
+		for (const auto& [name, shader] : m_Shaders) 
+		{
 			std::cout << " - " << name << "\n";
 		}
 	}

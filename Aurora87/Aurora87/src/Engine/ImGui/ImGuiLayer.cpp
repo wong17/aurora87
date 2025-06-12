@@ -3,13 +3,7 @@
 
 namespace Engine
 {
-	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
-	{
-	}
-
-	ImGuiLayer::~ImGuiLayer()
-	{
-	}
+	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") { }
 
 	void ImGuiLayer::OnAttach()
 	{
@@ -45,21 +39,12 @@ namespace Engine
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
-		std::cout << "ImGuiLayer detached." << std::endl;
-	}
-
-	void ImGuiLayer::OnUpdate(float deltaTime)
-	{
-		
+		//std::cout << "ImGuiLayer detached." << std::endl;
 	}
 
 	void ImGuiLayer::OnImGuiRender()
 	{
 		//ImGui::ShowDemoWindow();
-	}
-
-	void ImGuiLayer::OnEvent(Event& event)
-	{
 	}
 
 	void ImGuiLayer::Begin()
