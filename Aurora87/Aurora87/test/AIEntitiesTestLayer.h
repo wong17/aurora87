@@ -3,9 +3,11 @@
 #include "Engine/Core/Application.h"
 #include "Engine/Core/RenderSettings.h"
 #include "Engine/Core/Layer.h"
+
 #include "Engine/Events/Event.h"
 #include "Engine/Events/MouseEvent.h"
 #include "Engine/Events/KeyEvent.h"
+
 #include "Engine/OpenGL/Shader.h"
 #include "Engine/OpenGL/ShaderManager.h"
 #include "Engine/OpenGL/ShaderDataTypes.h"
@@ -20,20 +22,25 @@
 #include "Engine/OpenGL/UniformBuffer.h"
 #include "Engine/OpenGL/UniformBufferLayout.h"
 #include "Engine/OpenGL/TextRenderer.h"
+#include "Engine/OpenGL/Skybox.h"
+
 #include "Engine/Scene/SceneRenderer.h"
 #include "Engine/Scene/TransformSystem.h"
-#include "Engine/OpenGL/Skybox.h"
+
 #include "Engine/Util/Utils.h"
+
 #include "Engine/Scene/Entity.h"
 #include "Engine/Scene/EntityManager.h"
+
 #include "Engine/Meshes/Cube.h"
 #include "Engine/Meshes/PrimitiveFactory.h"
 #include "Engine/Meshes/PrimitiveMesh.h"
-#include "AIEnviroment/Base/BaseGameEntity.h"
-#include "AIEnviroment/Base/GameEntityManager.h"
-#include "AIEnviroment/Player/Player.h"
-#include <AIEnviroment/DumbZombie/DumbZombie.h>
 
+#include "Game/AIEnviroment/Base/BaseGameEntity.h"
+#include "Game/AIEnviroment/Base/GameEntityManager.h"
+#include "Game/AIEnviroment/Player/Player.h"
+#include "Game/AIEnviroment/DumbZombie/DumbZombie.h"
+#include "Game/AIEnviroment/GameLogic/CameraGame.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -50,7 +57,6 @@
 #include <map>
 #include <string>
 #include <filesystem>
-#include <AIEnviroment/GameLogic/CameraGame.h>
 
 namespace Test {
 	class AIEntitiesTestLayer : public Engine::Layer
