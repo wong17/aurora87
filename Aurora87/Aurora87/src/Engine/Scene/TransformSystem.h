@@ -59,13 +59,13 @@ namespace Engine
         }
     
     private:
-        // Para poder apliar transformaciones a las entidades
+        // In order to be able to apply transformations to the entities
         template<typename Key, typename Op>
         void _ApplyToEntity(const Key& key, Op&& op, const char* opName)
         {
             std::shared_ptr<Entity> e = GetByKey(key);
             if (!e) {
-                std::cerr << "[TransformSystem:EntityManager] " << opName << ": no existe la entidad para el key dado\n";
+                std::cerr << "[TransformSystem:EntityManager] " << opName << ": the entity does not exist for the given key\n";
                 return;
             }
             op(*e);

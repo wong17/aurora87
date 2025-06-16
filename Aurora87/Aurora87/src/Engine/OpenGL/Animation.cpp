@@ -6,7 +6,7 @@ namespace Engine
 	{
         if (!animation) 
         {
-            throw std::invalid_argument("Animation::Constructor: aiAnimation* es nulo.");
+            throw std::invalid_argument("Animation::Constructor: aiAnimation* is null.");
         }
 
         m_Duration = static_cast<float>(animation->mDuration);
@@ -14,7 +14,7 @@ namespace Engine
         
         if (animation->mNumChannels == 0) 
         {
-            std::cerr << "Animation::Constructor: aiAnimation no tiene canales de animacion.\n";
+            std::cerr << "Animation::Constructor: aiAnimation has no animation channels.\n";
         }
 
         m_Channels.reserve(animation->mNumChannels);
@@ -23,7 +23,7 @@ namespace Engine
             const aiNodeAnim* channel = animation->mChannels[i];
             if (!channel) 
             {
-                std::cerr << "Animation::Constructor: canal " << i << " es nulo, se omite.\n";
+                std::cerr << "Animation::Constructor: channel " << i << " is null, is omitted.\n";
                 continue;
             }
             ReadNodeAnimation(channel);
@@ -31,7 +31,7 @@ namespace Engine
 
         if (m_Channels.empty()) 
         {
-            std::cerr << "Animation::Constructor: No se cargo ninguna animacion de nodo valida.\n";
+            std::cerr << "Animation::Constructor: No valid node animation was loaded..\n";
         }
 	}
 
@@ -39,7 +39,7 @@ namespace Engine
 	{
         if (!channel) 
         {
-            std::cerr << "Animation::ReadNodeAnimation: aiNodeAnim* es nulo.\n";
+            std::cerr << "Animation::ReadNodeAnimation: aiNodeAnim* is null.\n";
             return;
         }
 
@@ -48,7 +48,7 @@ namespace Engine
         if (nodeAnim.NodeName.empty()) 
         {
             nodeAnim.NodeName = "<UnnamedNode>";
-            std::cerr << "Animation::ReadNodeAnimation: canal sin nombre, se asigna '<UnnamedNode>'.\n";
+            std::cerr << "Animation::ReadNodeAnimation: unnamed channel, ‘<UnnamedNode>’ is assigned.\n";
         }
 
         nodeAnim.Positions.reserve(channel->mNumPositionKeys);
@@ -58,7 +58,7 @@ namespace Engine
         // Posiciones
         if (channel->mNumPositionKeys == 0) 
         {
-            std::cerr << "Animation::ReadNodeAnimation (" << nodeAnim.NodeName << ") sin PositionKeys.\n";
+            std::cerr << "Animation::ReadNodeAnimation (" << nodeAnim.NodeName << ") without PositionKeys.\n";
         }
 
         for (uint32_t i = 0; i < channel->mNumPositionKeys; ++i) 
@@ -73,7 +73,7 @@ namespace Engine
         // Rotaciones
         if (channel->mNumRotationKeys == 0) 
         {
-            std::cerr << "Animation::ReadNodeAnimation (" << nodeAnim.NodeName << ") sin RotationKeys.\n";
+            std::cerr << "Animation::ReadNodeAnimation (" << nodeAnim.NodeName << ") without RotationKeys.\n";
         }
 
         for (uint32_t i = 0; i < channel->mNumRotationKeys; ++i) 
@@ -89,7 +89,7 @@ namespace Engine
         // Escalas
         if (channel->mNumScalingKeys == 0) 
         {
-            std::cerr << "Animation::ReadNodeAnimation (" << nodeAnim.NodeName << ")sin ScalingKeys.\n";
+            std::cerr << "Animation::ReadNodeAnimation (" << nodeAnim.NodeName << ") without ScalingKeys.\n";
         }
         for (uint32_t i = 0; i < channel->mNumScalingKeys; ++i) 
         {
@@ -103,7 +103,7 @@ namespace Engine
         // Solo agregamos si hay al menos un key en alguna categoría
         if (nodeAnim.Positions.empty() && nodeAnim.Rotations.empty() && nodeAnim.Scales.empty()) 
         {
-            std::cerr << "Animation::ReadNodeAnimation: canal '" << nodeAnim.NodeName << "' sin keyframes, se omite.\n";
+            std::cerr << "Animation::ReadNodeAnimation: channel '" << nodeAnim.NodeName << "' without keyframes, is omitted.\n";
             return;
         }
 

@@ -90,7 +90,7 @@ namespace Engine
 		{
 			if (m_ErrorCallback)
 			{
-				std::string msg = "AudioEngine::OpenDevice: Error al abrir el dispositivo";
+				std::string msg = "AudioEngine::OpenDevice: Error opening the device";
 				msg += name ? name : "default";
 				m_ErrorCallback(msg);
 			}

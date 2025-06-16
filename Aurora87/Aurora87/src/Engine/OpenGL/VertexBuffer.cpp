@@ -5,7 +5,7 @@ namespace Engine
 	VertexBuffer::VertexBuffer(uint32_t size, GLenum usage)
 		: m_Size(size), m_Capacity(size), m_Usage(usage)
 	{
-		// Desde OpenGL 4.5 DSA (Direct State Access)
+		// Since OpenGL 4.5 DSA (Direct State Access)
 		glCreateBuffers(1, &m_RendererID);
 		GLCall(glNamedBufferData(m_RendererID, size, nullptr, usage));
 	}
@@ -13,7 +13,7 @@ namespace Engine
 	VertexBuffer::VertexBuffer(float* vertices, uint32_t size, GLenum usage)
 		: m_Size(size), m_Capacity(size), m_Usage(usage)
 	{
-		// Desde OpenGL 4.5 DSA (Direct State Access)
+		// Since OpenGL 4.5 DSA (Direct State Access)
 		glCreateBuffers(1, &m_RendererID);
 		GLCall(glNamedBufferData(m_RendererID, size, vertices, usage));
 	}
@@ -23,8 +23,10 @@ namespace Engine
 	{
 		std::vector<float> raw;
 		raw.reserve(matrices.size() * 16);
-		for (const auto& mat : matrices) {
-			for (int j = 0; j < 4; ++j) {
+		for (const auto& mat : matrices) 
+		{
+			for (int j = 0; j < 4; ++j) 
+			{
 				raw.emplace_back(mat[j][0]);
 				raw.emplace_back(mat[j][1]);
 				raw.emplace_back(mat[j][2]);
@@ -66,14 +68,14 @@ namespace Engine
 	{
 		if (size > m_Capacity) 
 		{
-			// Redimensiona entero el buffer
+			// Resizes the entire buffer
 			m_Capacity = size;
 			m_Size = size;
 			GLCall(glNamedBufferData(m_RendererID, m_Capacity, data, m_Usage));
 		}
 		else 
 		{
-			// Solo sub-data con DSA
+			// Only sub-data with DSA
 			m_Size = size;
 			GLCall(glNamedBufferSubData(m_RendererID, 0, m_Size, data));
 		}

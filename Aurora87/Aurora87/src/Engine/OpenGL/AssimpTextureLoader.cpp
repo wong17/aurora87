@@ -12,7 +12,7 @@ namespace Engine
 			case 4: return ImageFormat::RGBA8;
 			default:
 			{
-				std::cerr << "AssimpTextureLoader::ChannelsToFormat: formato de textura no soportado: " << channels << "\n";
+				std::cerr << "AssimpTextureLoader::ChannelsToFormat: texture format not supported: " << channels << "\n";
 				return ImageFormat::None;
 			}
 		}
@@ -54,13 +54,13 @@ namespace Engine
 		int width, height, channels;
 		stbi_uc* data = nullptr;
 
-		// Textura comprimida en memoria (formato .jpg/.png/etc)
+		// Compressed texture in memory (format .jpg/.png/etc)
 		data = stbi_load_from_memory(
 			reinterpret_cast<stbi_uc*>(aiTex->pcData), static_cast<int>(aiTex->mWidth), &width, &height, &channels, STBI_default);
 
 		if (!data) 
 		{
-			std::cerr << "AssimpTextureLoader::LoadEmbeddedTexture: fallo al decodificar textura embebida\n";
+			std::cerr << "AssimpTextureLoader::LoadEmbeddedTexture: failure to decode embedded texture\n";
 			return nullptr;
 		}
 
@@ -83,14 +83,14 @@ namespace Engine
 		const uint8_t* dds_data = reinterpret_cast<const uint8_t*>(aiTex->pcData);
 		int dds_size = static_cast<int>(aiTex->mWidth);
 
-		// Parsear el bloque DDS en memoria
+		// Parse DDS block in memory
 		if (!ddsktx_parse(&info, dds_data, dds_size, nullptr))
 		{
-			std::cerr << "AssimpTextureLoader::LoadDDS: fallo al parsear DDS embebido\n";
+			std::cerr << "AssimpTextureLoader::LoadDDS: failure when parsing embedded DDS\n";
 			return nullptr;
 		}
 
-		// Determinar si es sRGB basado en el formato
+		// Determine if sRGB based on the format
 		bool isSRGB = false;
 		switch (info.format) 
 		{
@@ -102,7 +102,7 @@ namespace Engine
 			default: break;
 		}
 
-		// Mapear ddsktx_format a nuestro ImageFormat
+		// Map ddsktx_format to our ImageFormat
 		ImageFormat format = ImageFormat::None;
 		switch (info.format) 
 		{
@@ -116,29 +116,29 @@ namespace Engine
 				format = ImageFormat::BC7;
 				break;
 			default:
-				std::cerr << "Formato DDS no soportado: 0x" << std::hex << info.format << "\n";
+				std::cerr << "AssimpTextureLoader::LoadDDS: DDS format not supported: 0x" << std::hex << info.format << "\n";
 				return nullptr;
 		}
 
-		// Preparar la especificación OpenGL
+		// Preparing the OpenGL specification
 		TextureSpecification texSpec = spec;
 		texSpec.Width = info.width;
 		texSpec.Height = info.height;
 		texSpec.Format = format;
-		texSpec.GenerateMips = false; // El DDS ya incluye los mipmaps
+		texSpec.GenerateMips = false; // DDS already includes the mipmaps
 		texSpec.IsCompressed = true;
 		texSpec.MipLevels = info.num_mips;
 
-		// Crear la textura y reservar espacio para N niveles
+		// Create texture and reserve space for N levels
 		auto texture = std::make_shared<Texture>(texSpec);
 
-		// Subir cada mipmap comprimido
+		// Upload each compressed mipmap
 		ddsktx_sub_data sub_data;
 		for (int mip = 0; mip < info.num_mips; ++mip)
 		{
 			ddsktx_get_sub(&info, &sub_data,
-				dds_data,					// puntero al DDS completo
-				static_cast<int>(dds_size), // tamaño en bytes del DDS completo (cast a int)
+				dds_data,					// pointer to DDS
+				static_cast<int>(dds_size), // DDS size in bytes (cast to int)
 				0,							// array layer
 				0,							// cubemap face
 				mip);						// mip level
@@ -149,7 +149,7 @@ namespace Engine
 			}
 			else
 			{
-				std::cerr << "Error cargando mipmap " << mip << "\n";
+				std::cerr << "AssimpTextureLoader::LoadDDS: Error loading mipmap " << mip << "\n";
 				break;
 			}
 		}

@@ -82,7 +82,7 @@ namespace Engine
             int height = m_Face->glyph->bitmap.rows;
             GLuint texture;
 
-            // Si el glifo no tiene bitmap (espacio, etc.), creamos una textura de 1x1
+            // If the glyph has no bitmap (space, etc.), we create a 1x1 texture.
             unsigned char zero = 0;
             glCreateTextures(GL_TEXTURE_2D, 1, &texture);
             GLCall(glTextureStorage2D(texture, 1, GL_R8, width <= 0 ? 1 : width, height <= 0 ? 1 : height));

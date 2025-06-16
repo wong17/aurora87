@@ -29,11 +29,11 @@ namespace Engine
 
         void Update(float deltaTime);
 
-        // Para enviar al shader
+        // To send to the shader
         const std::vector<glm::mat4>& GetFinalBoneMatrices() const { return m_FinalBoneMatrices; }
 
     private:
-        // Para cada canal, interpola y escribe en la estructura Bone
+        // For each channel, interpolate and write in the structure Bone
         template<typename Key>
         static void Interpolate(const std::vector<Key>& keys, float time, typename Key::ValueType& outValue);
 

@@ -56,23 +56,23 @@ namespace Engine
 		m_Width = m_Specification.Width;
 		m_Height = m_Specification.Height;
 
-		// Verificar dimensiones válidas
+		// Check valid dimensions
 		if (m_Width == 0 || m_Height == 0) 
 		{
-			throw std::invalid_argument("Texture::Texture: Dimensiones de la textura deben ser mayores a 0.");
+			throw std::invalid_argument("Texture::Texture: Texture dimensions must be greater than 0.");
 			return;
 		}
 
 		m_InternalFormat = ImageFormatToOpenGLInternalFormat(m_Specification.Format);
 		m_DataFormat = ImageFormatToOpenGLDataFormat(m_Specification.Format);
 
-		// Calcular niveles de mipmap SOLO si no es comprimida
+		// Calculate mipmap levels ONLY if uncompressed
 		if (!m_Specification.IsCompressed) {
 			GLsizei calculatedLevels = m_Specification.GenerateMips	? Utils::CalculateMipLevels(m_Width, m_Height) : 1;
-			m_Specification.MipLevels = calculatedLevels; // Actualizar MipLevels
+			m_Specification.MipLevels = calculatedLevels; // Update MipLevels
 		}
 
-		// Crear la textura usando DSA
+		// Create texture using DSA
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		GLCall(glTextureStorage2D(m_RendererID, m_Specification.MipLevels, m_InternalFormat, m_Width, m_Height));
 
@@ -83,7 +83,7 @@ namespace Engine
 			glGenerateTextureMipmap(m_RendererID);
 		}
 
-		// Ahora solo debe de pasar los datos de la textura por SetData
+		// Now you only have to pass the texture data through SetData
 		m_IsLoaded = true;
 	}
 
@@ -121,32 +121,32 @@ namespace Engine
 		uint32_t bpp = 0;
 		switch (m_DataFormat) 
 		{
-			case GL_RED:        bpp = 1; break;   // 1 canal (8 bits)
-			case GL_RG:         bpp = 2; break;   // 2 canales (8 bits cada uno)
-			case GL_RGB:        bpp = 3; break;   // 3 canales
-			case GL_RGBA:       bpp = 4; break;   // 4 canales
-			case GL_RGBA32F:    bpp = 16; break;  // 4 componentes float (4 bytes cada una)
-			// Para formatos enteros y otros
-			case GL_R16:        bpp = 2; break;   // 1 canal (16 bits)
-			case GL_RG16:       bpp = 4; break;   // 2 canales (16 bits cada uno)
-			case GL_RGB16:      bpp = 6; break;   // 3 canales (16 bits cada uno)
-			case GL_RGBA16:     bpp = 8; break;   // 4 canales (16 bits cada uno)
+			case GL_RED:        bpp = 1; break;   // 1 channel (8 bits)
+			case GL_RG:         bpp = 2; break;   // 2 channels (8 bits each)
+			case GL_RGB:        bpp = 3; break;   // 3 channels
+			case GL_RGBA:       bpp = 4; break;   // 4 channels
+			case GL_RGBA32F:    bpp = 16; break;  // 4 float components (4 bytes each)
+			// For integer and other formats
+			case GL_R16:        bpp = 2; break;   // 1 channel (16 bits)
+			case GL_RG16:       bpp = 4; break;   // 2 channels (16 bits each)
+			case GL_RGB16:      bpp = 6; break;   // 3 channels (16 bits each)
+			case GL_RGBA16:     bpp = 8; break;   // 4 channels (16 bits each)
 			default: 
-				std::cerr << "Texture::SetData: Formato no soportado: 0x" << std::hex << m_DataFormat << std::dec << "\n"; 
+				std::cerr << "Texture::SetData: Unsupported format: 0x" << std::hex << m_DataFormat << std::dec << "\n"; 
 				return;
 		}
 
 		uint32_t expectedSize = m_Width * m_Height * bpp;
 		if (size != expectedSize) 
 		{
-            throw std::runtime_error("Tamanio de datos incorrecto. Esperado: " + std::to_string(expectedSize) 
-				+ ", Recibido: " + std::to_string(size));
+            throw std::runtime_error("Incorrect data size. Expected: " + std::to_string(expectedSize) 
+				+ ", Received: " + std::to_string(size));
 		}
 
-		// Determinamos tipo de dato (basado en formato interno)
+		// Determine data type (based on internal format)
 		GLenum type = GL_UNSIGNED_BYTE;
 		if (m_InternalFormat == GL_RGBA32F || m_InternalFormat == GL_R32F)	type = GL_FLOAT;
-		else if (m_InternalFormat == GL_R16 || m_InternalFormat == GL_RG16) type = GL_UNSIGNED_SHORT; // Para formatos de 16 bits
+		else if (m_InternalFormat == GL_R16 || m_InternalFormat == GL_RG16) type = GL_UNSIGNED_SHORT; // For 16-bit formats
 		GLCall(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, type, data));
 
 		if (m_Specification.GenerateMips) 
@@ -157,13 +157,13 @@ namespace Engine
 
 	void Texture::SetCompressedData(const void* data, size_t dataSize, uint32_t level) const
 	{
-		// Usar dimensiones reales del mipmap si están disponibles
+		// Use real mipmap dimensions if available
 		uint32_t w = std::max(1u, m_Width >> level);
 		uint32_t h = std::max(1u, m_Height >> level);
 
 		if (w == 0 || h == 0) 
 		{
-			throw std::runtime_error("Texture::SetCompressedData: Dimensiones de mipmap inválidas: " 
+			throw std::runtime_error("Texture::SetCompressedData: Invalid mipmap dimensions: " 
 				+ std::to_string(w) + "x" + std::to_string(h));
 		}
 
@@ -175,30 +175,33 @@ namespace Engine
 		stbi_set_flip_vertically_on_load(1);
 		int width, height, channels;
 
-		// Intenta cargar HDR primero
+		// Try loading HDR first
 		float* hdrData = nullptr;
 		if (stbi_is_hdr(path.c_str()))
 		{
 			hdrData = stbi_loadf(path.c_str(), &width, &height, &channels, 0);
 		}
-		// Si no se puede cargar HDR, intenta cargar LDR
+		// If HDR cannot be loaded, try to load LDR
 		stbi_uc* ldrData = nullptr;
-		if (!hdrData) {
+		if (!hdrData) 
+		{
 			ldrData = stbi_load(path.c_str(), &width, &height, &channels, 0);
-			if (!ldrData) {
-				std::cerr << "Error al cargar la textura " << path << "\n";
+			if (!ldrData) 
+			{
+				std::cerr << "Error loading texture " << path << "\n";
 				return;
 			}
 		}
 		
-		// Actualizar especificaciones
+		// Update specifications
 		m_Width = static_cast<uint32_t>(width);
 		m_Height = static_cast<uint32_t>(height);
 		m_Specification.Width = width;
 		m_Specification.Height = height;
 
-		// Detectar formato automáticamente sino está especificado, deducirlo de los canales
-		if (m_Specification.Format == ImageFormat::None) {
+		// Automatically detect format if not specified, deduce from channels
+		if (m_Specification.Format == ImageFormat::None) 
+		{
 			if (hdrData) 
 			{
 				m_Specification.Format = ImageFormat::RGBA32F;
@@ -215,17 +218,17 @@ namespace Engine
 					default:
 						stbi_image_free(ldrData);
 						stbi_image_free(hdrData);
-						std::cerr << "Texture::LoadFromFile: Cantidad de canales no soportado " << channels << " en " << path << "\n";
+						std::cerr << "Texture::LoadFromFile: Number of channels not supported " << channels << " in " << path << "\n";
 						return;
 				}
 			}
 		}
 
-		// Configurar formatos OpenGL
+		// Configuring OpenGL formats
 		m_InternalFormat = ImageFormatToOpenGLInternalFormat(m_Specification.Format);
 		m_DataFormat = ImageFormatToOpenGLDataFormat(m_Specification.Format);
 
-		// Crear la textura usando DSA
+		// Create texture using DSA
 		GLsizei levels = m_Specification.GenerateMips ? Utils::CalculateMipLevels(m_Width, m_Height) : 1;
 		m_Specification.MipLevels = static_cast<uint32_t>(levels);
 		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID));
@@ -240,7 +243,7 @@ namespace Engine
 		if (neededAlign != defaultAlign)
 			glPixelStorei(GL_UNPACK_ALIGNMENT, neededAlign);
 
-		// Subir datos
+		// Upload data
 		if (hdrData) 
 		{
 			GLCall(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_FLOAT, hdrData));
@@ -257,8 +260,9 @@ namespace Engine
 
 		ApplyTextureParameters();
 
-		// Determinar si se generan mipmaps
-		if (m_Specification.GenerateMips) {
+		// Determine if mipmaps are generated
+		if (m_Specification.GenerateMips) 
+		{
 			glGenerateTextureMipmap(m_RendererID);
 		}
 
@@ -267,11 +271,11 @@ namespace Engine
 
 	void Texture::ApplyTextureParameters() const
 	{
-		// Esto define cómo se muestrea la textura cuando se reduce y cuando se amplía
+		// This defines how the texture is sampled when reduced and when enlarged.
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, m_Specification.GenerateMips ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		// Esto controla cómo se manejan las coordenadas fuera del rango [0,1].
+		// This controls how coordinates outside the range [0,1] are handled.
 		if (IsNPOT())
 		{
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

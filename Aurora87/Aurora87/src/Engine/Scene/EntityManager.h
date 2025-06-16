@@ -28,7 +28,7 @@ namespace Engine
     public:
         using EntityID = Entity::EntityID;
 
-        // Estructura para almacenar información de cada entidad.
+        // Structure to store information of each entity.
         struct Record
         {
             std::shared_ptr<Entity> entity;
@@ -82,16 +82,15 @@ namespace Engine
         size_t GetEntityCount() const { return m_Records.size(); }
 
     private:
-        // Asigna un índice para uso en uniform buffers. Si hay índices reciclados disponibles, reutiliza uno;
-        // de lo contrario, genera uno nuevo.
+        // Allocates an index for use in uniform buffers. If recycled indexes are available, reuse one, otherwise generate a new one.
         uint32_t AllocateIndex();
 
-        // Busca el registro (Record) correspondiente al ID de entidad dado usando búsqueda binaria.
-        // Requiere que m_Records esté ordenado por ID de entidad.
+        // Finds the record corresponding to the given entity ID using binary search.
+        // Requires m_Records to be sorted by entity ID.
         const Record* FindRecordByID(Engine::Entity::EntityID id) const;
-        // Versión no-const de FindRecordByID, que permite modificar el Record resultante.
+        // Non-const version of FindRecordByID, which allows to modify the resulting Record.
         Record* FindRecordByID(Engine::Entity::EntityID id);
-		// Genera un ID único para una nueva entidad.
+		// Generates a unique ID for a new entity.
         Entity::EntityID GenerateUniqueID() { return m_NextEntityID++; }
 
         UniformBuffer& m_GlobalUniformBuffer;

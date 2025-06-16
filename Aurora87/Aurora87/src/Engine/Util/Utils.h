@@ -19,14 +19,14 @@ namespace Engine
 	class Utils
 	{
 	public:
-		// Función para extraer el nombre del archivo
+		// Function to extract the file name
 		static inline std::string ExtractFileName(const std::string& path)
 		{
-			// Buscar el último '/' o '\' (depende del sistema)
+			// Search for the last ‘/’ or ‘/’ (system dependent)
 			size_t lastSlash = path.find_last_of("/\\");
 			std::string filename = (lastSlash != std::string::npos) ? path.substr(lastSlash + 1) : path;
 
-			// Eliminar la extensión (buscamos el último '.')
+			// Delete the extension (look for the last ‘.’)
 			size_t dotPos = filename.find_last_of('.');
 			if (dotPos != std::string::npos)
 				filename = filename.substr(0, dotPos);
@@ -35,14 +35,14 @@ namespace Engine
 		}
 
 		/*
-		 * Esto calcula los niveles de mipmap que una textura puede tener,
+		 * This calculates the mipmap levels that a texture can have,
 		 * log2(max(width, height)) + 1.
 		 */
 		static inline GLsizei CalculateMipLevels(uint32_t width, uint32_t height) {
 			return static_cast<GLsizei>(std::floor(std::log2(std::max(width, height)))) + 1;
 		}
 
-		// Genera matrices de transformación aleatorias para situar elementos de forma random por la escena
+		// Generates random transformation matrices to randomly place elements around the scene
 		static inline std::vector<std::vector<glm::mat4>> GenerateTransformBatches(
 				unsigned int batches,
 				unsigned int instances,
@@ -60,7 +60,7 @@ namespace Engine
 			return all;
 		}
 
-		// Genera matrices de transformación aleatorias para situar elementos de forma random por la escena
+		// Generates random transformation matrices to randomly place elements around the scene
 		static inline std::vector<glm::mat4> GenerateTransformMatrices(
 			unsigned int instances,
 			const glm::vec3& areaMin,
@@ -71,7 +71,7 @@ namespace Engine
 			std::vector<glm::mat4> transformations;
 			transformations.reserve(instances);
 
-			// Motor y distribuciones
+			// Engine and distributions
 			static std::random_device rd;
 			static std::mt19937 gen(rd());
 			std::uniform_real_distribution<float> distX(areaMin.x, areaMax.x);
@@ -83,18 +83,18 @@ namespace Engine
 
 			for (unsigned int i = 0; i < instances; ++i)
 			{
-				// los traslada de forma random, siempre dentro del area especificada entre areaMin y areaMax
+				// moves them randomly, always within the specified area between areaMin and areaMax
 				glm::vec3 pos{ distX(gen), distY(gen), distZ(gen) };
 
-				// los rota de forma aleatoria
+				// rotates them randomly
 				float rotX = distRot(gen);
 				float rotY = distRot(gen);
 				float rotZ = distRot(gen);
 
-				// los escala uniformemete de forma aleatoria
+				// scales them uniformly and randomly
 				float s = distScale(gen);
 
-				// creamos la matriz del modelo multiplicando las transformaciones: M = T * R * S
+				// we create the model matrix by multiplying the transformations: M = T * R * S
 				glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
 				model = glm::rotate(model, rotX, glm::vec3(1, 0, 0));
 				model = glm::rotate(model, rotY, glm::vec3(0, 1, 0));
@@ -108,17 +108,17 @@ namespace Engine
 		}
 
 		/**
-		 * Genera un polígono extrudido (un cilindro prismático) centrado en (cx,cy),
-		 * con numSides lados, radio 'radius' y espesor total 'thickness'.
+		 * Generates an extruded polygon (a prismatic cylinder) centered at (cx,cy),
+		 * with numSides, radius and thickness.
 		 *
-		 * En lugar de usar índices, vuelca directamente en el VBO todos los vértices
-		 * de cada triángulo, en el orden correcto para dibujarlos con glDrawArrays.
+		 * Instead of using indexes, dump directly into the VBO all vertices
+		 * of each triangle, in the correct order to draw them with glDrawArrays.
 		 *
-		 * @param vertices  Vector destino de floats: x,y,z,u,v
-		 * @param cx, cy    Centro en XY
-		 * @param numSides  Número de lados (≥3)
-		 * @param radius    Radio en XY
-		 * @param thickness Grosor total en Z (se extruye ±thickness/2)
+		 * @param vertices Target vector of floats: x,y,z,u,v
+		 * @param cx, cy Center in XY
+		 * @param numSides Number of sides (≥3)
+		 * @param radius Radius in XY
+		 * @param thickness Total thickness in Z (extrudes ± thickness/2)
 		 */
 		static void GenerateExtrudedPolygonNoIndices(
 			std::vector<float>& vertices,
@@ -140,7 +140,7 @@ namespace Engine
 				botPos[i] = { cx + radius * c, cy + radius * s, -h };
 				topPos[i] = { cx + radius * c, cy + radius * s, +h };
 				diskUV[i] = { c * 0.5f + 0.5f, s * 0.5f + 0.5f };
-				sideU[i] = { float(i) / numSides, 0.0f }; // v rellenaremos luego
+				sideU[i] = { float(i) / numSides, 0.0f }; // v we will then fill in
 			}
 			glm::vec3 centerB{ cx,cy,-h }, centerT{ cx,cy,+h };
 			glm::vec2 centerUV{ 0.5f,0.5f };
@@ -156,7 +156,7 @@ namespace Engine
 				vertices.push_back(UV.y);
 				};
 
-			// 1) Tapa inferior (orientada abajo)
+			// 1) Bottom cover (bottom oriented)
 			{
 				glm::vec3 N = { 0, 0, -1 };
 				for (int i = 0; i < numSides; ++i) {
@@ -166,7 +166,7 @@ namespace Engine
 					push(botPos[i], N, diskUV[i]);
 				}
 			}
-			// 2) Tapa superior
+			// 2) Top cover
 			{
 				glm::vec3 N = { 0, 0, +1 };
 				for (int i = 0; i < numSides; ++i) {
@@ -176,19 +176,19 @@ namespace Engine
 					push(topPos[n], N, diskUV[n]);
 				}
 			}
-			// 3) Caras laterales
+			// 3) Side faces
 			for (int i = 0; i < numSides; ++i) {
 				int n = (i + 1) % numSides;
-				// para calcular la normal
+				// to calculate the normal
 				glm::vec3 edge1 = botPos[n] - botPos[i];
 				glm::vec3 edge2 = topPos[i] - botPos[i];
 				glm::vec3 N = glm::normalize(glm::cross(edge1, edge2));
-				// Triángulo A: bot i, bot n, top n
+				// Triangle A: bot i, bot n, top n
 				push(botPos[i], N, { sideU[i].x, 0.0f });
 				push(botPos[n], N, { sideU[n].x, 0.0f });
 				push(topPos[n], N, { sideU[n].x, 1.0f });
 
-				// Triángulo B: bot i, top n, top i
+				// Triangle B: bot i, top n, top i
 				push(botPos[i], N, { sideU[i].x, 0.0f });
 				push(topPos[n], N, { sideU[n].x, 1.0f });
 				push(topPos[i], N, { sideU[i].x, 1.0f });

@@ -14,15 +14,15 @@ namespace Engine
 		{
 			if (!GLAD_GL_VERSION_4_3)
 			{
-				std::cerr << "[OpenGL Warning] GL_KHR_debug no está disponible. "
-					<< "No se habilitará OpenGL debug callback." << std::endl;
+				std::cerr << "[OpenGL Warning] GL_KHR_debug is not available.. "
+					<< "OpenGL debug callback will not be enabled." << std::endl;
 			}
 
-			// Sólo disponible a partir de OpenGL 4.3 / ARB_debug_output
+			// Only available from OpenGL 4.3 onwards / ARB_debug_output
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 			glDebugMessageCallback(MessageCallback, nullptr);
-			// para filtrar notificaciones muy verbosas
+			// to filter very verbose notifications
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 		}
 

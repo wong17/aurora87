@@ -87,7 +87,7 @@ namespace Engine
 		int index = GetUniformBlockIndex(blockName);
 		if (index == -1)
 		{
-			std::cout << "Shader::HasUniformBlock: El bloque '" << blockName << "' no existe.\n";
+			std::cout << "Shader::HasUniformBlock: The block '" << blockName << "' does not exist.\n";
 			return false;
 		}
 		return true;
@@ -123,7 +123,7 @@ namespace Engine
 			char errorMsg[256];
 			strerror_s(errorMsg, sizeof(errorMsg), errno);
 
-			std::cerr << "Shader::ReadFile: No se pudo abrir el archivo: " << filePath << std::endl;
+			std::cerr << "Shader::ReadFile: File could not be opened: " << filePath << std::endl;
 			std::cerr << errorMsg << std::endl;
 			return "";
 		}
@@ -143,7 +143,7 @@ namespace Engine
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
 		if (location == -1)
 		{
-			//std::cout << "Shader::GetUniformLocation: uniform '" << name << "' no existe o no se estan usando." << std::endl;
+			//std::cout << "Shader::GetUniformLocation: uniform '" << name << "' does not exist or is not being used." << std::endl;
 		}
 
 		m_UniformLocationCache[name] = location;
@@ -166,7 +166,7 @@ namespace Engine
 		{
 			char infoLog[512];
 			glGetShaderInfoLog(id, 512, NULL, infoLog);
-			std::cout << "Shader::CompileShader: " << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << " fallo al compilar\n" << std::endl;
+			std::cout << "Shader::CompileShader: " << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << " failure to compile\n" << std::endl;
 			std::cout << infoLog << std::endl;
 
 			glDeleteShader(id);
@@ -193,7 +193,7 @@ namespace Engine
 		{
 			char infoLog[512];
 			glGetProgramInfoLog(program, 512, NULL, infoLog);
-			std::cout << "Shader::CreateShaderProgram : Fallo al vincularse\n" << std::endl;
+			std::cout << "Shader::CreateShaderProgram : Failure to link\n" << std::endl;
 			std::cout << infoLog << std::endl;
 
 			glDeleteProgram(program);
@@ -201,7 +201,7 @@ namespace Engine
 		}
 
 		GLCall(glValidateProgram(program));
-		// Eliminar shaders ya que no se necesitan más después de haber sido linkeados
+		// Remove shaders as they are no longer needed after they have been linked.
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 

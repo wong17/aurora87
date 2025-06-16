@@ -8,9 +8,9 @@ namespace Engine
 		const SkydomeConfig& cfg)
 	{
 		m_Shader = Shader::Create(vertexShaderPath, fragmentShaderPath);
-		// Cargar la textura equirectangular (lat/long)
+		// Load equirectangular texture (lat/long)
 		LoadTexture(equirectangularMapPath);
-		// Generar la geometría del hemisferio
+		// Generate hemisphere geometry
 		BuildHemisphere();
 	}
 
@@ -39,46 +39,46 @@ namespace Engine
 
 	void Skydome::LoadTexture(const std::string& path)
 	{
-		// Usamos el TextureManager para cachear y reutilizar texturas
+		// Use the TextureManager to cache and reuse textures
 		m_Texture = TextureManager::Get().Load(path);
 		if (!m_Texture->IsLoaded())
 		{
-			throw std::runtime_error("Skydome::LoadTexture: fallo al cargar textura " + path);
+			throw std::runtime_error("Skydome::LoadTexture: failure to load texture " + path);
 		}
 	}
 
 	void Skydome::BuildHemisphere()
 	{
-		const uint32_t L = m_Config.Longitudes;  // divisiones horizontales
-		const uint32_t M = m_Config.Latitudes;   // divisiones verticales (hemisferio)
+		const uint32_t L = m_Config.Longitudes;  // horizontal divisions
+		const uint32_t M = m_Config.Latitudes;   // vertical divisions (hemisphere)
 		const float    R = m_Config.Radius;
 
 		std::vector<float> rawVertices;
 		std::vector<uint32_t> indices;
-		// Cada vértice x,y,z + u,v = 5 floats
+		// Each vertex x,y,z + u,v = 5 floats
 		rawVertices.reserve((static_cast<std::vector<float, std::allocator<float>>::size_type>(L) + 1) * (static_cast<unsigned long long>(M) + 1) * 5);
-		// Cada cuadrado se convierte en 2 triángulos por eso multiplicamos por 6
+		// Each square becomes 2 triangles so we multiply by 6.
 		indices.reserve(static_cast<std::vector<uint32_t, std::allocator<uint32_t>>::size_type>(L) * M * 6);
 
-		// Generamos los vértices del hemisferio
+		// Generate the hemisphere vertices
 		for (uint32_t row = 0; row <= M; ++row)
 		{
-			// v ∈ [0,1] recorre de Polo (v=0) al ecuador (v=1)
+			// v ∈ [0,1] travels from Pole (v=0) to equator (v=1)
 			float v = float(row) / float(M);
-			// θ ∈ [0, π/2] para hemisferio
+			// θ ∈ [0, π/2] for hemisphere
 			float theta = v * (glm::half_pi<float>());
 			float sinT = std::sin(theta);
 			float cosT = std::cos(theta);
 
 			for (uint32_t col = 0; col <= L; ++col) 
 			{
-				// u ∈ [0,1] recorre longitudes 0…2π
+				// u ∈ [0,1] runs through lengths 0...2π
 				float u = float(col) / float(L);
 				float phi = u * (glm::two_pi<float>());
 				float sinP = std::sin(phi);
 				float cosP = std::cos(phi);
 
-				// posición 3D en esfera
+				// 3D position on sphere
 				float x = R * sinT * cosP;
 				float y = R * cosT;
 				float z = R * sinT * sinP;
@@ -86,24 +86,24 @@ namespace Engine
 				rawVertices.push_back(y);
 				rawVertices.push_back(z);
 
-				// coordenadas UV equirectangulares
-				rawVertices.push_back(u); // mapea φ ∈ [0,2π] -> u ∈ [0,1]
-				rawVertices.push_back(1.0f - v); // mapea θ ∈ [0,π/2] -> v ∈ [0,1] invertimos la componente y
+				// equirectangular UV coordinates
+				rawVertices.push_back(u); // map φ ∈ [0,2π] -> u ∈ [0,1].
+				rawVertices.push_back(1.0f - v); // map θ ∈ [0,π/2] -> v ∈ [0,1] we invert the component y
 			}
 		}
 
-		// Generamos los índices para cada cuadrado (2 triángulos)
+		// Generate the indexes for each square (2 triangles)
 		for (uint32_t row = 0; row < M; ++row) {
 			for (uint32_t col = 0; col < L; ++col) {
 				uint32_t i0 = row * (L + 1) + col;
 				uint32_t i1 = row * (L + 1) + (col + 1);
 				uint32_t i2 = (row + 1) * (L + 1) + col;
 				uint32_t i3 = (row + 1) * (L + 1) + (col + 1);
-				// Triángulo 1: (i0, i2, i1)
+				// Triangle 1: (i0, i2, i1)
 				indices.push_back(i0);
 				indices.push_back(i2);
 				indices.push_back(i1);
-				// Triángulo 2: (i1, i2, i3)
+				// Triangle 2: (i1, i2, i3)
 				indices.push_back(i1);
 				indices.push_back(i2);
 				indices.push_back(i3);
@@ -116,7 +116,7 @@ namespace Engine
 		m_VertexBuffer = std::make_shared<VertexBuffer>(rawVertices);
 		m_ElementBuffer = std::make_shared<ElementBuffer>(indices);
 
-		// Definimos el layout: posición (vec3) + uv (vec2)
+		// Define layout: position (vec3) + uv (vec2)
 		VertexBufferLayout layout = {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" }

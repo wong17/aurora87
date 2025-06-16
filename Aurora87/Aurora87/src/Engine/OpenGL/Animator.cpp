@@ -12,22 +12,25 @@ namespace Engine
         , m_GlobalInverseTransform(globalInverse)
     {
         if (!m_RootBone)
-            throw std::invalid_argument("Animator::Animator: rootBone nulo");
+            throw std::invalid_argument("Animator::Animator: rootBone is null");
 
-        // Cachear solo los canales que tienen hueso asociado
-        for (const auto& ch : m_Animation.Channels()) {
+        // Cache only channels that have associated bone
+        for (const auto& ch : m_Animation.Channels()) 
+        {
             auto it = m_Bones.find(ch.NodeName);
-            if (it != m_Bones.end()) {
+            if (it != m_Bones.end()) 
+            {
                 m_BoneChannels.emplace_back(&it->second, &ch);
             }
         }
         m_FinalBoneMatrices.resize(m_Bones.size(), glm::mat4(1.0f));
     }
 
-    void Animator::Update(float deltaTime) {
+    void Animator::Update(float deltaTime) 
+    {
         if (deltaTime <= 0.0f) 
         {
-            std::cerr << "Animator::Update: deltaTime no es positivo\n";
+            std::cerr << "Animator::Update: deltaTime is not positive\n";
             return;
         }
 
@@ -39,13 +42,13 @@ namespace Engine
 
         for (auto& [bone, channel] : m_BoneChannels) 
         {
-            // Posición
+            // Position
             glm::vec3 T(0.0f);
             Interpolate(channel->Positions, m_CurrentTime, T);
-            // Rotación
+            // Rotation
             glm::quat R(1.0f, 0.0f, 0.0f, 0.0f);
             Interpolate(channel->Rotations, m_CurrentTime, R);
-            // Escala
+            // Scale
             glm::vec3 S(1.0f);
             Interpolate(channel->Scales, m_CurrentTime, S);
 
@@ -53,7 +56,7 @@ namespace Engine
                 glm::translate(glm::mat4(1.0f), T) * glm::mat4_cast(R) * glm::scale(glm::mat4(1.0f), S);
         }
 
-        // Llenar el array de matrices finales
+        // Filling the array of final arrays
         m_FinalBoneMatrices.assign(m_Bones.size(), glm::mat4(1.0f));
         m_RootBone->Update(
             glm::mat4(1.0f),

@@ -5,38 +5,40 @@ namespace Engine
 	UniformBuffer::UniformBuffer(const UniformBufferLayout& layout, uint32_t bindingPoint, uint32_t blockCount)
 		: m_Layout(layout), m_BindingPoint(bindingPoint), m_BlockCount(blockCount)
 	{
-		// Calcular el stride en "crudo" (suma de tamaños de elementos)
+		// Calculate “raw” stride (sum of element sizes)
 		m_Stride = m_Layout.GetStride();
 
-		// Obtener la alineación mínima requerida por GPU
+		// Obtain minimum required alignment per GPU
 		GLint alignment = 0;
 		glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
-		// Ajustar 'm_Stride' al siguiente múltiplo de 'alignment' (alinear hacia arriba)
+		// Set ‘m_Stride’ to the next multiple of ‘alignment’ (align up).
 		m_AlignedStride = ((m_Stride + alignment - 1) / alignment) * alignment;
 
 		GLint maxUniformBlockSize = 0;
 		glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
-		// Validamos que el stride individual no sea mayor al bloque permitido
-		if (m_AlignedStride > static_cast<uint32_t>(maxUniformBlockSize)) {
+		// Validate that the individual stride is not larger than the allowed block.
+		if (m_AlignedStride > static_cast<uint32_t>(maxUniformBlockSize)) 
+		{
 			throw std::runtime_error(
-				"UniformBuffer::UniformBuffer: El layout excede el tamanio maximo permitido por la GPU (" +
+				"UniformBuffer::UniformBuffer: Layout exceeds maximum size allowed by GPU (" +
 				std::to_string(m_AlignedStride) + " > " + std::to_string(maxUniformBlockSize) + " bytes)"
 			);
 		}
 
-		// Validar que el tamaño total del buffer tampoco exceda el maximo
+		// Validate that the total buffer size also does not exceed the maximum buffer size.
 		GLsizeiptr totalSize = static_cast<GLsizeiptr>(m_AlignedStride) * m_BlockCount;
-		if (totalSize > static_cast<GLsizeiptr>(maxUniformBlockSize)) {
+		if (totalSize > static_cast<GLsizeiptr>(maxUniformBlockSize)) 
+		{
 			throw std::runtime_error(
-				"UniformBuffer::UniformBuffer: El tamanio total del buffer excede el maximo permitido (" +
+				"UniformBuffer::UniformBuffer: The total buffer size exceeds the maximum allowed. (" +
 				std::to_string(totalSize) + " > " + std::to_string(maxUniformBlockSize) + " bytes)"
 			);
 		}
 		
-		// Crear buffer y reservar almacenamiento inmutable
+		// Create buffer and reserve immutable storage
 		glCreateBuffers(1, &m_RendererID);
 		GLCall(glNamedBufferStorage(m_RendererID, totalSize, nullptr, GL_DYNAMIC_STORAGE_BIT));
-		// Enlazar el buffer al punto de enlace para usarlo en el shader
+		// Binding the buffer to the tie point for use in the shader
 		GLCall(glBindBufferBase(GL_UNIFORM_BUFFER, m_BindingPoint, m_RendererID));
 	}
 
@@ -56,9 +58,9 @@ namespace Engine
 	}
 
 	/*
-	 * Este método vincula al shader solo una subregión del UBO, definida por 'offset' y 'size'.
-	 * 'offset': posición en bytes donde comienza el bloque de una entidad
-	 * 'size': tamaño de bytes del bloque (normalmente 'alignedStride')
+	 * This method binds to the shader only a subregion of the UBO, defined by ‘offset’ and ‘size’.
+	 * offset': position in bytes where the block of an entity starts.
+	 * ‘size’: byte size of the block (usually ‘alignedStride’)
 	 */
 	void UniformBuffer::BindRange(uint32_t offset, uint32_t size) const
 	{
@@ -79,16 +81,16 @@ namespace Engine
 	void UniformBuffer::BindToShader(const Shader& shader, const std::string& blockName, uint32_t bindingPoint)
 	{
 		m_BindingPoint = bindingPoint;
-		// Obtener el índice del bloque uniforme en el shader
+		// Get the index of the uniform block in shader
 		GLuint blockIndex = glGetUniformBlockIndex(shader.GetRendererID(), blockName.c_str());
 		if (blockIndex == GL_INVALID_INDEX) 
 		{
-			std::cerr << "UniformBuffer::BindToShader: block '" << blockName << "' no existe en shader '" << shader.GetName() << "'\n";
+			std::cerr << "UniformBuffer::BindToShader: block '" << blockName << "' does not exist in shader '" << shader.GetName() << "'\n";
 			return;
 		}
-		// Asociar el bloque uniforme al punto de enlace
+		// Associate the uniform block to the tie point
 		GLCall(glUniformBlockBinding(shader.GetRendererID(), blockIndex, bindingPoint));
-		// Enlazar el Uniform Buffer al punto de enlace
+		// Binding the Uniform Buffer to the tie point
 		Bind();
 	}
 
@@ -102,7 +104,7 @@ namespace Engine
 			GLuint blockIndex = glGetUniformBlockIndex(shader.GetRendererID(), blockName.c_str());
 			if (blockIndex == GL_INVALID_INDEX) 
 			{
-				std::cerr << "UniformBuffer::BindToShader: block '"	<< blockName << "' no existe en shader '" << shader.GetName() << "'\n";
+				std::cerr << "UniformBuffer::BindToShader: block '"	<< blockName << "' does not exist in shader '" << shader.GetName() << "'\n";
 				continue;
 			}
 			GLCall(glUniformBlockBinding(shader.GetRendererID(), blockIndex, bindingPoint));
@@ -119,18 +121,18 @@ namespace Engine
 	{
 		if (blockCount <= m_BlockCount) return;
 		
-		// Guardamos el tamaño viejo para copiar
+		// Save the old size for copying
 		GLsizeiptr oldTotalSize = static_cast<GLsizeiptr>(m_AlignedStride) * m_BlockCount;
 		GLsizeiptr newTotalSize = static_cast<GLsizeiptr>(m_AlignedStride) * blockCount;
 
-		// Crear el buffer nuevo
+		// Create new buffer
 		GLuint newBuffer;
 		glCreateBuffers(1, &newBuffer);
 
-		// Asignar almacenamiento al buffer nuevo (permitiendo luego glCopyNamedBufferSubData)
+		// Allocate storage to the new buffer (allowing then glCopyNamedBufferSubData)
 		GLCall(glNamedBufferStorage(newBuffer,	newTotalSize, nullptr, GL_DYNAMIC_STORAGE_BIT));
 
-		// Copiar la parte vieja al nuevo buffer
+		// Copy old part to new buffer
 		GLCall(glCopyNamedBufferSubData(
 			m_RendererID,   // srcBuffer
 			newBuffer,      // dstBuffer
@@ -139,14 +141,14 @@ namespace Engine
 			oldTotalSize    // size to copy
 		));
 
-		// Liberamos el buffer viejo
+		// We release the old buffer
 		glDeleteBuffers(1, &m_RendererID);
 
-		// Guardamos el ID del nuevo buffer
+		// Save the new buffer ID
 		m_RendererID = newBuffer;
 		m_BlockCount = blockCount;
 
-		// Enlazamos el nuevo buffer al punto de enlace
+		// Link the new buffer to the tie point
 		GLCall(glBindBufferBase(GL_UNIFORM_BUFFER, m_BindingPoint, m_RendererID));
 	}
 }

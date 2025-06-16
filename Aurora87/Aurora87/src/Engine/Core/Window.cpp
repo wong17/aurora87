@@ -16,12 +16,12 @@ namespace Engine
 	Window::Window(const WindowProperties& props) : m_GLFWwindow(nullptr), m_WindowData({ props })
 	{
 		m_WindowData.Properties = props;
-		// Configura callback de error por defecto
+		// Set default error callback
 		glfwSetErrorCallback(GLFWErrorCallback);
-		// Inicializa la ventana
+		// Initializes the window
 		if (!Init()) 
 		{
-			std::cerr << "Error al inicializar la ventana GLFW." << std::endl;
+			std::cerr << "Window::Window: Error initializing GLFW window." << std::endl;
 			m_GLFWwindow = nullptr;
 		}
 	}
@@ -43,26 +43,26 @@ namespace Engine
 	{
 		if (!s_GLFWInitialized)
 		{
-			// Inicializa GLFW
+			// Initialize GLFW
 			int success = glfwInit();
 			if (!success)
 			{
-				std::cerr << "Error al inicializar GLFW." << std::endl;
+				std::cerr << "Window::Init: Error initializing GLFW." << std::endl;
 				return false;
 			}
 			s_GLFWInitialized = true;
 		}
 
-		// Establece hints para la versión de OpenGL y el perfil a utilizar
+		// Sets hints for the OpenGL version and profile to be used
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE); // COMENTAR ESTO EN RELEASE, ES SOLO PARA DEBUG
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE); // COMMENT THIS IN RELEASE, IT IS ONLY FOR DEBUGGING PURPOSES.
 #ifdef __APPLE__
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-		// Crea la ventana
+		// Creates the window
 		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -90,20 +90,20 @@ namespace Engine
 			glfwTerminate();
 			return false;
 		}
-		// Establece el contexto de OpenGL
+		// Sets the OpenGL context
 		glfwMakeContextCurrent(m_GLFWwindow);
-		// Inicializa GLAD
+		// Initialize GLAD
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			std::cerr << "Error al inicializar GLAD." << std::endl;
+			std::cerr << "Window::Init: Error initializing GLAD." << std::endl;
 			return false;
 		}
-		// Habilita el modo de depuración de OpenGL
+		// Enables OpenGL debugging mode
 		Engine::OpenGLDebug::Enable();
 
-		// Esto permite que los callbacks de GLFW puedan acceder a los datos y métodos de la instancia de la clase Window
+		// This allows GLFW callbacks to access the data and methods of the Window class instance.
 		glfwSetWindowUserPointer(m_GLFWwindow, &m_WindowData);
-		// Establece callbacks para GLFW
+		// Set callbacks for GLFW
 		glfwSetKeyCallback(m_GLFWwindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -206,7 +206,7 @@ namespace Engine
 
 	void Window::OnUpdate()
 	{
-		// Intercambia buffers y procesa eventos
+		// Exchanges buffers and processes events
 		glfwSwapBuffers(m_GLFWwindow);
 		glfwPollEvents();
 	}

@@ -18,7 +18,7 @@ namespace Engine
 
 		ImGui::StyleColorsDark();
 
-		// Cuando se habilitan múltiples viewports, se ajusta el estilo de la ventana
+		// When multiple viewports are enabled, the window style is adjusted.
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -39,7 +39,7 @@ namespace Engine
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
-		//std::cout << "ImGuiLayer detached." << std::endl;
+		//std::cout << "ImGuiLayer::OnDetach: ImGuiLayer detached." << std::endl;
 	}
 
 	void ImGuiLayer::OnImGuiRender()
@@ -63,7 +63,7 @@ namespace Engine
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		// Si se habilitaron múltiples viewports esto actualiza y renderiza las ventanas extra
+		// If multiple viewports are enabled, this updates and renders the extra windows.
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			GLFWwindow* backup_current_context = glfwGetCurrentContext();

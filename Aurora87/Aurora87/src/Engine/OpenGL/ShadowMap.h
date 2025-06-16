@@ -17,8 +17,7 @@
 namespace Engine
 {
 	/*
-	 * La proyección de perspectiva a menudo se usa para luces tipo spot y point, mientras que
-	 * la proyección ortográfica se usa para luces direccionales.
+	 * Perspective projection is often used for spot and point lights, while orthographic projection is used for directional lights.
 	 */
 	struct DepthTextureSpecification
 	{
@@ -32,7 +31,7 @@ namespace Engine
 	class ShadowMap
 	{
 	public:
-		// Width y Height deberian ser multiplos de 1024
+		// Width and Height should be multiplied by 1024.
 		ShadowMap(std::shared_ptr<ShadowCamera> camera,
 			unsigned int width = 2048,
 			unsigned int height = 2048,
@@ -61,7 +60,7 @@ namespace Engine
 
 		std::shared_ptr<ShadowCamera> m_Camera;
 		DepthTextureSpecification m_TexSpec;
-		// Almacena el viejo viewport (x, y, w, h)
+		// Store old viewport (x, y, w, h)
 		GLint m_PrevViewport[4];
 	};
 }

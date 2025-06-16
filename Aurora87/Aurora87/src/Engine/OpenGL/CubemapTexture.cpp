@@ -25,7 +25,7 @@ namespace Engine
 	{
 		if (faces.size() != 6) 
 		{
-			throw std::runtime_error("CubemapTexture::LoadCubemap: Se requieren 6 caras para crear un cubemap.");
+			throw std::runtime_error("CubemapTexture::LoadCubemap: 6 faces are required to create a cubemap.");
 			return;
 		}
 
@@ -36,7 +36,7 @@ namespace Engine
 			buffers[i] = stbi_load(faces[i].c_str(), &width, &height, &channels, 0);
 			if (!buffers[i]) 
 			{
-				std::cerr << "CubemapTexture::LoadCubemap: Error al cargar cara de cubemap " << faces[i] << std::endl;
+				std::cerr << "CubemapTexture::LoadCubemap: Error loading cubemap face " << faces[i] << std::endl;
 				for (auto ptr : buffers) 
 					if (ptr) stbi_image_free(ptr);
 				return;
@@ -53,7 +53,7 @@ namespace Engine
 			}
 		}
 
-		// Subir datos de cada cara
+		// Upload data for each side
 		GLenum dataFmt = (m_Channels == 4 ? GL_RGBA : GL_RGB);
 		for (GLint face = 0; face < 6; ++face) {
 			GLCall(glTextureSubImage3D(

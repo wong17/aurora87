@@ -27,7 +27,7 @@
 
 namespace Engine
 {
-	// Clase para manejar la malla del modelo u objeto 3D primitivo
+	// Class to handle the mesh of the primitive 3D model or object
 	class Mesh
 	{
 	public:
@@ -71,11 +71,11 @@ namespace Engine
 		void DrawInstanced(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, uint32_t instanceCount = 0, bool bindTextures = true);
 		bool CheckTextureLimit(MaterialTextureType type) const;
 
-		// Layouts por defecto
+		// Default layouts
 
 		/*
-		 * OJO: 
-		 * EN EL SHADER DEBEN DE COINCIDIR LOS NOMBRES DE LOS ATRIBUTOS Y DEBEN DE ESTAR EN EL MISMO ORDEN
+		 * ATTENTION: 
+		 * IN THE SHADER THE NAMES OF THE ATTRIBUTES MUST MATCH AND MUST BE IN THE SAME ORDER
 		 * layout(location = 0) in vec3 a_Position;
 		 * ...
 		 * layout(location = X) in TYPE a_Name;

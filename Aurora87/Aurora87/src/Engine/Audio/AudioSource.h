@@ -73,7 +73,7 @@ namespace Engine
         State  m_PrevState = State::Initial;
         StateCallback m_StateCallback = nullptr;
 
-        // Fade parametros
+        // Fade parameters
         bool m_Fading = false;
         float m_FadeCurrentTime = 0.0f;
         float m_FadeDuration = 0.0f;

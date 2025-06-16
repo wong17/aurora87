@@ -16,7 +16,7 @@ namespace Engine
 	class AssimpTextureLoader
 	{
 	public:
-		// Carga una aiTexture embebida y retorna un Texture listo para usar.
+		// Loads an embedded aiTexture and returns a ready to use Texture.
 		static std::shared_ptr<Texture> LoadEmbeddedTexture(aiTexture* aiTex);
 		static std::shared_ptr<Texture> LoadEmbeddedTexture(aiTexture* aiTex, const TextureSpecification& spec);
 

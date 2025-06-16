@@ -128,22 +128,22 @@ namespace Engine
 		}
 		void SetStencilFunc(StencilFunc func, int ref, unsigned mask) 
 		{ 
-			m_StencilFunc = func;	// criterio de comparación
-			m_StencilRef = ref;		// valor de referencia para realizar la comparación
-			m_StencilMask = mask;	// bits activos de la comparación
+			m_StencilFunc = func;	// comparison criterion
+			m_StencilRef = ref;		// reference value for comparison
+			m_StencilMask = mask;	// active bits of the comparison
 			glStencilFunc(_toGLStencilFunc(func), ref, mask);
 		}
 		void SetStencilOp(StencilOp sfail, StencilOp depthfail, StencilOp depthpass) 
 		{ 
-			// Indica qué escribir en el stencil cuando un fragmento:
-			m_StencilFail = sfail;			// no pasa la prueba de stencil
-			m_StencilDepthFail = depthfail;	// pasa la prueba de stencil pero no la de profundidad
-			m_StencilDepthPass = depthpass;	// pasa ambas pruebas
+			// Indicates what to write in the stencil when a fragment:
+			m_StencilFail = sfail;			// does not pass the stencil test
+			m_StencilDepthFail = depthfail;	// passes stencil test but not depth test
+			m_StencilDepthPass = depthpass;	// passes both tests
 			glStencilOp(_toGLStencilOp(sfail), _toGLStencilOp(depthfail), _toGLStencilOp(depthpass));
 		}
 		void SetStencilWriteMask(unsigned mask) 
 		{ 
-			// Controla qué bits del stencil buffer pueden escribirse (es útil para bloquear o permitir escritura)
+			// Controls which bits of the stencil buffer can be written (useful for blocking or allowing writes).
 			m_StencilWriteMask = mask;
 			glStencilMask(mask);
 		}

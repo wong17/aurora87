@@ -5,7 +5,7 @@ namespace Engine
 	std::shared_ptr<Mesh> Pentagon::GenerateMesh() const
 	{
         std::vector<float> vertices = {
-			// Posición                         // normales     // Coordenadas de textura
+			// Position                         // normal     // Texture coordinates
                   0.0f, 0.0f,       0.0f,      -0.0f, -1.0f,   -0.0f,        0.5f,      0.5f,
             -0.475528f, 0.0f, -0.154509f,      -0.0f, -1.0f,   -0.0f,   0.024472f, 0.654508f,
                   0.0f, 0.0f,      -0.5f,      -0.0f, -1.0f,   -0.0f,        0.5f,      1.0f,
@@ -86,7 +86,7 @@ namespace Engine
             if (auto tex = TextureManager::Get().Load(m_DiffuseTexturePath, spec))
                 textures.push_back({ MaterialTextureType::Diffuse, tex, MaterialTextureUniformName(MaterialTextureType::Diffuse), 0, spec.SRGB });
             else
-                std::cerr << "Cube::GenerateMesh(): Error al cargar la textura " << m_DiffuseTexturePath << "\n";
+                std::cerr << "Cube::GenerateMesh(): Error loading texture " << m_DiffuseTexturePath << "\n";
         }
 
         if (m_SpecularTexture)
@@ -103,7 +103,7 @@ namespace Engine
             if (auto tex = TextureManager::Get().Load(m_SpecularTexturePath))
                 textures.push_back({ MaterialTextureType::Specular, tex, MaterialTextureUniformName(MaterialTextureType::Specular), 1, false });
             else
-                std::cerr << "Cube::GenerateMesh(): Error al cargar la textura " << m_SpecularTexturePath << "\n";
+                std::cerr << "Cube::GenerateMesh(): Error loading texture " << m_SpecularTexturePath << "\n";
         }
 
 		return std::make_shared<Mesh>(vertices, textures);

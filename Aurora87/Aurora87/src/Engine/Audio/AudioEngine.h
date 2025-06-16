@@ -16,9 +16,9 @@ namespace Engine
 	{
 		OK,
 		DeviceFail,
-		// Error al abrir dispositivo
-		ContextFail,		// Error al crear contexto
-		MakeCurrentFail		// Error al activar contexto
+		// Error opening the device
+		ContextFail,		// Error when creating context
+		MakeCurrentFail		// Error when activating context
 	};
 
 	class AudioEngine 
@@ -38,13 +38,13 @@ namespace Engine
 		InitResult Initialize(const std::optional<std::string>& deviceName = std::nullopt);
 		void Shutdown();
 
-		// Configuración del oyente
+		// Listener configuration
 		void SetListenerPosition(float x, float y, float z);
 		void SetListenerVelocity(float x, float y, float z);
 		void SetListenerOrientation(const float* forwardAndUp);
 		void SetListenerGain(float gain);
 
-		// Dispositivos y contexto
+		// Devices and context
 		static std::vector<std::string> GetDevices();
 		bool HasExtension(const std::string& ext) const;
 		void PrintDeviceInfo() const;

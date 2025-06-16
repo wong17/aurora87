@@ -23,7 +23,7 @@ namespace Engine
 		glm::mat4 model = GetWorldMatrix();
 		depthShader.SetMat4("u_ModelMatrix", model);
 
-		// Dibujar mesh/model sin texturas
+		// Draw mesh/model without textures
 		if (m_Model)
 			m_Model->DrawDepth(depthShader);
 		else if (m_Mesh)
@@ -40,7 +40,7 @@ namespace Engine
 		glm::mat4 model = GetWorldMatrix();
 		depthShader.SetMat4("u_ModelMatrix", model);
 
-		// Dibujar mesh/model sin texturas
+		// Draw mesh/model without textures
 		if (m_Model)
 			m_Model->DrawInstancedDepth(depthShader, instanceCount);
 		else if (m_Mesh)
@@ -73,19 +73,19 @@ namespace Engine
 	{
 		m_Shader->Bind();
 
-		// Cálculo de offsets en el UBO
+		// Calculation of offsets in the UBO
 		uint32_t alignedStride = modelUniformBuffer.GetAlignedStride();
-		// Desplazamiento base para esta entidad: índice * tamaño alineado de cada bloque
+		// Base offset for this entity: index * aligned size of each block
 		uint32_t baseOffset = entityIndex * alignedStride;
-		// Desplazamiento interno donde se almacena el modelo dentro de cada bloque
+		// Internal scrolling where the model is stored within each block
 		uint32_t modelOffset = modelUniformBuffer.GetLayout().GetElement("u_ModelMatrix").Offset;
 
 		glm::mat4 matrix = GetWorldMatrix();
 
 		modelUniformBuffer.Bind();
-		// Subir solo la matriz de modelo a la región de esta entidad en el UBO
+		// Upload only the model matrix to the region of this entity in the UBO.
 		modelUniformBuffer.SetData(glm::value_ptr(matrix), sizeof(glm::mat4), baseOffset + modelOffset);
-		// Vincular exclusivamente la región de esta entidad (modelo, vista y proyección) para que el shader lea únicamente esos datos
+		// Bind exclusively the region of this entity (model, view and projection) so that the shader reads only this data
 		modelUniformBuffer.BindRange(baseOffset, alignedStride);
 
 		if (m_Model) 
@@ -122,19 +122,19 @@ namespace Engine
 	{
 		m_Shader->Bind();
 		
-		// Cálculo de offsets en el UBO
+		// Calculation of offsets in the UBO
 		uint32_t alignedStride = modelUniformBuffer.GetAlignedStride();
-		// Desplazamiento base para esta entidad: índice * tamaño alineado de cada bloque
+		// Base offset for this entity: index * aligned size of each block
 		uint32_t baseOffset = entityIndex * alignedStride;
-		// Desplazamiento interno donde se almacena el modelo dentro de cada bloque
+		// Internal scrolling where the model is stored within each block
 		uint32_t modelOffset = modelUniformBuffer.GetLayout().GetElement("u_ModelMatrix").Offset;
 
 		glm::mat4 modelMat = GetWorldMatrix();
 
 		modelUniformBuffer.Bind();
-		// Subir solo la matriz de modelo a la región de esta entidad en el UBO
+		// Upload only the model matrix to the region of this entity in the UBO.
 		modelUniformBuffer.SetData(glm::value_ptr(modelMat), sizeof(glm::mat4), baseOffset + modelOffset);
-		// Vincular exclusivamente la región de esta entidad (modelo, vista y proyección) para que el shader lea únicamente esos datos
+		// Bind exclusively the region of this entity (model, view and projection) so that the shader reads only this data
 		modelUniformBuffer.BindRange(baseOffset, alignedStride);
 
 		if (m_Model) 

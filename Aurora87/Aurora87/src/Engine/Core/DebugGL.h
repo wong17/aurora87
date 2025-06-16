@@ -5,7 +5,7 @@
 
 namespace Engine
 {
-	// Traducción simbólica de errores GL
+	// Symbolic translation of GL errors
 	inline const char* GetGLErrorString(GLenum error)
 	{
 		switch (error)
@@ -22,7 +22,7 @@ namespace Engine
 		}
 	}
 
-	// Traducción simbólica de estados de framebuffer
+	// Symbolic translation of framebuffer states
 	inline const char* FramebufferStatusToString(GLenum status)
 	{
 		switch (status)
@@ -40,13 +40,13 @@ namespace Engine
 		}
 	}
 
-	// limpia el queue de errores
+	// clears the queue of errors
 	inline void GL_ClearErrors() 
 	{
 		while (glGetError() != GL_NO_ERROR);
 	}
 
-	// chequea y reporta errores con linea y archivo
+	// checks and reports line and file errors
 	inline bool GL_LogCall(const char* func, const char* file, int line) 
 	{
 		bool ok = true;
@@ -59,7 +59,7 @@ namespace Engine
 		return ok;
 	}
 
-	// es para envolver las llamadas a OpenGL y reportar errores
+	// is for wrapping OpenGL calls and reporting errors
 #define GLCall(x) \
     do { \
         GL_ClearErrors(); \

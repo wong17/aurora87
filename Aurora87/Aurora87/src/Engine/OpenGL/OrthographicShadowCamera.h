@@ -18,29 +18,29 @@ namespace Engine
             float nearPlane = 0.1f, float farPlane = 10.0f)
             : OrthographicCamera(left, right, bottom, top), m_Near(nearPlane), m_Far(farPlane)
         {
-            // al instanciar, sobreescribimos la proyección para usar la de esta clase que incluye near/far
+            // when instantiating, we overwrite the projection to use the projection of this class that includes near/far
             SetProjection(left, right, bottom, top);
             m_ViewMatrix = glm::mat4(1.0f);
         }
 
         inline void SetLightParams(const glm::vec3& position, const glm::vec3& direction) override
         {
-            // posición
+            // position
             SetPosition(position);
             
-            // calculamos el vector up
+            // calculate the up vector
             glm::vec3 up;
             const glm::vec3 defaultUp = glm::vec3(0.0f, 1.0f, 0.0f);
             if (glm::length(glm::cross(direction, defaultUp)) < 0.001f)
             {
-                up = glm::vec3(0.0f, 0.0f, 1.0f); // Usamos Z si la dirección es casi vertical
+                up = glm::vec3(0.0f, 0.0f, 1.0f); // We use Z if the direction is almost vertical
             }
             else
             {
-                up = defaultUp; // Caso general
+                up = defaultUp; // General case
             }
 
-            // normalizamos dirección
+            // we normalize direction
             glm::vec3 dirNormalized = direction;
             if (glm::length(dirNormalized) > 0.0f)
             {
@@ -48,10 +48,10 @@ namespace Engine
             }
             else
             {
-                dirNormalized = glm::vec3(0.0f, 0.0f, -1.0f); // Dirección por defecto (hacia adelante)
+                dirNormalized = glm::vec3(0.0f, 0.0f, -1.0f); // Default (forward) direction
             }
 
-            // Calcular matriz de vista usando lookAt
+            // Calculate view matrix using lookAt
             m_ViewMatrix = glm::lookAt(position, position + dirNormalized, up);
             m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
         }
@@ -70,7 +70,7 @@ namespace Engine
         {
             if (left >= right || bottom >= top || m_Near >= m_Far) 
             {
-                throw std::invalid_argument("OrthographicShadowCamera::SetProjection: parametros incorrectos");
+                throw std::invalid_argument("OrthographicShadowCamera::SetProjection: incorrect parameters");
             }
 
             // reconstruimos la matriz ortográfica usando near/far

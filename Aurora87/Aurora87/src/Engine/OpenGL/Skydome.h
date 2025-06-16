@@ -22,14 +22,14 @@
 
 namespace Engine
 {
-	// Configuración de malla para el domo
+	// Mesh configuration for dome
 	struct SkydomeConfig
 	{
 		uint32_t Longitudes = 64;
 		uint32_t Latitudes = 32;
 		float Radius = 500.0f;
-		float RotationSpeed = 0.01f;    // vueltas por segundo o rad/s
-		float VerticalOffset = 0.0f;	// indica la altura del domo respecto al origen
+		float RotationSpeed = 0.01f;    // revolutions per second or rad/s
+		float VerticalOffset = 0.0f;	// indicates the height of the dome with respect to the origin
 	};
 
 	class Skydome
@@ -39,7 +39,7 @@ namespace Engine
 			const std::string& vertexShaderPath, 
 			const std::string& fragmentShaderPath, 
 			const SkydomeConfig& cfg = {});
-		// timeSeconds tiempo en segundos (es para animaciones, opcional)
+		// timeSeconds time in seconds (is for animations, optional)
 		void Draw(const glm::mat4& view, const glm::mat4& proj, float timeSeconds = 0.0f);
 		void SetViewMatrix(const glm::mat4& view) { m_Shader->SetMat4("u_ViewMatrix", view); }
 		void SetProjectionMatrix(const glm::mat4& proj) { m_Shader->SetMat4("u_ProjectionMatrix", proj); }

@@ -18,7 +18,7 @@ namespace Engine
         {
             if (nearClip >= farClip || fov <= 0.0f) 
             {
-                throw std::invalid_argument("PerspectiveShadowCamera: near, far y fov parametros incorrectos");
+                throw std::invalid_argument("PerspectiveShadowCamera: near, far and fov wrong parameters");
             }
             m_ViewMatrix = glm::mat4(1.0f);
         }
@@ -27,7 +27,7 @@ namespace Engine
         {
             SetPosition(position);
             
-            // calculamos el vector up
+            // we calculate the up vector
             glm::vec3 up;
             const glm::vec3 defaultUp = glm::vec3(0.0f, 1.0f, 0.0f);
             if (glm::length(glm::cross(direction, defaultUp)) < 0.001f) 
@@ -39,7 +39,7 @@ namespace Engine
                 up = defaultUp;
             }
 
-            // Normalizamos dirección
+            // We normalize direction
             glm::vec3 dirNormalized = direction;
             if (glm::length(dirNormalized) > 0.0f) 
             {
@@ -47,7 +47,7 @@ namespace Engine
             }
             else 
             {
-                dirNormalized = glm::vec3(0.0f, 0.0f, -1.0f); // Dirección por defecto (hacia adelante)
+                dirNormalized = glm::vec3(0.0f, 0.0f, -1.0f); // Default (forward) direction
             }
 
             glm::quat rotation = glm::quatLookAt(dirNormalized, up);

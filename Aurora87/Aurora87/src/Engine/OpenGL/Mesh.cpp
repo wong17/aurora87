@@ -149,7 +149,7 @@ namespace Engine
 	{
 		if (m_VertexArray == nullptr)
 		{
-			throw std::runtime_error("Mesh::SetInstanceTransforms(): VertexArray es null, utilice un constructor para crear el Mesh.");
+			throw std::runtime_error("Mesh::SetInstanceTransforms(): VertexArray is null, use a constructor to create the Mesh.");
 		}
 
 		m_InstanceTransforms = mats;
@@ -165,7 +165,7 @@ namespace Engine
 
 		if (m_VertexArray == nullptr) 
 		{
-			std::cerr << "Mesh::DrawDepth(): VertexArray es null." << std::endl;
+			std::cerr << "Mesh::DrawDepth(): VertexArray is null." << std::endl;
 			return;
 		}
 
@@ -183,12 +183,12 @@ namespace Engine
 	void Mesh::DrawInstancedDepth(Shader& depthShader, uint32_t instanceCount)
 	{
 		if (!m_HasInstancing)
-			throw std::runtime_error("Mesh::DrawInstancedDepth(): no se han configurado instancias (SetInstanceTransforms)");
+			throw std::runtime_error("Mesh::DrawInstancedDepth(): no instances have been configured (SetInstanceTransforms)");
 
 		// Si no hay instancias registradas entonces se invoca Draw()
 		if (instanceCount == 0) 
 		{
-			std::cout << "Mesh::DrawInstancedDepth(): instanceCount es 0, llamando a Draw()" << std::endl;
+			std::cout << "Mesh::DrawInstancedDepth(): instanceCount is 0, calling Draw()" << std::endl;
 			DrawDepth(depthShader);
 			return;
 		}
@@ -197,7 +197,7 @@ namespace Engine
 
 		if (m_VertexArray == nullptr) 
 		{
-			std::cerr << "Mesh::DrawInstancedDepth(): VertexArray es null." << std::endl;
+			std::cerr << "Mesh::DrawInstancedDepth(): VertexArray is null." << std::endl;
 			return;
 		}
 
@@ -226,7 +226,7 @@ namespace Engine
 
 		if (m_VertexArray == nullptr) 
 		{
-			std::cerr << "Mesh::Draw(): VertexArray es null." << std::endl;
+			std::cerr << "Mesh::Draw(): VertexArray is null." << std::endl;
 			return;
 		}
 
@@ -244,12 +244,12 @@ namespace Engine
 	void Mesh::DrawInstanced(Shader& shader, UniformBuffer& textureBlockUniformBuffer, uint32_t entityIndex, uint32_t instanceCount, bool bindTextures)
 	{
 		if (!m_HasInstancing)
-			throw std::runtime_error("Mesh::DrawInstanced(): no se han configurado instancias (SetInstanceTransforms)");
+			throw std::runtime_error("Mesh::DrawInstanced(): no instances have been configured (SetInstanceTransforms)");
 
 		// Si no hay instancias registradas entonces se invoca Draw()
 		if (instanceCount == 0) 
 		{
-			std::cout << "Mesh::DrawInstanced(): instanceCount es 0, llamando a Draw()" << std::endl;
+			std::cout << "Mesh::DrawInstanced(): instanceCount is 0, calling Draw()" << std::endl;
 			Draw(shader, textureBlockUniformBuffer, bindTextures);
 			return;
 		}
@@ -264,7 +264,7 @@ namespace Engine
 
 		if (m_VertexArray == nullptr) 
 		{
-			std::cerr << "Mesh::DrawInstanced(): VertexArray es null." << std::endl;
+			std::cerr << "Mesh::DrawInstanced(): VertexArray is null." << std::endl;
 			return;
 		}
 
@@ -517,7 +517,7 @@ namespace Engine
 		m_VertexBuffer = std::make_shared<VertexBuffer>(size);
 		m_VertexBuffer->SetData(m_Vertices.data(), size);
 
-		// Para ver si hay un desajuste entre el tamaño del buffer y el número de vértices
+		// To see if there is a mismatch between the buffer size and the number of vertices
 		{
 			uint32_t stride = m_Layout.GetStride();
 			if (stride > 0)
@@ -527,10 +527,10 @@ namespace Engine
 				if (impliedCount != actualCount)
 				{
 					throw std::runtime_error(
-						"Mesh::SetupMesh(): Advertencia desajuste en el conteo de vertices. Tamanio del buffer = " +
+						"Mesh::SetupMesh(): Vertex count mismatch warning. Buffer size = " +
 						std::to_string(size) + " bytes, stride = " +
 						std::to_string(stride) + " bytes -> " +
-						std::to_string(impliedCount) + " vertices, pero m_Vertices.size() = " +
+						std::to_string(impliedCount) + " vertices, but m_Vertices.size() = " +
 						std::to_string(actualCount)
 					);
 				}
@@ -580,7 +580,7 @@ namespace Engine
 			return;
 		}
 
-		// Si ya se inicializó, actualizamos el buffer de instancias
+		// If it has already been initialized, we update the instance buffer
 		m_InstanceVertexBuffer->Bind();
 		m_InstanceVertexBuffer->SetData(m_InstanceTransforms.data(), 
 			static_cast<uint32_t>(m_InstanceTransforms.size() * sizeof(glm::mat4)));

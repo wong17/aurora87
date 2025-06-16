@@ -39,7 +39,7 @@ namespace Engine
                 if (e.Name == name) 
                     return e;
             
-            throw std::runtime_error("UniformBufferLayout::GetElement: Elemento '" + name + "' no encontrado");
+            throw std::runtime_error("UniformBufferLayout::GetElement: Element '" + name + "' not found");
         }
 
     private:

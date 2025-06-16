@@ -21,7 +21,7 @@ namespace Engine
 	class UniformBuffer
 	{
 	public:
-		// Valor por defecto para blockCount (número de entidades)
+		// Default value for blockCount (number of entities)
 		static constexpr uint32_t DEFAULT_BLOCK_COUNT = 100;
 
 		UniformBuffer(uint32_t bindingPoint = 0)
@@ -46,7 +46,7 @@ namespace Engine
 		uint32_t GetBindingPoint() const { return m_BindingPoint; }
 		const UniformBufferLayout& GetLayout() const { return m_Layout; }
 
-		// Ajusta la cantidad de bloques (número de entidades) y re-aloca el buffer
+		// Adjusts the number of blocks (number of entities) and re-allocates the buffer.
 		void ResizeBlocks(uint32_t blockCount);
 		uint32_t GetBlockCount() const { return m_BlockCount; }
 		uint32_t GetStride() const { return m_Stride; }
@@ -152,8 +152,8 @@ namespace Engine
 		uint32_t m_BindingPoint;
 		UniformBufferLayout m_Layout;
 
-		uint32_t m_Stride;				// stride sin padding
-		uint32_t m_AlignedStride;		// stride con padding
+		uint32_t m_Stride;				// stride without padding
+		uint32_t m_AlignedStride;		// stride with padding
 		uint32_t m_BlockCount;
 	};
 }

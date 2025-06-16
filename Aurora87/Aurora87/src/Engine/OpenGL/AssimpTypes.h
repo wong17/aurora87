@@ -17,10 +17,10 @@ namespace Engine
 {
     constexpr int MAX_TEXTURES_PER_TYPE = 2;
 
-	// Enum para los tipos de texturas
+	// Enum for texture types
     enum class MaterialTextureType
     {
-        // Texturas en arreglo
+        // Textures in array
         Diffuse,
         Specular,
         Normal,
@@ -31,7 +31,7 @@ namespace Engine
         Roughness,
         Metallic,
 
-		// Texturas específicas para glTF/GLB
+		// glTF/GLB specific textures
 		MetallicRoughness,  // u_MetallicRoughnessMap
 		BaseColor,          // u_AlbedoMap
 
@@ -55,20 +55,20 @@ namespace Engine
     {
         if (!IsTextureTypeArray(type)) 
         {
-            // Para texturas unicas, maximo 1
+            // For single textures, maximum 1
             return currentCount >= 1;
         }
         return currentCount >= MAX_TEXTURES_PER_TYPE;
     }
 
-	// Para aplicar gamma correction solo a las texturas que lo requieran
+	// To apply gamma correction only to the textures that require it.
     inline bool TextureTypeIsSRGB(MaterialTextureType t) {
 		return t == MaterialTextureType::Diffuse    // .fbx/.obj
             || t == MaterialTextureType::BaseColor; // .glTF/.glb albedo
     }
 
 
-	// Para convertir de MaterialTextureType a aiTextureType y usarlo en el shader
+	// To convert from MaterialTextureType to aiTextureType for use in the shader
     inline std::string MaterialTextureUniformName(MaterialTextureType type)
     {
         switch (type) 
@@ -91,7 +91,7 @@ namespace Engine
         return "";
     }
 
-	// Para convertir de MaterialTextureType a aiTextureType y usarlo al cargar texturas
+	// To convert from MaterialTextureType to aiTextureType and use it when loading textures
     inline aiTextureType MaterialTextureAssimpType(MaterialTextureType type)
     {
         switch (type)
@@ -115,7 +115,7 @@ namespace Engine
     }
 
     const std::unordered_map<std::string, std::vector<MaterialTextureType>> TEXTURE_TYPES_BY_EXTENSION = {
-        // Formatos PBR (glTF/GLB)
+        // PBR Format (glTF/GLB)
         {".gltf", {
             MaterialTextureType::BaseColor,         // glTF albedo
             MaterialTextureType::MetallicRoughness,
@@ -131,7 +131,7 @@ namespace Engine
             MaterialTextureType::Emissive
         }},
 
-        // Formatos tradicionales (FBX)
+        // Traditional formats (FBX)
         {".fbx", {
             MaterialTextureType::Diffuse,
             MaterialTextureType::Specular,
@@ -144,7 +144,7 @@ namespace Engine
             MaterialTextureType::Metallic
         }},
 
-        // Formatos simples (OBJ)
+        // Simple formats (OBJ)
         {".obj", {
             MaterialTextureType::Diffuse,
             MaterialTextureType::Specular,

@@ -6,18 +6,20 @@ namespace Engine
 	{
 		if (!texture)
 		{
-			std::cerr << "TextureManager: Texture es null." << std::endl;
+			std::cerr << "TextureManager::Add: Texture is null." << std::endl;
 			return;
 		}
 
-		if (name.empty()) {
-			std::cerr << "TextureManager: Texture name no puede estar vacío." << std::endl;
+		if (name.empty()) 
+		{
+			std::cerr << "TextureManager::Add: Texture name cannot be empty." << std::endl;
 			return;
 		}
 
 		std::string key = name + "@" + texture->GetPath();
-		if (Exists(key)) {
-			std::cout << "TextureManager: Texture '" << name << "' ya existe." << std::endl;
+		if (Exists(key)) 
+		{
+			std::cout << "TextureManager::Add: Texture '" << name << "' already exists." << std::endl;
 			return;
 		}
 
@@ -28,19 +30,21 @@ namespace Engine
 	{
 		if (!texture)
 		{
-			std::cerr << "TextureManager: Texture es null." << std::endl;
+			std::cerr << "TextureManager::Add: Texture is null." << std::endl;
 			return;
 		}
 
 		const std::string& name = texture->GetName();
-		if (name.empty()) {
-			std::cerr << "TextureManager: Texture name no puede estar vacío." << std::endl;
+		if (name.empty()) 
+		{
+			std::cerr << "TextureManager::Add: Texture name cannot be empty." << std::endl;
 			return;
 		}
 
 		std::string key = name + "@" + texture->GetPath();
-		if (Exists(name)) {
-			std::cerr << "TextureManager: Texture '" << name << "' ya existe." << std::endl;
+		if (Exists(name)) 
+		{
+			std::cerr << "TextureManager::Add: Texture '" << name << "' already exists." << std::endl;
 			return;
 		}
 
@@ -56,14 +60,16 @@ namespace Engine
 	std::shared_ptr<Texture> TextureManager::Load(const std::string& name, const std::string& path, const TextureSpecification& specification)
 	{
 		std::string key = name + "@" + path;
-		if (Exists(key)) {
-			//std::cout << "TextureManager: Texture '" << name << "' ya existe." << std::endl;
+		if (Exists(key)) 
+		{
+			//std::cout << "TextureManager: Texture '" << name << "' already exists." << std::endl;
 			return m_Textures[key];
 		}
 		
 		auto texture = std::make_shared<Texture>(specification, path);
-		if (!texture->IsLoaded()) {
-			std::cerr << "TextureManager: Error al cargar la textura '" << name << "'." << std::endl;
+		if (!texture->IsLoaded()) 
+		{
+			std::cerr << "TextureManager::Load: Error loading texture '" << name << "'." << std::endl;
 			return nullptr;
 		}
 
@@ -74,8 +80,9 @@ namespace Engine
 
 	std::shared_ptr<Texture> TextureManager::Get(const std::string& key)
 	{
-		if (!Exists(key)) {
-			std::cerr << "TextureManager: Texture '" << key << "' no encontrada." << std::endl;
+		if (!Exists(key)) 
+		{
+			std::cerr << "TextureManager: Texture '" << key << "' not found." << std::endl;
 			return nullptr;
 		}
 
@@ -91,7 +98,8 @@ namespace Engine
 	{
 		if (!texture) return false;
 
-		for (const auto& [key, tex] : m_Textures) {
+		for (const auto& [key, tex] : m_Textures) 
+		{
 			if (tex == texture)
 				return true;
 		}
@@ -103,8 +111,10 @@ namespace Engine
 	{
 		if (!texture) return;
 
-		for (auto it = m_Textures.begin(); it != m_Textures.end(); ++it) {
-			if (it->second == texture) {
+		for (auto it = m_Textures.begin(); it != m_Textures.end(); ++it) 
+		{
+			if (it->second == texture) 
+			{
 				m_Textures.erase(it);
 				return;
 			}
@@ -115,11 +125,15 @@ namespace Engine
 
 	void TextureManager::GarbageCollect()
 	{
-		for (auto it = m_Textures.begin(); it != m_Textures.end(); ) {
-			if (it->second.use_count() == 1) {  // Si solo lo mantiene el manager, lo eliminamos
+		for (auto it = m_Textures.begin(); it != m_Textures.end(); ) 
+		{
+			if (it->second.use_count() == 1) 
+			{  
+				// If only the manager keeps it, we delete it.
 				it = m_Textures.erase(it);
 			}
-			else {
+			else 
+			{
 				++it;
 			}
 		}
@@ -127,8 +141,9 @@ namespace Engine
 
 	void TextureManager::ListTextures() const
 	{
-		std::cout << "Textures cargados:\n";
-		for (const auto& [name, texture] : m_Textures) {
+		std::cout << "Loaded textures:\n";
+		for (const auto& [name, texture] : m_Textures) 
+		{
 			std::cout << " - " << name << "\n";
 		}
 	}

@@ -105,15 +105,15 @@ namespace Engine
 	protected:
 		void RecalculateViewMatrix() override;
 	protected:
-		glm::vec3 m_Front = { 0.0f, 0.0f, -1.0f };	// Indica la dirección hacia la que está mirando la cámara
-		glm::vec3 m_Right = { 1.0f, 0.0f, 0.0f };	// Indica la dirección a la derecha de la cámara
-		glm::vec3 m_Up = { 0.0f, 1.0f, 0.0f };		// Indica la dirección hacia arriba de la cámara
+		glm::vec3 m_Front = { 0.0f, 0.0f, -1.0f };	// Indicates the direction the camera is facing
+		glm::vec3 m_Right = { 1.0f, 0.0f, 0.0f };	// Indicates the direction to the right of the camera
+		glm::vec3 m_Up = { 0.0f, 1.0f, 0.0f };		// Indicates upward direction of the camera
 
 		float m_FOV, m_AspectRatio, m_NearClip, m_FarClip;
-		/* Con yaw = –90° y pitch = 0°, el vector de dirección resultante es (0, 0, –1), lo que alinea la vista de la cámara con el eje Z negativo. */
-		float m_Yaw = -90.0f;	// Rotación inicial en el eje Y en grados (plano horizontal)
-		float m_Pitch = 0.0f;	// Rotación inicial en el eje X en grados (plano vertical)
-		float m_Roll = 0.0f;	// Rotación inicial en el eje Z en grados (plano de profundidad) 
+		/* With yaw = -90° and pitch = 0°, the resulting direction vector is (0, 0, -1), which aligns the camera view with the negative Z axis. */
+		float m_Yaw = -90.0f;	// Initial Y-axis rotation in degrees (horizontal plane)
+		float m_Pitch = 0.0f;	// Initial rotation on X-axis in degrees (vertical plane)
+		float m_Roll = 0.0f;	// Initial Z-axis rotation in degrees (depth plane)
 
 		float m_MinYaw = 0.0f;
 		float m_MaxYaw = 360.0f;
@@ -122,8 +122,8 @@ namespace Engine
 
 		bool m_YawLimitsEnabled = false;
 
-		float m_MouseSensitivity = 0.1f;	// Sensibilidad del mouse para el movimiento de la cámara
-		float m_MovementSpeed = 100.0f;		// Velocidad de movimiento de la cámara (en unidades por segundo)
+		float m_MouseSensitivity = 0.1f;	// Mouse sensitivity for camera movement
+		float m_MovementSpeed = 100.0f;		// Camera movement speed (in units per second)
 
 		bool  m_KeyboardEnabled = true;
 		bool  m_MouseEnabled = true;

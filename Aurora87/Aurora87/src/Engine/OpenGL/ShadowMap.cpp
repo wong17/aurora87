@@ -8,7 +8,7 @@ namespace Engine
 	{
 		if (width == 0 || height == 0) 
 		{
-			throw std::invalid_argument("ShadowMap::ShadowMap: ancho y/o alto no puede ser igual a 0");
+			throw std::invalid_argument("ShadowMap::ShadowMap: width and/or height cannot be equal to 0");
 		}
 
 		InitFramebuffer();
@@ -22,10 +22,10 @@ namespace Engine
 
 	void ShadowMap::BeginDepthPass()
 	{
-		// Guardar viewport actual
+		// Save current viewport
 		glGetIntegerv(GL_VIEWPORT, m_PrevViewport);
 
-		// Configurar viewport al tamaño del shadow map
+		// Set viewport to shadow map size
 		glViewport(0, 0, m_Width, m_Height);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferId);
@@ -37,7 +37,7 @@ namespace Engine
 	void ShadowMap::EndDepthPass() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		// restauramos el viewport que había antes
+		// restore the previous viewport
 		glViewport(m_PrevViewport[0], m_PrevViewport[1], m_PrevViewport[2], m_PrevViewport[3]);
 	}
 
@@ -55,14 +55,14 @@ namespace Engine
 		m_Width = newWidth;
 		m_Height = newHeight;
 
-		// Borrar recursos existentes
+		// Delete existing resources
 		glDeleteFramebuffers(1, &m_FrameBufferId);
 		glDeleteTextures(1, &m_DepthTex);
 
-		// Volver a crearlos con el nuevo tamaño
+		// Re-create them with the new size
 		InitFramebuffer();
 
-		// Actualizar relacion de aspecto si es camara perspectiva
+		// Update aspect ratio if perspective camera
 		if (auto* perspectiveCam = dynamic_cast<PerspectiveShadowCamera*>(m_Camera.get())) 
 		{
 			perspectiveCam->Resize(m_Width, m_Height);
@@ -83,20 +83,20 @@ namespace Engine
 
 	void ShadowMap::InitFramebuffer()
 	{
-		// crear texture para el DepthBuffer
+		// create texture for DepthBuffer
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthTex);
 		GLCall(glTextureStorage2D(m_DepthTex, 1, GL_DEPTH_COMPONENT24, m_Width, m_Height));
-		// configurar parametros de textura
+		// configure texture parameters
 		GLCall(glTextureParameteri(m_DepthTex, GL_TEXTURE_MIN_FILTER, m_TexSpec.MinFilter));
 		GLCall(glTextureParameteri(m_DepthTex, GL_TEXTURE_MAG_FILTER, m_TexSpec.MagFilter));
 		GLCall(glTextureParameteri(m_DepthTex, GL_TEXTURE_WRAP_S, m_TexSpec.WrapS));
 		GLCall(glTextureParameteri(m_DepthTex, GL_TEXTURE_WRAP_T, m_TexSpec.WrapT));
 		GLCall(glTextureParameterfv(m_DepthTex, GL_TEXTURE_BORDER_COLOR, &m_TexSpec.BorderColor.x));
 
-		// crear rrameBuffer
+		// create rrameBuffer
 		glCreateFramebuffers(1, &m_FrameBufferId);
 		GLCall(glNamedFramebufferTexture(m_FrameBufferId, GL_DEPTH_ATTACHMENT, m_DepthTex, 0));
-		// deshabilitar color buffer
+		// disable color buffer
 		GLCall(glNamedFramebufferDrawBuffer(m_FrameBufferId, GL_NONE));
 		GLCall(glNamedFramebufferReadBuffer(m_FrameBufferId, GL_NONE));
 
@@ -105,7 +105,7 @@ namespace Engine
 		{
 			std::cerr << "ShadowMap::InitFramebuffer: [Framebuffer Error] (" << status << "): "	
 				<< FramebufferStatusToString(status) << std::endl;
-			throw std::runtime_error("ShadowMap::InitFramebuffer: framebuffer incompleto");
+			throw std::runtime_error("ShadowMap::InitFramebuffer: incomplete framebuffer");
 		}
 	}
 }

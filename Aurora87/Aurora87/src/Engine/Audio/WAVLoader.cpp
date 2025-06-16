@@ -8,14 +8,14 @@ namespace Engine
 
 		if (!drwav_init_file(&wav, filepath.c_str(), nullptr))
 		{
-			throw std::runtime_error("WAVLoader::Load: Error al abrir: " + filepath);
+			throw std::runtime_error("WAVLoader::Load: Error when opening: " + filepath);
 		}
 
 		// Validación de canales
 		if (wav.channels < 1 || wav.channels > 2)
 		{
 			drwav_uninit(&wav);
-			throw std::runtime_error("WAVLoader::Load: Canales no soportados (" +
+			throw std::runtime_error("WAVLoader::Load: Channels not supported (" +
 				std::to_string(wav.channels) + ") en: " + filepath);
 		}
 
@@ -23,8 +23,8 @@ namespace Engine
 		if (wav.bitsPerSample != 16)
 		{
 			drwav_uninit(&wav);
-			throw std::runtime_error("WAVLoader::Load: Bits por muestra no son 16 (" +
-				std::to_string(wav.bitsPerSample) + ") en: " + filepath);
+			throw std::runtime_error("WAVLoader::Load: Bits per sample are not 16 (" +
+				std::to_string(wav.bitsPerSample) + ") in: " + filepath);
 		}
 
 		const ALenum format = (wav.channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
@@ -39,8 +39,8 @@ namespace Engine
 
 		if (framesRead != totalFrames)
 		{
-			throw std::runtime_error("WAVLoader::Load: Error leyendo frames en: " + filepath +
-				"\nFrames leídos: " + std::to_string(framesRead) + "/" + std::to_string(totalFrames));
+			throw std::runtime_error("WAVLoader::Load: Error reading frames in: " + filepath +
+				"\nFrames read: " + std::to_string(framesRead) + "/" + std::to_string(totalFrames));
 		}
 
 		return WAVData
@@ -48,7 +48,7 @@ namespace Engine
 			std::move(pcmData),
 			static_cast<uint32_t>(wav.channels),
 			static_cast<uint32_t>(wav.sampleRate),
-			16,  // Ya validamos que son 16 bits
+			16,  // We have already validated that they are 16 bits
 			format,
 			static_cast<uint64_t>(totalFrames)
 		};

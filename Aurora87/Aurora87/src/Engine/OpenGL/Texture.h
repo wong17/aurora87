@@ -17,7 +17,7 @@ namespace Engine
 	enum class ImageFormat
 	{
 		None = 0,
-		// Formatos no comprimidos
+		// Uncompressed formats
 		R8,
 		RG8,
 		RGB8,
@@ -25,7 +25,7 @@ namespace Engine
 		RGBA32F,
 		SRGB8,
 		SRGBA8,
-		// Formatos comprimidos
+		// Compressed formats
 		BC1_RGB,       // DXT1
 		BC1_SRGB,      // DXT1 sRGB
 		BC3_RGBA,      // DXT5
@@ -40,7 +40,7 @@ namespace Engine
 		uint32_t Height = 1;
 		ImageFormat Format = ImageFormat::None;
 		bool GenerateMips = true;
-		// Parámetros de wrapping
+		// Wrapping parameters
 		GLenum WrapS = GL_REPEAT;
 		GLenum WrapT = GL_REPEAT;
 		bool SRGB = false;
@@ -59,10 +59,10 @@ namespace Engine
 		void Bind(uint32_t slot = 0) const;
 
 		void SetData(void* data, uint32_t size) const;
-		// Sube una textura comprimida para un nivel de mipmap
+		// Upload a compressed texture for one level of mipmap
 		void SetCompressedData(const void* data, size_t dataSize, uint32_t level) const;
 		inline void SetName(const std::string& name) { m_Name = name; }
-		// Esto es para ver si la textura es NPOT (Non Power of Two)
+		// This is to see if the texture is NPOT (Non Power of Two).
 		inline bool IsNPOT() const { return (m_Width & (m_Width - 1)) != 0 || (m_Height & (m_Height - 1)) != 0; }
 
 		const std::string& GetPath() const { return m_Path; }

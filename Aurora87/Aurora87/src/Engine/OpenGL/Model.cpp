@@ -134,7 +134,7 @@ namespace Engine
 			m_Valid = true;
 		}
 		catch (const std::exception& e) {
-			std::cerr << "Model load failed: " << e.what() << std::endl;
+			std::cerr << "Model::Model: Model load failed: " << e.what() << std::endl;
 			m_Valid = false;
 		}
 	}
@@ -263,14 +263,13 @@ namespace Engine
 	{
 		if (!m_ModelAnimation) 
 		{
-			std::cerr << "Model::SetAnimation: no hay animaciones cargadas.\n";
+			std::cerr << "Model::SetAnimation: no animations loaded.\n";
 			return false;
 		}
 		size_t count = m_ModelAnimation->GetAnimationCount();
 		if (idx >= count) 
 		{
-			std::cerr << "Model::SetAnimation: índice fuera de rango ("
-				<< idx << " >= " << count << ").\n";
+			std::cerr << "Model::SetAnimation: index out of range ("	<< idx << " >= " << count << ").\n";
 			return false;
 		}
 
@@ -281,19 +280,19 @@ namespace Engine
 	{
 		if (!m_ModelAnimation) 
 		{
-			std::cerr << "Model::SetAnimation: no hay animaciones cargadas.\n";
+			std::cerr << "Model::SetAnimation: no animations loaded.\n";
 			return false;
 		}
 
 		if (name.empty()) 
 		{
-			std::cerr << "Model::SetAnimation: el nombre de la animación está vacío.\n";
+			std::cerr << "Model::SetAnimation: animation name is empty.\n";
 			return false;
 		}
 		const auto& names = m_ModelAnimation->GetAnimationNames();
 		if (std::find(names.begin(), names.end(), name) == names.end()) 
 		{
-			std::cerr << "Model::SetAnimation: animación \"" << name << "\" no encontrada.\n";
+			std::cerr << "Model::SetAnimation: animation \"" << name << "\" not found.\n";
 			return false;
 		}
 
@@ -309,7 +308,7 @@ namespace Engine
 
 		if (deltaTime < 0.0f) 
 		{
-			std::cerr << "Model::UpdateAnimation: deltaTime negativo (" << deltaTime << ").\n";
+			std::cerr << "Model::UpdateAnimation: negative deltaTime (" << deltaTime << ").\n";
 			return;
 		}
 
@@ -327,23 +326,23 @@ namespace Engine
 
 	void Model::LoadModel(const std::string& path)
 	{
-		// Detectar extensión para decidir FlipUVs
+		// Detect extension to decide FlipUVs
 		m_Extension = std::filesystem::path(path).extension().string();
 		std::transform(m_Extension.begin(), m_Extension.end(), m_Extension.begin(), ::tolower);
 		m_Directory = std::filesystem::path(path).parent_path().string();
 
-		// Flags base
+		// Base Flags
 		unsigned int flags =
 			aiProcess_Triangulate
 			| aiProcess_JoinIdenticalVertices
 			| aiProcess_ValidateDataStructure
 			;
 
-		// Formatos PBR (glTF/GLB)
+		// PBR Formats (glTF/GLB)
 		if (m_Extension == ".gltf" || m_Extension == ".glb") 
 		{
 			flags |= aiProcess_EmbedTextures
-				| aiProcess_CalcTangentSpace   // Normales + tangentes
+				| aiProcess_CalcTangentSpace   // Normal + tangent
 				| aiProcess_ImproveCacheLocality
 				| aiProcess_RemoveRedundantMaterials;
 		}
@@ -362,7 +361,7 @@ namespace Engine
 				| aiProcess_OptimizeGraph
 				| aiProcess_SortByPType;
 		}
-		// Otros
+		// Others
 		else 
 		{
 			flags |= aiProcess_FlipUVs
@@ -379,8 +378,8 @@ namespace Engine
 		if (m_Scene->mNumAnimations > 0) 
 		{
 			m_ModelAnimation.emplace(m_Scene);
-			std::cout << "Model::LoadModel: cargadas " << m_ModelAnimation->GetAnimationCount()
-				<< " animaciones\n";
+			std::cout << "Model::LoadModel: loaded " << m_ModelAnimation->GetAnimationCount()
+				<< " animations\n";
 		}
 
 		uint32_t nextTexUnit = 0;
@@ -389,12 +388,12 @@ namespace Engine
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene, uint32_t& nextTexUnit)
 	{
-		// Para cada malla en el nodo actual
+		// For each mesh at the current node
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			m_Meshes.emplace_back(ProcessMesh(mesh, scene, nextTexUnit));
 		}
-		// Recursivamente procesa cada hijo del nodo
+		// Recursively process each child of the node
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			ProcessNode(node->mChildren[i], scene, nextTexUnit);
 		}
@@ -402,17 +401,17 @@ namespace Engine
 
 	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, uint32_t& nextTexUnit)
 	{
-		// 1. Vertices (Reservar espacio para los vértices)
+		// 1. Vertices (Reserve space for vertices)
 		auto vertices = ExtractVertices(mesh);
-		// 2. Indices (Reservar espacio para los índices de las caras)
+		// 2. Indexes (Reserve space for face indexes)
 		auto indices = ExtractIndices(mesh);
-		// 3. Texturas (Extraer las texturas)
+		// 3. Textures (Extract textures)
 		auto textures = ExtractTextures(mesh, scene, nextTexUnit);
-		// 4) Factores PBR
+		// 4) PBR factors
 		glm::vec4 baseColor;
 		float metallic, roughness;
 		ExtractPBRFactors(mesh, scene, baseColor, metallic, roughness);
-		// 5) Modo de dibujo
+		// 5) Drawing mode
 		GLenum drawMode = DetermineDrawMode(mesh);
 
 		return Mesh(vertices, indices, textures, Mesh::DefaultModelLayout(), drawMode, baseColor, metallic, roughness);
@@ -420,25 +419,25 @@ namespace Engine
 
 	std::vector<Vertex> Model::ExtractVertices(aiMesh* mesh) const
 	{
-		// 1. Vertices (Reservar espacio para los vértices)
+		// 1. Vertices (Reserve space for vertices)
 		std::vector<Vertex> vertices;
 		vertices.reserve(mesh->mNumVertices);
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex vertex{};
-			// Posición
+			// Position
 			vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
 
-			// Normales
+			// Normal
 			vertex.Normal = mesh->HasNormals() ?
 				glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z) :
 				glm::vec3(0.0f);
 
-			// Coordenadas de textura
+			// Texture coordinates
 			if (mesh->mTextureCoords[0])
 				vertex.TexCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
 
-			// Tangentes y bitangentes
+			// Tangents and bitangents
 			if (mesh->mTangents && mesh->mBitangents) {
 				vertex.Tangent = { mesh->mTangents[i].x,   mesh->mTangents[i].y,   mesh->mTangents[i].z };
 				vertex.Bitangent = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
@@ -469,10 +468,10 @@ namespace Engine
 		if (mesh->mMaterialIndex < 0) return textures;
 
 		aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-		// Obtener lista de texturas para la extensión actual
+		// Get texture list for current extension
 		auto it = TEXTURE_TYPES_BY_EXTENSION.find(m_Extension);
 		if (it == TEXTURE_TYPES_BY_EXTENSION.end()) {
-			std::cerr << "Model::ExtractTextures: Formato no soportado: " << m_Extension << "\n";
+			std::cerr << "Model::ExtractTextures: Unsupported format: " << m_Extension << "\n";
 			return textures;
 		}
 		// Cargar texturas de cada tipo
@@ -489,7 +488,7 @@ namespace Engine
 	std::vector<TextureData> Model::LoadMaterialTextures(aiMaterial* mat, MaterialTextureType mtt, uint32_t& nextTextureUnit)
 	{
 		std::vector<TextureData> result;
-		// Recolectar todas las rutas de la textura
+		// Collect all texture paths
 		auto paths = CollectTexturePaths(mat, mtt);
 		result.reserve(paths.size());
 
@@ -497,17 +496,17 @@ namespace Engine
 		{
 			bool embedded = false;
 			int  embeddedIndex = -1;
-			// A partir de aiString, determinar si es embedded o archivo, devolver pathId limpio
+			// From aiString, determine whether embedded or file, return clean pathId
 			auto optFs = ResolveTexturePath(paths[i], embedded, embeddedIndex);
 			std::string pathId = embeddedIndex >= 0 ? "__embedded_" + std::to_string(embeddedIndex) : (optFs ? *optFs : paths[i].C_Str());
-			// Ver si ya la cacheamos
+			// See if it has already been searched
 			if (auto it = m_LoadedTexturesMap.find(pathId); it != m_LoadedTexturesMap.end())
 			{
 				result.push_back(it->second);
 				continue;
 			}
 
-			// Cargar y crear un TextureData, o std::nullopt en error
+			// Load and create TextureData, or std::nullopt on error
 			if (auto td = CreateTextureData(pathId, mtt, nextTextureUnit))
 			{
 				result.push_back(*td);
@@ -560,10 +559,10 @@ namespace Engine
 		return paths;
 	}
 
-	// Subdirectorios comunes para texturas
+	// Common texture subdirectories
 	static const std::vector<std::string> textureSubdirs =
 	{
-		"textures", "texture",       // Más comunes
+		"textures", "texture",       // Most common
 		"images", "image",
 		"materials", "material",
 		"source", "sources",
@@ -595,7 +594,7 @@ namespace Engine
 		outEmbedded = false;
 		outEmbeddedIndex = -1;
 
-		// Normalizar separadores y eliminar comillas si existen
+		// Normalize separators and remove quotation marks if any
 		std::replace(s.begin(), s.end(), '\\', '/');
 		s.erase(std::remove(s.begin(), s.end(), '\"'), s.end());
 		std::filesystem::path texPath = std::filesystem::path(s).lexically_normal();
@@ -614,10 +613,10 @@ namespace Engine
 			return std::nullopt;
 		};
 
-		// Busqueda de texturas
+		// Texture search
 		for (const auto& base : baseDirs) 
 		{
-			// Rutas directas
+			// Direct routes
 			std::filesystem::path candidates[] = 
 			{
 				base / texPath,
@@ -631,7 +630,7 @@ namespace Engine
 					return path;
 				}
 
-				// 5.b) Subdirectorios comunes
+				// Common Subdirectories
 				for (const auto& sub : textureSubdirs) 
 				{
 					if (auto path = checkPath(base / sub / texPath)) 
@@ -642,8 +641,8 @@ namespace Engine
 			}
 		}
 
-		// Error con rutas probadas
-		std::cerr << "Model::ResolveTexturePath: Textura no encontrada: " << texPath << "\n";
+		// Error with tested routes
+		std::cerr << "Model::ResolveTexturePath: Texture not found: " << texPath << "\n";
 		
 		return std::nullopt;
 	}
@@ -652,14 +651,14 @@ namespace Engine
 	{
 		if (embedded)
 		{
-			// textura embebida glTF
+			// glTF embedded texture
 			aiTexture* tex = m_Scene->mTextures[embeddedIndex];
 			return AssimpTextureLoader::LoadEmbeddedTexture(tex, spec);
 		}
-		// textura externa
+		// external texture
 		if (!std::filesystem::exists(pathId))
 		{
-			std::cerr << "Model::LoadTextureFromPath: no existe " << pathId << "\n";
+			std::cerr << "Model::LoadTextureFromPath: does not exist " << pathId << "\n";
 			return nullptr;
 		}
 
@@ -676,7 +675,7 @@ namespace Engine
 		{
 			if (embeddedIndex < 0 || embeddedIndex >= static_cast<int>(m_Scene->mNumTextures))
 			{
-				std::cerr << "Model::CreateTextureData: Indice embebido invalido: " << embeddedIndex << "\n";
+				std::cerr << "Model::CreateTextureData: Embedded index invalid: " << embeddedIndex << "\n";
 				return std::nullopt;
 			}
 		}
@@ -684,11 +683,11 @@ namespace Engine
 		TextureSpecification spec;
 		spec.SRGB = TextureTypeIsSRGB(mtt);
 
-		// Cargar la Texture (embebido o de fichero)
+		// Load Texture (embedded or file)
 		auto tex = LoadTextureFromPath(pathId, embedded, embeddedIndex, spec);
 		if (!tex)
 		{
-			std::cerr << "Model::CreateTextureData: fallo carga " << pathId << "\n";
+			std::cerr << "Model::CreateTextureData: load failure " << pathId << "\n";
 			return std::nullopt;
 		}
 
@@ -745,7 +744,7 @@ namespace Engine
 			ai_real roughness = 1.0f;
 			if (mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) != AI_SUCCESS) 
 			{
-				// Fallback a shininess si no hay roughness
+				// Fallback to shininess if no roughness
 				ai_real shininess = 100.0f;
 				if (mat->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) 
 				{
@@ -777,7 +776,7 @@ namespace Engine
 		if (prim & aiPrimitiveType_POINT)    return GL_POINTS;
 		if (prim & aiPrimitiveType_LINE)     return GL_LINES;
 
-		// siempre triangulado por aiProcess_Triangulate:
+		// always triangulated by aiProcess_Triangulate:
 		return GL_TRIANGLES;
 	}
 }

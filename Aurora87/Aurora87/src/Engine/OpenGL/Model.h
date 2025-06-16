@@ -72,13 +72,13 @@ namespace Engine
 		void ProcessNode(aiNode* node, const aiScene* scene, uint32_t& nextTexUnit);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene, uint32_t& nextTexUnit);
 		std::vector<TextureData> LoadMaterialTextures(aiMaterial* mat, MaterialTextureType mtt, uint32_t& nextTextureUnit);
-		// Funciones para procesar la malla
+		// Functions for mesh processing
 		std::vector<Vertex> ExtractVertices(aiMesh* mesh) const;
 		std::vector<unsigned int> ExtractIndices(aiMesh* mesh) const;
 		std::vector<TextureData> ExtractTextures(aiMesh* mesh, const aiScene* scene, uint32_t& nextTexUnit);
 		void ExtractPBRFactors(aiMesh* mesh, const aiScene* scene, glm::vec4& outBaseColor, float& outMetallic, float& outRoughness) const;
 		GLenum DetermineDrawMode(aiMesh* mesh) const;
-		// Funciones para cargar texturas
+		// Texture loading functions
 		std::vector<aiString> CollectTexturePaths(aiMaterial* mat, MaterialTextureType mtt) const;
 		std::optional<std::string> ResolveTexturePath(const aiString& aiStr, bool& outEmbedded, int& outEmbeddedIndex) const;
 		std::shared_ptr<Texture> LoadTextureFromPath(const std::string& pathId, bool embedded, int embeddedIndex, const TextureSpecification& spec) const;
@@ -86,10 +86,10 @@ namespace Engine
 
 		std::string m_Extension;
 		std::string m_Directory;
-		Assimp::Importer m_Importer;										// Debe vivir mientras usemos aiScene
+		Assimp::Importer m_Importer;										// It must live as long as we use aiScene
 		const aiScene* m_Scene = nullptr;
 		std::vector<Mesh> m_Meshes;
-		std::unordered_map<std::string, TextureData> m_LoadedTexturesMap;	// Para evitar cargas duplicadas, las cacheamos
+		std::unordered_map<std::string, TextureData> m_LoadedTexturesMap;	// To avoid duplicate loads, we cache them
 		bool m_Valid = false;
 
 		std::optional<ModelAnimation> m_ModelAnimation;

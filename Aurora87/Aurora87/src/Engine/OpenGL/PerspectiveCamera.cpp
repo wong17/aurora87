@@ -23,8 +23,8 @@ namespace Engine
 	{
 		m_Rotation = rotation;
 		m_Yaw = m_Rotation.y;
-		// Limitar el rango de pitch para evitar problemas de gimbal lock o bloqueo Cardan
-		m_Pitch = std::clamp(rotation.x, -89.0f, 89.0f); // Limitar el rango de pitch entre -89 y 89 grados
+		// Limit the pitch range to avoid gimbal lock problems.
+		m_Pitch = std::clamp(rotation.x, -89.0f, 89.0f); // Limit pitch range between -89 and 89 degrees
 		m_Roll = m_Rotation.z;
 		RecalculateViewMatrix();
 	}
@@ -55,7 +55,7 @@ namespace Engine
 	void PerspectiveCamera::AdjustFOV(float deltaFOV, float minFOV, float maxFOV)
 	{
 		m_FOV -= deltaFOV;
-		m_FOV = std::clamp(m_FOV, minFOV, maxFOV); // Limitar el FOV entre minFOV y maxFOV
+		m_FOV = std::clamp(m_FOV, minFOV, maxFOV); // Limiting FOV between minFOV and maxFOV
 		SetProjection(m_FOV, m_AspectRatio, m_NearClip, m_FarClip);
 	}
 
@@ -80,14 +80,14 @@ namespace Engine
 		{
 			auto& keyEvent = static_cast<Engine::KeyPressedEvent&>(event);
 
-			// Si se presiona la tecla ESC, alterna la captura del mouse
+			// If ESC key is pressed, toggles mouse capture
 			if (keyEvent.GetKeyCode() == GLFW_KEY_ESCAPE)
 			{
 				m_MouseCaptured = !m_MouseCaptured;
 				auto& window = Engine::Application::Get().GetWindow();
 				if (m_MouseCaptured)
 				{
-					m_FirstMouse = true; // Reiniciar la posición inicial del mouse
+					m_FirstMouse = true; // Reset the initial mouse position
 					window.SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				}
 				else
@@ -113,7 +113,7 @@ namespace Engine
 		}
 		else if (event.GetEventType() == Engine::EventType::MouseMoved)
 		{
-			// Solo procesamos el movimiento del mouse si el cursor está capturado
+			// We only process the mouse movement if the cursor is captured.
 			if (!m_MouseEnabled || !m_MouseCaptured)
 				return;
 
@@ -130,7 +130,7 @@ namespace Engine
 			}
 
 			float xOffset = xPos - m_LastX;
-			float yOffset = m_LastY - yPos; // Invertir el eje Y
+			float yOffset = m_LastY - yPos; // Invert Y-axis
 			m_LastX = xPos;
 			m_LastY = yPos;
 
@@ -139,7 +139,7 @@ namespace Engine
 		else if (event.GetEventType() == Engine::EventType::MouseScrolled)
 		{
 			auto& mouseScrolledEvent = static_cast<Engine::MouseScrolledEvent&>(event);
-			// Ajustar el FOV de la cámara al hacer scroll
+			// Adjusting camera FOV when scrolling
 			AdjustFOV(mouseScrolledEvent.GetYOffset());
 		}
 	}
@@ -160,7 +160,7 @@ namespace Engine
 			case CameraMovement::RIGHT:		position += velocity * m_Right; break;
 			default: std::cout << "PerspectiveCamera::ProcessKeyboard: Invalid Camera Movement" << std::endl; break;
 		}
-		// Actualiza la posición de la cámara y recalcula la matriz de vista
+		// Updates the camera position and recalculates the view matrix.
 		SetPosition(position);
 	}
 
@@ -169,10 +169,10 @@ namespace Engine
 		if (!m_MouseEnabled)
 			return;
 
-		// Esto es para invertir el movimiento del mouse
+		// This is to invert the mouse movement
 		xOffset *= m_MouseSensitivity;
 		yOffset *= m_MouseSensitivity;
-		// Actualiza los ángulos de yaw y pitch
+		// Updates yaw and pitch angles
 		m_Yaw += xOffset;
 		m_Pitch += yOffset;
 		
@@ -186,28 +186,28 @@ namespace Engine
 
 	void PerspectiveCamera::RecalculateViewMatrix()
 	{
-		// Calcula el vector de dirección a partir de yaw y pitch
+		// Calculate direction vector from yaw and pitch
 		glm::vec3 front{};
 		front.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
 		front.y = sin(glm::radians(m_Pitch));
 		front.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
 		m_Front = glm::normalize(front);
 
-		// Calcula el vector de dirección a la derecha y arriba de la cámara
+		// Calculates the direction vector to the right and above the camera.
 		m_Right = glm::normalize(glm::cross(m_Front, glm::vec3(0.0f, 1.0f, 0.0f)));
 		m_Up = glm::normalize(glm::cross(m_Right, m_Front));
 		
-		// Genera la matriz de vista usando glm::lookAt
+		// Generate view matrix using glm::lookAt
 		glm::mat4 view = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 
-		// Aplica la rotación (roll) a la matriz de vista
+		// Applies rotation (roll) to view matrix
 		if (m_Roll != 0.0f)
 		{
 			glm::mat4 rollMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(m_Roll), m_Front);
 			view = rollMatrix * view;
 		}
 
-		// Actualiza la matriz de vista y la matriz de proyección
+		// Updates view matrix and projection matrix
 		m_ViewMatrix = view;
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}

@@ -9,7 +9,7 @@ namespace Engine
         alGenBuffers(1, &m_Buffer);
         if (ALenum err = alGetError(); err != AL_NO_ERROR) 
         {
-            throw std::runtime_error("AudioBuffer::AudioBuffer: Error al generar el OpenAL buffer: " + 
+            throw std::runtime_error("AudioBuffer::AudioBuffer: Error generating OpenAL buffer: " + 
                 std::string(alGetString(err)));
         }
 
@@ -22,7 +22,7 @@ namespace Engine
         if (ALenum err = alGetError(); err != AL_NO_ERROR) 
         {
             alDeleteBuffers(1, &m_Buffer);
-            throw std::runtime_error("AudioBuffer::AudioBuffer: Error al cargar el audio: " + std::string(alGetString(err)));
+            throw std::runtime_error("AudioBuffer::AudioBuffer: Error loading audio: " + std::string(alGetString(err)));
         }
 
         m_SampleRate = wav.SampleRate;
@@ -71,23 +71,23 @@ namespace Engine
     {
         if (wav.Data.empty()) 
         {
-            throw std::invalid_argument("AudioBuffer::ValidateWAVData: WAV data esta vacio");
+            throw std::invalid_argument("AudioBuffer::ValidateWAVData: WAV data is empty");
         }
 
         if (wav.Channels != 1 && wav.Channels != 2) 
         {
-            throw std::invalid_argument("AudioBuffer::ValidateWAVData: Cantidad de canales no soportados (" +
+            throw std::invalid_argument("AudioBuffer::ValidateWAVData: Unsupported number of channels (" +
                 std::to_string(wav.Channels) + ")");
         }
 
         if (wav.SampleRate == 0) 
         {
-            throw std::invalid_argument("AudioBuffer::ValidateWAVData: Tasa de muestreo invalida (0 Hz)");
+            throw std::invalid_argument("AudioBuffer::ValidateWAVData: Invalid sample rate (0 Hz)");
         }
 
         if (wav.BitsPerSample != 16) 
         {
-            throw std::invalid_argument("AudioBuffer::ValidateWAVData: Solo se soportan muestras de 16 bits");
+            throw std::invalid_argument("AudioBuffer::ValidateWAVData: Only 16-bit samples are supported");
         }
     }
 

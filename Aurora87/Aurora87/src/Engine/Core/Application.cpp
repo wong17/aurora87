@@ -14,7 +14,7 @@ namespace Engine
 
 		if (m_AudioEngine.Initialize() != InitResult::OK)
 		{
-			std::cerr << "Application::Application: Error inicializando AudioEngine\n";
+			std::cerr << "Application::Application: Error initializing AudioEngine\n";
 		}
 		else
 		{
@@ -49,18 +49,18 @@ namespace Engine
 			m_DeltaTime = currentFrame - m_LastFrame;
 			m_LastFrame = currentFrame;
 
-			// Acumular tiempo y contar frames
+			// Accumulating time and counting frames
 			fpsTimer += m_DeltaTime;
 			frameCount++;
 
-			// Si ha pasado 1 segundo, calculamos los FPS y actualizamos el título
+			// If 1 second has elapsed, we calculate the FPS and update the title
 			if (fpsTimer >= 1.0f)
 			{
 				float fps = frameCount / fpsTimer;
 				std::stringstream ss;
 				ss << "Aurora 87 - FPS: " << std::fixed << std::setprecision(2) << fps;
 				glfwSetWindowTitle(m_Window->GetNativeWindow(), ss.str().c_str());
-				// Reiniciamos el contador y timer
+				// Reset the counter and timer
 				frameCount = 0;
 				fpsTimer = 0.0f;
 			}
@@ -144,7 +144,7 @@ namespace Engine
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
-		// Si la ventana es minimizada, no hace falta actualizar la camara
+		// If the window is minimized, there is no need to update the camera.
 		if (e.GetWidth() == 0 || e.GetHeight() == 0) return false;
 
 		if (m_Camera)

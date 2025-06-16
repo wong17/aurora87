@@ -39,7 +39,7 @@ namespace Engine
         std::map<std::string, Bone> m_BoneHierarchy;
         Bone* m_RootBone = nullptr;
 
-        // Todas las animaciones del modelo
+        // All model animations
         std::vector<Animation> m_Animations;
         std::vector<std::string> m_AnimationNames;
         std::optional<Animator> m_Animator;

@@ -8,7 +8,7 @@
 
 namespace Engine
 {
-	// Representa un elemento en el VertexBufferLayout y cada elemento describe un VertexBufferAttribute
+	// Represents an element in the VertexBufferLayout and each element describes a VertexBufferAttribute
 	class VertexBufferElement
 	{
 	public:
@@ -25,7 +25,7 @@ namespace Engine
 		ShaderDataType GetType() const { return m_Type; }
 		bool GetNormalized() const { return m_Normalized; }
 
-		// Esto es para saber cuantos componentes tiene el tipo de dato que se esta usando
+		// This is to know how many components the data type being used has.
 		uint32_t GetComponentCount() const
 		{
 			switch (m_Type)
@@ -34,8 +34,8 @@ namespace Engine
 				case ShaderDataType::Float2:  return 2;
 				case ShaderDataType::Float3:  return 3;
 				case ShaderDataType::Float4:  return 4;
-				case ShaderDataType::Mat3:    return 3; // Mat3 = 3 * vec3, cada fila de la matriz es un vec3
-				case ShaderDataType::Mat4:    return 4; // Mat4 = 4 * vec4, cada fila de la matriz es un vec4
+				case ShaderDataType::Mat3:    return 3; // Mat3 = 3 * vec3, each row of the matrix is a vec3
+				case ShaderDataType::Mat4:    return 4; // Mat4 = 4 * vec4, each row of the matrix is a vec4
 				case ShaderDataType::Int:     return 1;
 				case ShaderDataType::Int2:    return 2;
 				case ShaderDataType::Int3:    return 3;

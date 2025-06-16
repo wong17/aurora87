@@ -5,7 +5,7 @@ namespace Engine
     static std::shared_ptr<AudioSource> MakeSourceWithBuffer(const std::shared_ptr<AudioBuffer>& buf) 
     {
         if (!buf)
-			throw std::runtime_error("AudioManager::MakeSourceWithBuffer: No se puede crear una fuente de audio con un buffer nulo.");
+			throw std::runtime_error("AudioManager::MakeSourceWithBuffer: Cannot create a null buffered audio source.");
 
         auto src = std::make_shared<AudioSource>();
         src->AttachBuffer(buf->Id());
@@ -15,7 +15,7 @@ namespace Engine
     std::shared_ptr<AudioBuffer> AudioManager::LoadBuffer(const std::string& name, const std::string& filepath) 
     {
         if (name.empty() || filepath.empty()) 
-			throw std::invalid_argument("AudioManager::LoadBuffer: Nombre y ruta no pueden estar vacios.");
+			throw std::invalid_argument("AudioManager::LoadBuffer: Name and path cannot be empty.");
 
         std::lock_guard<std::mutex> lock(m_Mutex);
         auto it = m_BufferCache.find(name);
@@ -31,14 +31,14 @@ namespace Engine
     std::shared_ptr<AudioBuffer> AudioManager::GetBuffer(const std::string& name) const 
     {
 		if (name.empty())
-			throw std::invalid_argument("AudioManager::GetBuffer: Nombre no puede estar vacio.");
+			throw std::invalid_argument("AudioManager::GetBuffer: Name cannot be empty.");
 
         std::lock_guard<std::mutex> lock(m_Mutex);
         auto it = m_BufferCache.find(name);
 
         if (it == m_BufferCache.end())
         {
-            std::cerr << "AudioManager::GetBuffer: Buffer '" << name << "' no encontrado." << std::endl;
+            std::cerr << "AudioManager::GetBuffer: Buffer '" << name << "' not found." << std::endl;
 			return nullptr;
         }
         
@@ -49,7 +49,7 @@ namespace Engine
     {
         if (name.empty())
         {
-			std::cerr << "AudioManager::BufferExists: Nombre no puede estar vacio." << std::endl;
+			std::cerr << "AudioManager::BufferExists: Name cannot be empty." << std::endl;
             return false;
         }
 
@@ -61,7 +61,7 @@ namespace Engine
     {
         if (name.empty())
         {
-            std::cerr << "AudioManager::RemoveBuffer: Nombre no puede estar vacio." << std::endl;
+            std::cerr << "AudioManager::RemoveBuffer: Name cannot be empty." << std::endl;
             return false;
         }
 
@@ -88,28 +88,28 @@ namespace Engine
     {
         if (bufferName.empty()) 
         {
-            throw std::invalid_argument("AudioManager::AcquireSource: bufferName no puede estar vacío");
+            throw std::invalid_argument("AudioManager::AcquireSource: bufferName cannot be empty");
         }
 
         std::lock_guard<std::mutex> lock(m_Mutex);
-        // Primero busca el buffer en el cache directamente
+        // First look for the buffer in the cache directly
         auto itBuf = m_BufferCache.find(bufferName);
         if (itBuf == m_BufferCache.end())
-            throw std::runtime_error("AudioManager::AcquireSource: buffer '" + bufferName + "' no existe");
+            throw std::runtime_error("AudioManager::AcquireSource: buffer '" + bufferName + "' does not exist");
 
         auto& buffer = itBuf->second;
 
-        // Si hay fuentes libres, reutiliza una
+        // If there are free sources, reuse one
         if (!m_FreeSources.empty())
         {
             auto& src = m_FreeSources.back();
             m_FreeSources.pop_back();
-            // Reattach al buffer existente
+            // Reattach to existing buffer
             src->AttachBuffer(buffer->Id());
             return src;
         }
 
-        // Si no, crea una nueva fuente
+        // Otherwise, create a new source
         return MakeSourceWithBuffer(buffer);
     }
 
@@ -117,11 +117,11 @@ namespace Engine
     {
         if (!source) 
         {
-            throw std::invalid_argument("AudioManager::ReleaseSource: source no puede ser nullptr");
+            throw std::invalid_argument("AudioManager::ReleaseSource: source cannot be nullptr");
         }
 
         std::lock_guard<std::mutex> lock(m_Mutex);
-        // Resetea estado y pone en pool
+        // Reset status and put in pool
         source->Stop();
         m_FreeSources.push_back(source);
     }
@@ -130,7 +130,7 @@ namespace Engine
     {
         if (bufferNames.empty()) 
         {
-            throw std::invalid_argument("AudioManager::AcquireSources: lista de nombres vacía");
+            throw std::invalid_argument("AudioManager::AcquireSources: empty list of names");
         }
 
         std::vector<std::shared_ptr<AudioSource>> list;
@@ -139,7 +139,7 @@ namespace Engine
         {
             if (name.empty()) 
             {
-                throw std::invalid_argument("AudioManager::AcquireSources: name en la lista no puede estar vacío");
+                throw std::invalid_argument("AudioManager::AcquireSources: name in the list cannot be empty");
             }
 
             list.push_back(AcquireSource(name));

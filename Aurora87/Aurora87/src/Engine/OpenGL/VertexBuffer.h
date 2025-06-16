@@ -26,8 +26,8 @@ namespace Engine
 		void SetData(const void* data, uint32_t size);
 
 		inline uint32_t GetRendererID() const { return m_RendererID; }
-		inline uint32_t GetSize() const { return m_Size; }         // bytes usados
-		inline uint32_t GetCapacity() const { return m_Capacity; } // bytes asignados
+		inline uint32_t GetSize() const { return m_Size; }         // bytes used
+		inline uint32_t GetCapacity() const { return m_Capacity; } // bytes assigned
 		inline GLenum GetUsage() const { return m_Usage; }
 		inline const VertexBufferLayout& GetLayout() const { return m_Layout; }
 		inline uint32_t GetVertexCount() const
@@ -37,8 +37,8 @@ namespace Engine
 
 	private:
 		uint32_t m_RendererID;
-		uint32_t m_Size;      // bytes efectivamente usados
-		uint32_t m_Capacity;  // bytes asignados en la GPU
+		uint32_t m_Size;      // bytes actually used
+		uint32_t m_Capacity;  // bytes allocated on the GPU
 		GLenum m_Usage;
 		VertexBufferLayout m_Layout;
 	};

@@ -5,7 +5,7 @@ namespace Engine
 	ElementBuffer::ElementBuffer(const uint32_t* indices, uint32_t count, GLenum usage) 
 		: m_Count(count), m_RendererID(0), m_Usage(usage), m_Size(count * sizeof(uint32_t))
 	{
-		// Desde OpenGL 4.5 DSA 
+		// Since OpenGL 4.5 DSA 
 		glCreateBuffers(1, &m_RendererID);
 		GLCall(glNamedBufferData(m_RendererID, m_Size, indices, usage));
 	}

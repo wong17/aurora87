@@ -33,7 +33,7 @@ namespace Engine
     private:
         mutable std::mutex m_Mutex;
         std::unordered_map<std::string, std::shared_ptr<AudioBuffer>> m_BufferCache;
-        // Pool de AudioSource para reutilizar
+        // AudioSource pool for reuse
         std::vector<std::shared_ptr<AudioSource>> m_FreeSources;
     };
 }

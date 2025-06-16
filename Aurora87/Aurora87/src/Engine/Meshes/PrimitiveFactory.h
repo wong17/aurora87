@@ -23,7 +23,7 @@ namespace Engine
 	class PrimitiveFactory
 	{
 	private:
-		// Versión que construye la primitiva a partir de rutas
+		// Version that builds the primitive from routes
 		template<typename PrimitiveType>
 		static std::shared_ptr<Mesh> CreateInternal(
 			const std::string& diffusePath,
@@ -35,7 +35,7 @@ namespace Engine
 			)->GenerateMesh();
 		}
 
-		// Versión que construye la primitiva a partir de texturas ya cargadas
+		// Version that builds the primitive from already loaded textures.
 		template<typename PrimitiveType>
 		static std::shared_ptr<Mesh> CreateInternal(
 			const std::shared_ptr<Texture>& diffuse,

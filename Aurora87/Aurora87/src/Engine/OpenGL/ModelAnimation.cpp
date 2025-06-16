@@ -6,7 +6,7 @@ namespace Engine
     {
         if (!scene || !scene->mRootNode)
         {
-            throw std::invalid_argument("ModelAnimation::ModelAnimation: escena o nodo raíz nulo.");
+            throw std::invalid_argument("ModelAnimation::ModelAnimation: scene or root node null.");
         }
 
         m_GlobalInverseTransform = glm::inverse(glm::make_mat4(&scene->mRootNode->mTransformation.a1));
@@ -15,9 +15,9 @@ namespace Engine
         ProcessAnimations(scene);
 
         if (!m_RootBone)
-            throw std::runtime_error("ModelAnimation::ModelAnimation: no se encontro rootBone en la jerarquia de nodos.");
+            throw std::runtime_error("ModelAnimation::ModelAnimation: rootBone not found in node hierarchy.");
 
-		// Si hay animaciones, inicializa el Animator con la primera animación por defecto
+		// If there are animations, initialize the Animator with the first default animation.
         if (!m_Animations.empty())
             SetAnimation(0);
     }
@@ -39,7 +39,7 @@ namespace Engine
                 std::string name = aiBone->mName.C_Str();
                 if (name.empty()) continue;
 
-                // Crear o actualizar hueso
+                // Create or update bone
                 auto it = m_BoneHierarchy.find(name);
                 if (it == m_BoneHierarchy.end())
                 {
@@ -81,7 +81,7 @@ namespace Engine
         std::string nodeName = node->mName.C_Str();
         Bone* currentBone = nullptr;
 
-        // Buscar si ya existe en el mapa
+        // Search if it already exists in the map
         auto it = m_BoneHierarchy.find(nodeName);
         if (it != m_BoneHierarchy.end()) 
         {
@@ -98,15 +98,15 @@ namespace Engine
                 m_RootBone = currentBone;
             }
 
-			parent = currentBone; // Actualizar padre para hijos
+			parent = currentBone; // Update parent for children
         }
         else
         {
-            std::cerr << "ModelAnimation::BuildBoneHierarchy: nodo '"
-                << nodeName << "' no corresponde a ningun hueso de mesh.\n";
+            std::cerr << "ModelAnimation::BuildBoneHierarchy: node '"
+                << nodeName << "' does not correspond to any mesh bone.\n";
         }
 
-        // Procesar hijos recursivamente
+        // Recursively process children
         for (uint32_t i = 0; i < node->mNumChildren; ++i) 
         {
             BuildBoneHierarchy(node->mChildren[i], parent);
@@ -118,11 +118,11 @@ namespace Engine
         if (index >= m_Animations.size()) 
             return false;
 
-        // Recrea el Animator con la animación seleccionada
+        // Recreate Animator with the selected animation
         m_Animator.emplace(
             m_Animations[index],
-            m_BoneHierarchy,  // Pasar mapa completo
-            m_RootBone,       // Pasar raíz jerárquica
+            m_BoneHierarchy,  // Pass full map
+            m_RootBone,       // Pass hierarchical root
             m_GlobalInverseTransform
         );
 

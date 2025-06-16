@@ -37,7 +37,7 @@ namespace Engine
 	private:
 		void CalculateOffsetsAndStride()
 		{
-			uint32_t offset = 0; // Es el offset de cada VertexBufferElement en el VertexBuffer
+			uint32_t offset = 0; // It is the offset of each VertexBufferElement in the VertexBuffer
 			m_Stride = 0;
 			for (auto& element : m_Elements)
 			{
@@ -48,6 +48,6 @@ namespace Engine
 		}
 	private:
 		std::vector<VertexBufferElement> m_Elements;
-		uint32_t m_Stride = 0;	// Este es el tamaño total del VertexBuffer en el VertexArray
+		uint32_t m_Stride = 0;	// This is the total size of the VertexBuffer in the VertexArray
 	};
 }

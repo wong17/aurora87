@@ -24,7 +24,7 @@ namespace UI
 			std::shared_ptr<Engine::Texture> normalTex,
 			std::shared_ptr<Engine::Texture> hoverTex);
 
-		// Setter para callback onClick
+		// Setter for onClick callback
 		void SetOnClick(std::function<void()> callback) { m_OnClick = callback; }
 
 		void Update(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& cameraPos, GLFWwindow* window);

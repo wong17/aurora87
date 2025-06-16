@@ -12,7 +12,7 @@
 
 namespace Engine
 {
-    // Keyframes de posición
+    // Position keyframes
     struct PositionKey 
     {
         using ValueType = glm::vec3;
@@ -20,7 +20,7 @@ namespace Engine
         float Time;
     };
 
-    // Keyframes de rotación
+    // Rotation keyframes
     struct RotationKey 
     {
         using ValueType = glm::quat;
@@ -28,7 +28,7 @@ namespace Engine
         float Time;
     };
 
-    // Keyframes de escala
+    // Scale keyframes
     struct ScaleKey 
     {
         using ValueType = glm::vec3;
@@ -36,7 +36,7 @@ namespace Engine
         float Time;
     };
 
-    // Canal de animación por nodo
+    // Animation channel per node
     struct NodeAnimation 
     {
         std::string NodeName;

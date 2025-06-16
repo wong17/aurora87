@@ -2,17 +2,17 @@
 
 namespace Engine
 {
-    // Crea una nueva entidad y le asigna un índice UBO
+    // Creates a new entity and assigns a UBO index to it
     std::shared_ptr<Entity> EntityManager::CreateEntity(
         std::shared_ptr<Model> model, 
         std::shared_ptr<Shader> shader,
         const std::string& name)
     {
         uint32_t uboIndex = AllocateIndex();
-		// Se crea una nueva entidad y se le asigna un ID único
+		// A new entity is created and a unique ID is assigned to it
         auto entity = std::make_shared<Entity>(model, shader, name);
         entity->m_ID = GenerateUniqueID();
-		// Esto hace que el vector de registros esté ordenado por ID
+		// This causes the vector of records to be sorted by ID
         Record rec{ entity, uboIndex, shader };
         auto it = std::lower_bound(m_Records.begin(), m_Records.end(), entity->GetID(), 
             [](const Record& rec, Entity::EntityID id) { return rec.entity->GetID() < id; });
@@ -23,7 +23,7 @@ namespace Engine
 
         m_IDMap[entity->GetID()] = entity;
 
-		// InstanceTransform por defecto, una matriz identidad
+		// InstanceTransform by default, a matrix identity
         std::vector<glm::mat4> identityBatch = { glm::mat4(1.0f) };
         if (entity->GetMesh())
             entity->GetMesh()->SetInstanceTransforms(identityBatch, Mesh::InstanceLayout());
@@ -39,10 +39,10 @@ namespace Engine
         const std::string& name)
     {
         uint32_t uboIndex = AllocateIndex();
-        // Se crea una nueva entidad y se le asigna un ID único
+        // A new entity is created and a unique ID is assigned to it
         auto entity = std::make_shared<Entity>(mesh, shader, name);
         entity->m_ID = GenerateUniqueID();
-        // Esto hace que el vector de registros esté ordenado por ID
+        // This causes the vector of records to be sorted by ID
         Record rec{ entity, uboIndex, shader };
         auto it = std::lower_bound(m_Records.begin(), m_Records.end(), entity->GetID(),
             [](const Record& rec, Entity::EntityID id) { return rec.entity->GetID() < id; });
@@ -62,21 +62,21 @@ namespace Engine
         return entity;
     }
 
-    // Destruye una entidad y recicla su índice
+    // Destroys an entity and recycles its index
     void EntityManager::DestroyEntity(const std::shared_ptr<Entity>& entity)
     {
         auto it = std::find_if(m_Records.begin(), m_Records.end(), [&](auto& rec) { return rec.entity == entity; });
         if (it == m_Records.end())
             return;
 
-        // Reciclar índice del UniformBuffer
+        // Recycle UniformBuffer index
         m_FreeIndices.push(it->uniformBufferIndex);
 
-        // Eliminar de los mapas
+        // Remove from maps
         m_EntityMap.erase(entity->GetName());
         m_IDMap.erase(entity->GetID());
 
-        // Eliminar de m_Records
+        // Delete from m_Records
         m_Records.erase(it);
     }
 
@@ -100,7 +100,7 @@ namespace Engine
 		auto entity = GetEntityByName(name);
         if (!entity)
         {
-            std::cerr << "EntityManager::SetInstanceTransforms(): No se encontró la entidad con el nombre: " << name << std::endl;
+            std::cerr << "EntityManager::SetInstanceTransforms(): Entity with name " << name << " not found: " << std::endl;
             return;
         }
 
@@ -112,19 +112,19 @@ namespace Engine
     {
         if (!Exists(entity))
         {
-            std::cerr << "EntityManager::SetInstanceTransforms(): La entidad no esta registrada.\n";
+            std::cerr << "EntityManager::SetInstanceTransforms(): The entity is not registered.\n";
             return;
         }
 
         auto it = std::find_if(m_Records.begin(), m_Records.end(), [&](Record const& r) { return r.entity == entity; });
         if (it == m_Records.end()) {
-            std::cerr << "EntityManager::SetInstanceTransforms(): Record no encontrado.\n";
+            std::cerr << "EntityManager::SetInstanceTransforms(): Record not found.\n";
             return;
         }
         it->instanceCount = static_cast<uint32_t>(mats.size());
 
         if (entity->GetMesh() == nullptr && entity->GetModel() == nullptr)
-            throw std::runtime_error("EntityManager::SetInstanceTransforms(): La entidad no tiene un Mesh o Model asociado.");
+            throw std::runtime_error("EntityManager::SetInstanceTransforms(): Entity does not have an associated Mesh or ModelRecord not found.");
 
 		if (entity->GetMesh() != nullptr)       entity->GetMesh()->SetInstanceTransforms(mats, instanceLayout);
         else if (entity->GetModel() != nullptr) entity->GetModel()->SetInstanceTransforms(mats, instanceLayout);

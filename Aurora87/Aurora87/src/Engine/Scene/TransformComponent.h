@@ -9,7 +9,7 @@ namespace Engine
 	struct TransformComponent
 	{
 		glm::vec3 Position{ 0.0f };
-		glm::vec3 Rotation{ 0.0f }; // Euler angles en grados
+		glm::vec3 Rotation{ 0.0f }; // Euler angles in degrees
 		glm::vec3 Scale{ 1.0f };
 
 		glm::mat4 GetLocalMatrix() const 

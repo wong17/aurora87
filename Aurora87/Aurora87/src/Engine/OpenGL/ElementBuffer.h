@@ -27,6 +27,6 @@ namespace Engine
 		uint32_t m_RendererID;
 		GLenum m_Usage;
 		uint32_t m_Size;	// m_Count * sizeof(uint32_t) en bytes
-		uint32_t m_Count;	// número de elementos
+		uint32_t m_Count;	// number of items
 	};
 }

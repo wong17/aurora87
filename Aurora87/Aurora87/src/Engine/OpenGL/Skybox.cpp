@@ -17,7 +17,7 @@ namespace Engine
 		renderSettings.SetDepthFunc(Engine::DepthFunc::Lequal);
 
 		m_Shader->Bind();
-		// eliminamos componente de traslación de view para que el skybox siempre quede “fijo”
+		// we eliminate the view translation component so that the skybox always remains “fixed”.
 		glm::mat4 skyView = glm::mat4(glm::mat3(view));
 		m_Shader->SetMat4("u_ViewMatrix", skyView);
 		m_Shader->SetMat4("u_ProjectionMatrix", projection);
