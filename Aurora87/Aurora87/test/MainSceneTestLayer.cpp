@@ -348,6 +348,6 @@ namespace Test
 		m_Earth->Scale(glm::vec3(3.0f));
 		m_Earth->Rotate(glm::vec3(160.0f, 20.0f, 30.0f));
 		m_Earth->Translate(glm::vec3(-3680.0f, 1500.0f, 0.0f));
-		m_Player->Translate(glm::vec3(0.0f, 70.0f, 0.0f));
+		m_Player->Translate(glm::vec3(0.0f, 55.0f, 0.0f));
 	}
 }
