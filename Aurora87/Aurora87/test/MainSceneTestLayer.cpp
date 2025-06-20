@@ -258,7 +258,7 @@ namespace Test
 	void MainSceneTestLayer::InitializeLights()
 	{
 		// Global ambient light
-		m_LightManager->SetGlobalAmbient(glm::vec3(0.005f));
+		m_LightManager->SetGlobalAmbient(glm::vec3(0.03f));
 
 		// Directional lights
 		Engine::DirectionalLight dir(
